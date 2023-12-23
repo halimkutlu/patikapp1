@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:leblebiapp/locale/ChangeLanguage.dart';
 import 'package:leblebiapp/locale/Messages.dart';
 import 'package:leblebiapp/pages/login.dart';
+import 'package:leblebiapp/pages/splashScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,14 +16,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      translations: LocaleString(),
-      locale: Locale('en', 'US'),
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Login(),
-    );
+        debugShowCheckedModeBanner: false,
+        translations: LocaleString(),
+        locale: Locale('en', 'US'),
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: SplashScreen());
   }
 }
