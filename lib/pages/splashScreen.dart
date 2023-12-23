@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:leblebiapp/pages/login.dart';
+import 'package:leblebiapp/providers/splashScreenProvider.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,12 +17,10 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Timer(Duration(seconds: 13), () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Login()),
-      );
-    });
+    final splashProvider =
+        Provider.of<SplashScreenProvider>(context, listen: false);
+    splashProvider.initData(context);
+
     super.initState();
   }
 
