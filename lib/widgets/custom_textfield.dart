@@ -84,6 +84,7 @@ class _CTextfieldState extends State<CTextfield> {
         ),
         TextFormField(
           controller: widget.controller,
+          obscureText: widget.obscureText ?? true,
           decoration: InputDecoration(
             hintText: widget.hintText,
             filled: true,

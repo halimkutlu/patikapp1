@@ -30,34 +30,48 @@ class LocaleString extends Translations {
           'keepWithGoogle': 'Google ile devam et',
           'noAccount': 'Hesabın yok mu?',
           'register': 'Kayıt ol',
+          'ok': 'Tamam',
+          'warning': 'Uyarı',
+          'userpasswordNotEmpty': 'Kullanıcı adı veya şifre boş olamaz',
+          'back': 'Geri',
+          'forgotMessage':
+              'Lütfen daha önce kayıt için kullandığınız e-mail adresinizi girin. Sonrasında otomatik olarak şifre yenileme ekranına yönlendirileceksiniz.',
+          'send': 'Gönder'
         },
-        'de_DE': {
-          'hello': 'HALLO',
-          'message': 'Nachricht',
-          'title': 'Titel',
-          'subscribe': 'Abonnieren',
-          'changelang': 'Sprache ändern',
-          'dashboard': 'Startseite',
-          'introText1': 'Sowohl einfach als auch praktisch',
-          'introText2':
-              'Patik ist eine praktische Wortlern-App. Sie lernen Wörter in verschiedenen Themenbereichen mit Spielen und Aktivitäten, ohne sich zu langweilen.',
-          'introText3':
-              'Nehmen Sie sich nur 10 Minuten am Tag Zeit.\nWörter lernen',
-          'introText4':
-              'Mit der Patik-App werden Sie nach nur 10 Minuten täglichem Lernen schnell Fortschritte machen.',
-          'skip': 'Überspringen',
-          'next': 'Nächster',
-          'login': 'Anmelden',
-          'appName': 'Patik',
-          'welcome': 'Willkommen',
-          'userName': 'Benutzername',
-          'password': 'Passwort',
-          'mail': 'E-Mail-Adresse',
-          'forgotPassword': 'Passwort vergessen',
-          'or': 'ODER',
-          'keepWithGoogle': 'Mit Google fortfahren',
-          'noAccount': 'Kein Konto?',
-          'register': 'Registrieren',
-        },
+        "de_DE": {
+          "hello": "HALLO",
+          "message": "Nachricht",
+          "title": "Titel",
+          "subscribe": "Abonnieren",
+          "changelang": "Sprache ändern",
+          "dashboard": "Dashboard",
+          "introText1": "Einfach und praktisch zugleich",
+          "introText2":
+              "Patik ist eine praktische Vokabel-Lern-App. Sie lernen Wörter zu verschiedenen Themenbereichen mit Spielen und Aktivitäten, ohne sich zu langweilen.",
+          "introText3": "Nur 10 Minuten pro Tag.\nWortschatz lernen",
+          "introText4":
+              "Mit der Patik-App werden Sie bemerken, wie schnell Sie lernen, indem Sie nur 10 Minuten täglich investieren, nachdem Sie angefangen haben zu arbeiten.",
+          "skip": "Überspringen",
+          "next": "Nächste",
+          "login": "Anmelden",
+          "appName": "Patik",
+          "welcome": "WILLKOMMEN",
+          "userName": "Benutzername",
+          "password": "Passwort",
+          "mail": "E-Mail-Adresse",
+          "forgotPassword": "Passwort vergessen",
+          "or": "ODER",
+          "keepWithGoogle": "Mit Google fortfahren",
+          "noAccount": "Kein Konto?",
+          "register": "Registrieren",
+          "ok": "OK",
+          "warning": "Warnung",
+          "userpasswordNotEmpty":
+              "Benutzername oder Passwort darf nicht leer sein",
+          "back": "Zurück",
+          'forgotMessage':
+              'Almanca Lütfen daha önce kayıt için kullandığınız e-mail adresinizi girin. Sonrasında otomatik olarak şifre yenileme ekranına yönlendirileceksiniz.',
+          'send': ' Almanca Gönder'
+        }
       };
 }

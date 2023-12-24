@@ -5,6 +5,7 @@ import 'package:leblebiapp/locale/Messages.dart';
 import 'package:leblebiapp/pages/splashScreen.dart';
 import 'package:leblebiapp/providers/introductionPageProvider.dart';
 import 'package:leblebiapp/providers/loginProvider.dart';
+import 'package:leblebiapp/providers/registerProvider.dart';
 import 'package:leblebiapp/providers/splashScreenProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -20,8 +21,7 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<IntroductionPageProvider>(
       create: (_) => IntroductionPageProvider()),
   ChangeNotifierProvider<LoginProvider>(create: (_) => LoginProvider()),
-  // ChangeNotifierProvider<MainPageViewProvider>(
-  //     create: (_) => MainPageViewProvider()),
+  ChangeNotifierProvider<RegisterProvider>(create: (_) => RegisterProvider()),
 ];
 
 class MyApp extends StatelessWidget {
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           translations: LocaleString(),
-          locale: Locale('tr', 'TR'),
+          locale: Locale('de', 'DE'),
           title: 'Flutter Demo',
           theme: ThemeData(
             scaffoldBackgroundColor: MainColors.backgroundColor,

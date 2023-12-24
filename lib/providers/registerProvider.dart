@@ -6,15 +6,17 @@ import 'package:get/get.dart';
 import 'package:leblebiapp/api/api_repository.dart';
 import 'package:leblebiapp/pages/forgotPassword.dart';
 import 'package:leblebiapp/pages/login.dart';
+import 'package:leblebiapp/pages/mailResponse.dart';
 import 'package:leblebiapp/pages/register.dart';
 import 'package:leblebiapp/widgets/customAlertDialog.dart';
 import 'package:leblebiapp/widgets/customAlertDialogOnlyOk.dart';
 
-class LoginProvider extends ChangeNotifier {
+class RegisterProvider extends ChangeNotifier {
   final apirepository = APIRepository();
 
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _mailController = TextEditingController();
 
   bool? _passwordVisible = false;
 
@@ -22,40 +24,42 @@ class LoginProvider extends ChangeNotifier {
 
   TextEditingController get userName => _usernameController;
   TextEditingController get password => _passwordController;
+  TextEditingController get mail => _mailController;
 
-  TextEditingController _forgotMailController = TextEditingController();
-  TextEditingController get forgotMailController => _forgotMailController;
-
-  void gotoRegisterPage(BuildContext context) async {
+  void gotoMailResponsePage(BuildContext context) async {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => Register()));
+        .push(MaterialPageRoute(builder: (context) => MailResponse()));
   }
 
-  void login(BuildContext context) {
-    if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+  void gotoLoginPage(BuildContext context) async {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => Login()));
+  }
+
+  void register(BuildContext context) {
+    if (_usernameController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _mailController.text.isEmpty) {
+      CustomAlertDialogOnlyConfirm(context, () {
+        Navigator.pop(context);
+      }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
+          "ok".tr);
+    } else if (!_mailController.text.isEmail) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
       }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
           "ok".tr);
     } else {
-      //TODO API LOGİN
+      //TODO API REGİSTER
+      if (1 == 1) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => MailResponse()));
+      } else {
+        //   CustomAlertDialogOnlyConfirm(context, () {
+        //   Navigator.pop(context);
+        // }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
+        //     "ok".tr);
+      }
     }
-  }
-
-  void forgotPassword(BuildContext context) {
-    if (!forgotMailController.text.isEmail) {
-      CustomAlertDialogOnlyConfirm(context, () {
-        Navigator.pop(context);
-      }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
-          "ok".tr);
-    } else {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
-    }
-  }
-
-  void gotoForgotPassWordPage(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => ForgotPassword()));
   }
 }
