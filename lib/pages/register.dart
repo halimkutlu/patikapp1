@@ -1,32 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leblebiapp/assets/mainColors.dart';
-import 'package:leblebiapp/pages/dashboard.dart';
-import 'package:leblebiapp/providers/loginProvider.dart';
+import 'package:leblebiapp/providers/registerProvider.dart';
 import 'package:leblebiapp/widgets/custom_textfield.dart';
 import 'package:leblebiapp/widgets/icon_button.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Register extends StatefulWidget {
+  const Register({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _LoginState extends State<Login> {
-  @override
-  void initState() {
-    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
-
-    super.initState();
-  }
-
+class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
-    final loginProvider = Provider.of<LoginProvider>(context);
-
+    final loginProvider = Provider.of<RegisterProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: [
@@ -35,7 +26,7 @@ class _LoginState extends State<Login> {
           ),
           Center(
             child: Text(
-              'welcome'.tr,
+              'register'.tr,
               style: TextStyle(fontSize: 3.h),
             ),
           ),
@@ -51,7 +42,17 @@ class _LoginState extends State<Login> {
           Padding(
             padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
             child: CTextfield(
+              controller: loginProvider.mail,
+              name: "mail".tr,
+              hintText: "mail".tr,
+              icon: Icons.lock_outline,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
+            child: CTextfield(
               controller: loginProvider.password,
+              obscureText: true,
               name: "password".tr,
               hintText: "password".tr,
               icon: Icons.lock_outline,
@@ -67,42 +68,8 @@ class _LoginState extends State<Login> {
               width: 0.3.w,
               height: 2.5.h,
               onTap: () {
-                loginProvider.login(context);
+                loginProvider.register(context);
               },
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              InkWell(
-                onTap: () {
-                  loginProvider.gotoForgotPassWordPage(context);
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(right: 10.w),
-                  child: Text(
-                    'forgotPassword'.tr,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Center(
-            child: Text(
-              'or'.tr,
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 2.h),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CustomIconButton(
-              textColor: Colors.black,
-              colors: Colors.white,
-              icons: Icon(Icons.invert_colors),
-              name: 'keepWithGoogle'.tr,
-              width: 0.3.w,
-              height: 2.5.h,
             ),
           ),
           Center(
@@ -116,10 +83,10 @@ class _LoginState extends State<Login> {
                 ),
                 InkWell(
                   onTap: () {
-                    loginProvider.gotoRegisterPage(context);
+                    loginProvider.gotoLoginPage(context);
                   },
                   child: Text(
-                    'register'.tr,
+                    'login'.tr,
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 1.4.h,
@@ -129,33 +96,8 @@ class _LoginState extends State<Login> {
               ],
             ),
           ),
-          Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 5.h),
-              child: Container(
-                width: 90,
-                height: 90,
-                child: Image.asset(
-                  'lib/assets/logo.png',
-                  width: 600.0,
-                  height: 240.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          )
         ]),
       ),
     );
   }
 }
-
-
-  //  ElevatedButton(
-  //           onPressed: () {
-  //             Navigator.push(
-  //               context,
-  //               MaterialPageRoute(builder: (context) => const Dashboard()),
-  //             );
-  //           },
-  //           child: Text('dashboard'.tr)),
