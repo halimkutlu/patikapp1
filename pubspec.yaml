@@ -41,6 +41,7 @@ dependencies:
   sizer: ^2.0.15
   dio: ^5.4.0
   art_sweetalert: ^0.0.5
+  sqflite: ^2.3.0
 
 dev_dependencies:
   flutter_test:
