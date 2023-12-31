@@ -4,11 +4,15 @@ import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leblebiapp/api/api_repository.dart';
+import 'package:leblebiapp/models/http_response.model.dart';
+import 'package:leblebiapp/models/user.model.dart';
 import 'package:leblebiapp/pages/forgotPassword.dart';
 import 'package:leblebiapp/pages/login.dart';
 import 'package:leblebiapp/pages/register.dart';
+import 'package:leblebiapp/providers/dbprovider.dart';
 import 'package:leblebiapp/widgets/customAlertDialog.dart';
 import 'package:leblebiapp/widgets/customAlertDialogOnlyOk.dart';
+import 'package:provider/provider.dart';
 
 class LoginProvider extends ChangeNotifier {
   final apirepository = APIRepository();
@@ -31,7 +35,7 @@ class LoginProvider extends ChangeNotifier {
         .push(MaterialPageRoute(builder: (context) => Register()));
   }
 
-  void login(BuildContext context) {
+  void login(BuildContext context) async {
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
@@ -39,6 +43,16 @@ class LoginProvider extends ChangeNotifier {
           "ok".tr);
     } else {
       //TODO API LOGİN
+      String controller = "a";
+      httpSonucModel apiresult =
+          await apirepository.post(controller: controller, data: null);
+      if (apiresult.success!) {
+        final dbprovider = Provider.of<DbProvider>(context);
+        dbprovider.initData(context);
+        print("başarılı");
+      } else {
+        print("hata");
+      }
     }
   }
 
