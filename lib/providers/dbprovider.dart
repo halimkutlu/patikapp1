@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:archive/archive.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:leblebiapp/providers/download_file.dart';
@@ -38,41 +39,53 @@ class DbProvider extends ChangeNotifier {
 
   runProcess() async {
     // ZIP dosyasının yolu
-    if (Platform.isAndroid) {
-      await Permission.manageExternalStorage.request();
-    } else {
-      await Permission.storage.request();
-    }
-    var direct = File('/storage/emulated/0/Download/123456789_tr-TR.zip');
+    bool permissionStatus;
+    final deviceInfo =await DeviceInfoPlugin().androidInfo;
 
-    // ZIP dosyasını çıkaran fonksiyon
-    List<int> bytes = direct.readAsBytesSync();
-    Archive archive = ZipDecoder().decodeBytes(bytes);
 
-    // Çıkartılan dosyaları depolamak için geçici bir dizin oluştur
-    Directory tempDir = await getTemporaryDirectory();
-    String tempPath = tempDir.path;
-
-    // ZIP dosyasındaki dosyaları çıkart
-    for (ArchiveFile file in archive) {
-      String fileName = '$tempPath/${file.name}';
-      File(fileName)
-        ..createSync(recursive: true)
-        ..writeAsBytesSync(file.content);
+    // Buna bakarsın kutlu benim emulator 30
+    if(deviceInfo.version.sdkInt>32){
+      //permissionStatus = await Permission.photos.request().isGranted;
+      permissionStatus = await Permission.manageExternalStorage.request().isGranted;
+    }else{
+      //permissionStatus = await Permission.storage.request().isGranted;
+      permissionStatus = await Permission.manageExternalStorage.request().isGranted;
     }
 
+    String dbPath = '/data/user/0/com.example.patikapp1/cache/tr-TR/tr-TR.db';
+    bool lngFiles = await File(dbPath).exists();
+    if (!lngFiles) {
+      var direct = File('/storage/emulated/0/Download/123456789_tr-TR.zip');
+
+      // ZIP dosyasını çıkaran fonksiyon
+      List<int> bytes = direct.readAsBytesSync();
+      Archive archive = ZipDecoder().decodeBytes(bytes);
+
+      //---------------------- Kutlu burası cache dizinini dönüyor, cache olmamalı bence--------------------------------
+      // Çıkartılan dosyaları depolamak için geçici bir dizin oluştur
+      Directory tempDir = await getTemporaryDirectory();
+      String tempPath = tempDir.path;
+
+      // ZIP dosyasındaki dosyaları çıkart
+      for (ArchiveFile file in archive) {
+        String fileName = '$tempPath/${file.name}';
+        File(fileName)
+          ..createSync(recursive: true)
+          ..writeAsBytesSync(file.content);
+      }
+    }
     // SQLite veritabanı dosyasının yolu
-    String dbPath = '$tempPath/path/to/your/database.db';
 
     // SQLite veritabanını aç
     Database database = await openDatabase(
       dbPath,
       password: '123456789', // SQLite veritabanının şifresi
+      version: 3
     );
 
     // SQLite sorgularını yapabilirsiniz
     List<Map<String, dynamic>> result =
-        await database.rawQuery('SELECT * FROM your_table');
+        await database.rawQuery('SELECT * FROM Information');
     print(result);
 
     // Veritabanını kapat
