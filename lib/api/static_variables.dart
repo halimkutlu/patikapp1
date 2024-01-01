@@ -1,7 +1,10 @@
 //uygulama içerisinde kullanılacak bilgiler için model oluşturulması.
 class StaticVariables {
   static String token = "";
-  static String cryptedUserName = "";
-  static String cryptedPassword = "";
+  static String UserName = "";
+  static String Name = "";
+  static String Surname = "";
+  static List<int> Roles = [];
   static String LangCode = "";
+  static String LangName = "";
 }

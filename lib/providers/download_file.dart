@@ -1,13 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import 'dbprovider.dart';
 
 Future<void> downloadFile(String url, {required String filename}) async {
   final httpClient = http.Client();
@@ -16,7 +15,6 @@ Future<void> downloadFile(String url, {required String filename}) async {
     bool permissionStatus;
     final deviceInfo = await DeviceInfoPlugin().androidInfo;
 
-    // Android versiyon kontrolü
     if (deviceInfo.version.sdkInt > 32) {
       permissionStatus =
           await Permission.manageExternalStorage.request().isGranted;
@@ -31,18 +29,11 @@ Future<void> downloadFile(String url, {required String filename}) async {
 
     final appDocDir = await getApplicationCacheDirectory();
 
-    // // "PatikApp" klasörünü oluştur
-    // final patikAppDir = Directory('${appDocDir.path}/PatikApp');
-    // if (!await patikAppDir.exists()) {
-    //   await patikAppDir.create(recursive: true);
-    // }
-
     final file = File('${appDocDir.path}/$filename.zip');
 
-    // Dosya zaten var mı kontrol et
     if (await file.exists()) {
       print('File already exists: ${file.path}');
-      return; // Dosya zaten varsa işlemi sonlandır
+      return;
     }
 
     final Map<String, String> body = {
@@ -72,15 +63,11 @@ Future<void> downloadFile(String url, {required String filename}) async {
       await file.writeAsBytes(bytes);
 
       print('File downloaded successfully: ${file.path}');
-      // DbProvider dbProvider = DbProvider();
-      // dbProvider.runProcess("tr-TR");
     } else {
       print('Request failed with status: ${response.statusCode}');
-      // Handle error response here
     }
   } catch (e) {
     print('Error during file download: $e');
-    // Handle network or other errors here
   } finally {
     httpClient.close();
   }

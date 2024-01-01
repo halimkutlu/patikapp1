@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:leblebiapp/api/static_variables.dart';
 import 'package:leblebiapp/locale/ChangeLanguage.dart';
 
 class Dashboard extends StatefulWidget {
@@ -17,6 +18,15 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 208.0),
+            child: Center(
+              child: Text("Hoşgeldin " +
+                  StaticVariables.Name +
+                  " " +
+                  StaticVariables.Surname),
+            ),
+          ),
           ElevatedButton(
               onPressed: () {
                 if (a) {

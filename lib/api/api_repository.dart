@@ -10,6 +10,8 @@ import 'package:leblebiapp/models/http_response.model.dart';
 import 'package:leblebiapp/models/user.model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/user.dart';
+
 class APIRepository {
   var dio = Dio();
   final String _baseUrl = BASE_URL;
@@ -93,17 +95,19 @@ class APIRepository {
       if (response.statusCode != 200) {
         result.message =
             response.statusMessage ?? response.statusMessage ?? "Giris Hatasi";
-        return UserResult(
-          message: result.message,
-          data: result.data,
-          success: false,
-        );
+
+        return result;
       } else {
-        result.data = userData.fromJson(response.data["data"]);
+        result.data = User.fromJson(response.data);
         if (result.data != null) {
           ReloadApiBase(result.data!.token!);
           // String userString = json.encode(response);
           // print(userString);
+          StaticVariables.Name = result.data!.firstName!;
+          StaticVariables.Surname = result.data!.lastName!;
+          StaticVariables.Roles = result.data!.roles!;
+          StaticVariables.UserName = result.data!.username!;
+
           saveToken(userName!, password!, result.data!.token!);
           if (rememberMe != false) {
             rememberMeOption();
@@ -359,10 +363,10 @@ class APIRepository {
 //Beni hatırla butonuna basıldığı takdirde calısan alan,
 //Kullanıcının bilgilerini localstorage üzerine kayıt edilir ve bir dahaki girişinde direkt olarak local storage üzerinden alınır.
   void rememberMeOption() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("Token", StaticVariables.token);
-    await prefs.setString("cryptedUserName", StaticVariables.cryptedUserName);
-    await prefs.setString("cryptedPassword", StaticVariables.cryptedPassword);
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.setString("Token", StaticVariables.token);
+    // await prefs.setString("cryptedUserName", StaticVariables.cryptedUserName);
+    // await prefs.setString("cryptedPassword", StaticVariables.cryptedPassword);
   }
 
 //Kullanıcı giriş yaptıktan sonra gelen tokenı local storage üzerinde kayıt edilmesini sağlayan alan

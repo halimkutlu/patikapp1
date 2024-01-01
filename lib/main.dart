@@ -1,14 +1,11 @@
-import 'dart:io';
-import 'dart:typed_data';
+// ignore_for_file: unused_local_variable
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:leblebiapp/assets/mainColors.dart';
 import 'package:leblebiapp/locale/Messages.dart';
 import 'package:leblebiapp/pages/splashScreen.dart';
 import 'package:leblebiapp/providers/dbprovider.dart';
-import 'package:leblebiapp/providers/download_file.dart';
 import 'package:leblebiapp/providers/introductionPageProvider.dart';
 import 'package:leblebiapp/providers/loginProvider.dart';
 import 'package:leblebiapp/providers/registerProvider.dart';
@@ -16,8 +13,6 @@ import 'package:leblebiapp/providers/splashScreenProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sizer/sizer.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart'; // Bu import'ı ekleyin
 
 //telefona otomatik klasör oluşturucak
 //tr_TR yoksa uyarı çıkıcak, indirme ile zip gelecek
@@ -48,10 +43,16 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-     downloadFile("https://lingobetik.com.tr/Downloads/GetLngFileStream",
-         filename: 'tr-TR');
-
+    // downloadFile("https://lingobetik.com.tr/Downloads/GetLngFileStream",
+    //     filename: 'tr-TR');
+    // runTheProcedures();
     super.initState();
+  }
+
+  runTheProcedures() async {
+    var dbProvider = DbProvider();
+    await dbProvider.openDbConnection("tr-TR");
+    await dbProvider.getWordList();
   }
 
   @override
