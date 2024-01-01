@@ -48,10 +48,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    // downloadFile("https://lingobetik.com.tr/Downloads/GetLngFileStream",
-    //     filename: 'test');
-    DbProvider dbProvider = DbProvider();
-    dbProvider.runProcess();
+     downloadFile("https://lingobetik.com.tr/Downloads/GetLngFileStream",
+         filename: 'tr-TR');
+
     super.initState();
   }
 

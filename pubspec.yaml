@@ -41,9 +41,8 @@ dependencies:
   sizer: ^2.0.15
   dio: ^5.4.0
   art_sweetalert: ^0.0.5
-  # sqflite: ^2.3.0
+  sqflite: ^2.3.0
   path_provider: ^2.1.1
-  sqflite_sqlcipher: ^2.2.1
   http: ^1.1.2
   archive: ^3.4.9
   permission_handler: ^11.1.0

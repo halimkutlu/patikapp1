@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_function_literals_in_foreach_calls
 
 import 'dart:async';
 import 'dart:io';
@@ -10,83 +10,92 @@ import 'package:leblebiapp/providers/download_file.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:sqflite_sqlcipher/sqflite.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DbProvider extends ChangeNotifier {
-  initData(BuildContext context) async {
-    Future<void> _initDatabase() async {
-      var dbDir = await getDatabasesPath();
-      var dbPath = join(dbDir, "app.db");
+  runProcess(String filename) async {
+    // ZIP dosyasının yolu
+    bool permissionStatus;
+    final deviceInfo = await DeviceInfoPlugin().androidInfo;
 
-// Delete any existing database:
-      await deleteDatabase(dbPath);
+    // Buna bakarsın kutlu benim emulator 30
+    if (deviceInfo.version.sdkInt > 32) {
+      //permissionStatus = await Permission.photos.request().isGranted;
+      permissionStatus =
+          await Permission.manageExternalStorage.request().isGranted;
+    } else {
+      //permissionStatus = await Permission.storage.request().isGranted;
+      permissionStatus =
+          await Permission.manageExternalStorage.request().isGranted;
+    }
 
-// Create the writable database file from the bundled demo database file:
-      ByteData data = await rootBundle.load("lib/db/tr-TR.db");
-      List<int> bytes =
-          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-      await File(dbPath).writeAsBytes(bytes);
-      var db = await openDatabase(
-        dbPath,
-        onOpen: (Database db) async {
-          // Veritabanı açıldığında yapılacak işlemler
-          print('Database opened');
-        },
-      );
-      print(db);
+    //Seçilen Dosya kontrol edilir.
+    final appDocDir = await getApplicationCacheDirectory();
+
+    // // "PatikApp" klasörü varmı diye bakılır
+    // final patikAppDir = Directory('${appDocDir.path}/PatikApp');
+    // if (!await patikAppDir.exists()) {
+    //   //Eğer dosya yoksa indirme işlemi yapılması gerekiyor
+    //   return;
+    // }
+
+    final file = File('${appDocDir.path}/$filename.zip');
+
+    // Dosya zaten var mı kontrol et
+    if (await file.exists()) {
+      //DOSYA VARSA OKUMA İŞLEMLERİ YAPILIR
+      //ÖNCESİNDE CACHE DOSYASINDAN AKTARIM YAPILMASI GEREKİYOR.
+      try {
+        List<int> bytes = file.readAsBytesSync();
+        Archive archive = ZipDecoder().decodeBytes(bytes);
+
+        Directory dir = await getApplicationDocumentsDirectory();
+        // final patikAppDir = Directory('${dir.path}/PatikApp').path;
+
+        // ZIP dosyasındaki dosyaları çıkart
+        for (ArchiveFile file in archive) {
+          File tempFile = File('${dir.path}/${file.name}');
+
+          tempFile
+            ..createSync(recursive: true)
+            ..writeAsBytesSync(file.content);
+        }
+
+        DbProvider dbProvider = DbProvider();
+        dbProvider.readDb("tr-TR");
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      //TO DO DOSYA YOKSA İNDİRME İŞLEMİ YAPILIR
     }
   }
 
-  runProcess() async {
-    // ZIP dosyasının yolu
-    bool permissionStatus;
-    final deviceInfo =await DeviceInfoPlugin().androidInfo;
+  Future<void> readDb(String filename) async {
+    Directory dir = await getApplicationDocumentsDirectory();
+    final patikAppDir = Directory('${dir.path}/$filename').path;
+    final dbPath = File('${patikAppDir}/$filename.db').path;
 
+    //SQLite veritabanını aç
+    Database database = await openDatabase(dbPath);
 
-    // Buna bakarsın kutlu benim emulator 30
-    if(deviceInfo.version.sdkInt>32){
-      //permissionStatus = await Permission.photos.request().isGranted;
-      permissionStatus = await Permission.manageExternalStorage.request().isGranted;
-    }else{
-      //permissionStatus = await Permission.storage.request().isGranted;
-      permissionStatus = await Permission.manageExternalStorage.request().isGranted;
-    }
+    // Kullanıcı tablolarını al
+    var tableNames = (await database.query('sqlite_master',
+            where: 'type = ? AND name NOT LIKE ?',
+            whereArgs: ['table', 'sqlite_%']))
+        .map((row) => row['name'] as String)
+        .where((tableName) =>
+            tableName !=
+            'android_metadata') // android_metadata tablosunu hariç tut
+        .toList(growable: false);
 
-    String dbPath = '/data/user/0/com.example.patikapp1/cache/tr-TR/tr-TR.db';
-    bool lngFiles = await File(dbPath).exists();
-    if (!lngFiles) {
-      var direct = File('/storage/emulated/0/Download/123456789_tr-TR.zip');
-
-      // ZIP dosyasını çıkaran fonksiyon
-      List<int> bytes = direct.readAsBytesSync();
-      Archive archive = ZipDecoder().decodeBytes(bytes);
-
-      //---------------------- Kutlu burası cache dizinini dönüyor, cache olmamalı bence--------------------------------
-      // Çıkartılan dosyaları depolamak için geçici bir dizin oluştur
-      Directory tempDir = await getTemporaryDirectory();
-      String tempPath = tempDir.path;
-
-      // ZIP dosyasındaki dosyaları çıkart
-      for (ArchiveFile file in archive) {
-        String fileName = '$tempPath/${file.name}';
-        File(fileName)
-          ..createSync(recursive: true)
-          ..writeAsBytesSync(file.content);
-      }
-    }
-    // SQLite veritabanı dosyasının yolu
-
-    // SQLite veritabanını aç
-    Database database = await openDatabase(
-      dbPath,
-      password: '123456789', // SQLite veritabanının şifresi
-      version: 3
-    );
+    // Tablo isimlerini yazdır
+    tableNames.forEach((tableName) {
+      debugPrint(tableName);
+    });
 
     // SQLite sorgularını yapabilirsiniz
-    List<Map<String, dynamic>> result =
-        await database.rawQuery('SELECT * FROM Information');
-    print(result);
+    await database.rawQuery('SELECT * FROM Information');
 
     // Veritabanını kapat
     await database.close();

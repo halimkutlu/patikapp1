@@ -48,7 +48,7 @@ class LoginProvider extends ChangeNotifier {
           await apirepository.post(controller: controller, data: null);
       if (apiresult.success!) {
         final dbprovider = Provider.of<DbProvider>(context);
-        dbprovider.initData(context);
+
         print("başarılı");
       } else {
         print("hata");
