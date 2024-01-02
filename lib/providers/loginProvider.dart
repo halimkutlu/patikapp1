@@ -1,17 +1,20 @@
-// ignore_for_file: prefer_final_fields, use_build_context_synchronously
+// ignore_for_file: prefer_final_fields, use_build_context_synchronously, prefer_const_constructors, prefer_interpolation_to_compose_strings
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leblebiapp/api/api_repository.dart';
+import 'package:leblebiapp/api/api_urls.dart';
 import 'package:leblebiapp/api/static_variables.dart';
 import 'package:leblebiapp/locale/ChangeLanguage.dart';
+import 'package:leblebiapp/models/http_response.model.dart';
 import 'package:leblebiapp/models/user.model.dart';
 import 'package:leblebiapp/pages/dashboard.dart';
 import 'package:leblebiapp/pages/forgotPassword.dart';
 import 'package:leblebiapp/pages/login.dart';
 import 'package:leblebiapp/pages/register.dart';
 import 'package:leblebiapp/pages/select_language.dart';
+import 'package:leblebiapp/pages/select_learn_language.dart';
 import 'package:leblebiapp/widgets/customAlertDialog.dart';
 import 'package:leblebiapp/widgets/customAlertDialogOnlyOk.dart';
 
@@ -34,6 +37,9 @@ class LoginProvider extends ChangeNotifier {
   //LOADİNG
   bool? _loading = false;
   bool get loading => _loading!;
+
+  List<dynamic>? _learnLanguage = [];
+  List<dynamic> get learnLanguage => _learnLanguage!;
 
   void gotoRegisterPage(BuildContext context) async {
     Navigator.of(context)
@@ -94,9 +100,27 @@ class LoginProvider extends ChangeNotifier {
     return locale;
   }
 
+  getLearnLanguage(BuildContext context) async {
+    _loading = true;
+    _learnLanguage = locale;
+    _loading = false;
+    // notifyListeners();
+
+    // httpSonucModel lngList =
+    //     await apirepository.get(controller: learnLanguageUrl);
+    // if (lngList.success!) {
+    //   //todo : apiden diller gelecek
+    // } else {
+
+    //   CustomAlertDialogOnlyConfirm(context, () {
+    //     Navigator.pop(context);
+    //   }, "error".tr, "errorAccured".tr, ArtSweetAlertType.info, "ok".tr);
+    // }
+  }
+
   setUseLanguage(language, BuildContext context) {
     CustomAlertDialog(context, () {
-      changeLanguage(language['locale']);
+      changeLanguage(language['locale'], context);
     },
         "areYouSure".tr,
         "applicationLanguage".tr +
@@ -109,8 +133,13 @@ class LoginProvider extends ChangeNotifier {
         "no".tr);
   }
 
-  changeLanguage(Locale locale) {
+  changeLanguage(Locale locale, BuildContext context) {
     updateLanguage(locale);
-    notifyListeners();
+    Navigator.pop(context);
+    CustomAlertDialogOnlyConfirm(context, () {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => SelectLearnLanguage()));
+      notifyListeners();
+    }, "success".tr, "langSuccess".tr, ArtSweetAlertType.success, "ok".tr);
   }
 }

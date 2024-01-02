@@ -17,7 +17,7 @@ updateLanguage(Locale locale) async {
   prefs.setString("language_code", locale.languageCode);
   prefs.setString("countryCode", locale.countryCode!);
   // Sayfayı yeniden oluşturarak getLanguage fonksiyonunu tekrar çağır
-  Get.back();
+  // Get.back();
 }
 
 getLanguage() async {

@@ -43,7 +43,11 @@ class LocaleString extends Translations {
           'yes': 'Evet',
           'no': 'Hayır',
           'applicationLanguage': 'Uygulama dili',
-          'applicationLanguage2': 'olacaktır.'
+          'applicationLanguage2': 'olacaktır.',
+          'error': 'Hata',
+          'errorAccured': 'Hata oluştu',
+          'langSuccess': 'Dil başarı ile ayarlandı.',
+          'success': 'Başarılı',
         },
         "de_DE": {
           "hello": "HALLO",
@@ -85,7 +89,11 @@ class LocaleString extends Translations {
           'yes': 'Ja',
           'no': 'Nein',
           'applicationLanguage': 'Alamnca Uygulama dili',
-          'applicationLanguage2': 'Almanca olacaktır.'
+          'applicationLanguage2': 'Almanca olacaktır.',
+          'errorAccured': 'Alamanca Hata oluştu',
+          'error': 'Hata almanca',
+          'langSuccess': 'Almanca Dil başarı ile ayarlandı.',
+          'success': 'Almanca Başarılı',
         }
       };
 }
