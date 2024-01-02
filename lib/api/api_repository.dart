@@ -47,8 +47,7 @@ class APIRepository {
         String token = tokenValue;
         if (token != "") {
           print("Token:$token");
-          options.headers["Authorization"] =
-              "Bearer $token"; //Sending token with every request accept login
+          options.headers["Authorization"] = token; //Sending token with every request accept login
           options.followRedirects = false;
           return requestInterceptorHandler.next(options);
         } else {
@@ -162,7 +161,7 @@ class APIRepository {
       @required Map<String, dynamic>? queryParameters,
       bool redirectLogin = false}) async {
     try {
-      ReloadApiBase(StaticVariables.token);
+      //ReloadApiBase(StaticVariables.token);
       final response =
           await dio.get(controller!, queryParameters: queryParameters);
       if (response != null) {
@@ -235,7 +234,7 @@ class APIRepository {
       @required dynamic data,
       bool redirectLogin = false}) async {
     try {
-      ReloadApiBase(StaticVariables.token);
+      //ReloadApiBase(StaticVariables.token);
       final response = await dio.post(controller!, data: data);
       httpSonucModel result = httpSonucModel.fromJsonData(response.data);
 
@@ -304,14 +303,14 @@ class APIRepository {
       message: "Başarılı",
     );
     try {
-      ReloadApiBase(StaticVariables.token);
+      //ReloadApiBase(StaticVariables.token);
       final response =
           await dio.get(controller!, queryParameters: queryParameters);
       if (response != null) {
         return httpSonucModel(
-          data: response,
-          success: true,
-          message: "Başarılı",
+          data: response.data['Data'],
+          success: response.data['Success'],
+          message: response.data['Message'],
         );
       }
       return httpSonucModel(

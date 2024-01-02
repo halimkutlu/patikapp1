@@ -7,6 +7,8 @@ import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../models/language.model.dart';
+
 class SelectLearnLanguage extends StatefulWidget {
   const SelectLearnLanguage({super.key});
 
@@ -25,7 +27,9 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
   @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(context);
-    loginProvider.getLearnLanguage(context);
+    if (Languages.LngList.isEmpty)
+      loginProvider.getLearnLanguage(context);
+
     return Scaffold(
       body: loginProvider.loading
           ? Loading()
@@ -80,9 +84,9 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: loginProvider.learnLanguage.length,
+                      itemCount: Languages.LngList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        var language = loginProvider.learnLanguage[index];
+                        var language = Languages.LngList[index];
                         return InkWell(
                           onTap: () {},
                           child: Container(
@@ -101,7 +105,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  language['name'],
+                                  language.Name!,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Color(0xFF0F1011),

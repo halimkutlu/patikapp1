@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_final_fields, use_build_context_synchronously, prefer_const_constructors, prefer_interpolation_to_compose_strings
 
+import 'dart:convert';
+
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +10,7 @@ import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/http_response.model.dart';
+import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/user.model.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/forgotPassword.dart';
@@ -102,20 +105,20 @@ class LoginProvider extends ChangeNotifier {
 
   getLearnLanguage(BuildContext context) async {
     _loading = true;
-    _learnLanguage = locale;
+    //_learnLanguage = locale;
     _loading = false;
-    // notifyListeners();
+    //notifyListeners();
 
-    // httpSonucModel lngList =
-    //     await apirepository.get(controller: learnLanguageUrl);
-    // if (lngList.success!) {
-    //   //todo : apiden diller gelecek
-    // } else {
-
-    //   CustomAlertDialogOnlyConfirm(context, () {
-    //     Navigator.pop(context);
-    //   }, "error".tr, "errorAccured".tr, ArtSweetAlertType.info, "ok".tr);
-    // }
+    httpSonucModel lngList =
+        await apirepository.get(controller: learnLanguageUrl);
+    if (lngList.success!) {
+      Languages.fromJson(lngList.data);
+      notifyListeners();
+    } else {
+      CustomAlertDialogOnlyConfirm(context, () {
+        Navigator.pop(context);
+      }, "error".tr, "errorAccured".tr, ArtSweetAlertType.info, "ok".tr);
+    }
   }
 
   setUseLanguage(language, BuildContext context) {

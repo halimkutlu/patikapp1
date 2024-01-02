@@ -7,10 +7,13 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../api/api_urls.dart';
+import '../models/language.model.dart';
 
-Future<void> downloadFile(String url, {required String filename}) async {
+Future<void> downloadFile(String endpoint, {required int lcid}) async {
   final httpClient = http.Client();
-
+  String url = "$BASE_URL/api/Downloads/$endpoint";
+  String filename = Languages.GetCodeFromLCID(lcid);
   try {
     bool permissionStatus;
     final deviceInfo = await DeviceInfoPlugin().androidInfo;
@@ -39,7 +42,7 @@ Future<void> downloadFile(String url, {required String filename}) async {
     final Map<String, String> body = {
       "lcid": "0",
       "code": filename,
-      "phoneID": "1293812938"
+      "phoneID": deviceInfo.id
     };
 
     final request = http.Request('POST', Uri.parse(url));

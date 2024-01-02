@@ -1,4 +1,4 @@
-const BASE_URL = "https://lingobetik.com.tr";
+const BASE_URL = "https://192.168.1.70:7178/api";
 //----
 const loginUrl = "/Users/Authenticate";
-const learnLanguageUrl = "/Downloads/GetLngs";
+const learnLanguageUrl = "/Parameters/GetLngList";

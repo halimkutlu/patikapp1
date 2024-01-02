@@ -13,13 +13,14 @@ class httpSonucModel {
   });
 
   httpSonucModel.fromJsonData(Map<String, dynamic> data)
-      : data = data['data'],
-        success = data['success'];
+      : data = data['Data'],
+        success = data['Success'], message = data['Message'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['data'] = data;
-    data['success'] = success;
+    data['Data'] = data;
+    data['Success'] = success;
+    data['Message'] = message;
     return data;
   }
 }
