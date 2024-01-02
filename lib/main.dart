@@ -2,15 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:leblebiapp/assets/mainColors.dart';
-import 'package:leblebiapp/locale/ChangeLanguage.dart';
-import 'package:leblebiapp/locale/Messages.dart';
-import 'package:leblebiapp/pages/splashScreen.dart';
-import 'package:leblebiapp/providers/dbprovider.dart';
-import 'package:leblebiapp/providers/introductionPageProvider.dart';
-import 'package:leblebiapp/providers/loginProvider.dart';
-import 'package:leblebiapp/providers/registerProvider.dart';
-import 'package:leblebiapp/providers/splashScreenProvider.dart';
+import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/locale/ChangeLanguage.dart';
+import 'package:patikmobile/locale/Messages.dart';
+import 'package:patikmobile/pages/splashScreen.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
+import 'package:patikmobile/providers/introductionPageProvider.dart';
+import 'package:patikmobile/providers/loginProvider.dart';
+import 'package:patikmobile/providers/registerProvider.dart';
+import 'package:patikmobile/providers/splashScreenProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';

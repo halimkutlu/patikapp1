@@ -3,20 +3,20 @@
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:leblebiapp/api/api_repository.dart';
-import 'package:leblebiapp/api/api_urls.dart';
-import 'package:leblebiapp/api/static_variables.dart';
-import 'package:leblebiapp/locale/ChangeLanguage.dart';
-import 'package:leblebiapp/models/http_response.model.dart';
-import 'package:leblebiapp/models/user.model.dart';
-import 'package:leblebiapp/pages/dashboard.dart';
-import 'package:leblebiapp/pages/forgotPassword.dart';
-import 'package:leblebiapp/pages/login.dart';
-import 'package:leblebiapp/pages/register.dart';
-import 'package:leblebiapp/pages/select_language.dart';
-import 'package:leblebiapp/pages/select_learn_language.dart';
-import 'package:leblebiapp/widgets/customAlertDialog.dart';
-import 'package:leblebiapp/widgets/customAlertDialogOnlyOk.dart';
+import 'package:patikmobile/api/api_repository.dart';
+import 'package:patikmobile/api/api_urls.dart';
+import 'package:patikmobile/api/static_variables.dart';
+import 'package:patikmobile/locale/ChangeLanguage.dart';
+import 'package:patikmobile/models/http_response.model.dart';
+import 'package:patikmobile/models/user.model.dart';
+import 'package:patikmobile/pages/dashboard.dart';
+import 'package:patikmobile/pages/forgotPassword.dart';
+import 'package:patikmobile/pages/login.dart';
+import 'package:patikmobile/pages/register.dart';
+import 'package:patikmobile/pages/select_language.dart';
+import 'package:patikmobile/pages/select_learn_language.dart';
+import 'package:patikmobile/widgets/customAlertDialog.dart';
+import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 
 class LoginProvider extends ChangeNotifier {
   final apirepository = APIRepository();

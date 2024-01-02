@@ -1,6 +1,6 @@
 // ignore_for_file: camel_case_types
 
-import 'package:leblebiapp/models/user.dart';
+import 'package:patikmobile/models/user.dart';
 
 class userData {
   String? token;

@@ -6,10 +6,10 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:leblebiapp/api/api_urls.dart';
-import 'package:leblebiapp/api/static_variables.dart';
-import 'package:leblebiapp/models/http_response.model.dart';
-import 'package:leblebiapp/models/user.model.dart';
+import 'package:patikmobile/api/api_urls.dart';
+import 'package:patikmobile/api/static_variables.dart';
+import 'package:patikmobile/models/http_response.model.dart';
+import 'package:patikmobile/models/user.model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user.dart';

@@ -3,10 +3,10 @@
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:leblebiapp/api/api_repository.dart';
-import 'package:leblebiapp/pages/login.dart';
-import 'package:leblebiapp/pages/mailResponse.dart';
-import 'package:leblebiapp/widgets/customAlertDialogOnlyOk.dart';
+import 'package:patikmobile/api/api_repository.dart';
+import 'package:patikmobile/pages/login.dart';
+import 'package:patikmobile/pages/mailResponse.dart';
+import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 
 class RegisterProvider extends ChangeNotifier {
   final apirepository = APIRepository();

@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:leblebiapp/providers/loginProvider.dart';
-import 'package:leblebiapp/widgets/loading_bar.dart';
+import 'package:patikmobile/providers/loginProvider.dart';
+import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 

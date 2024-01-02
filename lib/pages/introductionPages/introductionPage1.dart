@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:leblebiapp/assets/mainColors.dart';
-import 'package:leblebiapp/providers/introductionPageProvider.dart';
+import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 

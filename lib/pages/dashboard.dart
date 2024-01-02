@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:leblebiapp/api/static_variables.dart';
-import 'package:leblebiapp/locale/ChangeLanguage.dart';
+import 'package:patikmobile/api/static_variables.dart';
+import 'package:patikmobile/locale/ChangeLanguage.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});

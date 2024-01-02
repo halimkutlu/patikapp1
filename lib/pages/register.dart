@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:leblebiapp/assets/mainColors.dart';
-import 'package:leblebiapp/providers/registerProvider.dart';
-import 'package:leblebiapp/widgets/custom_textfield.dart';
-import 'package:leblebiapp/widgets/icon_button.dart';
+import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/providers/registerProvider.dart';
+import 'package:patikmobile/widgets/custom_textfield.dart';
+import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 

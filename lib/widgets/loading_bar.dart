@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leblebiapp/assets/mainColors.dart';
+import 'package:patikmobile/assets/mainColors.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:sizer/sizer.dart';
 

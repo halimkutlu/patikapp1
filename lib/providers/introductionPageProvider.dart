@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:leblebiapp/pages/login.dart';
+import 'package:patikmobile/pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class IntroductionPageProvider extends ChangeNotifier {

@@ -3,8 +3,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:leblebiapp/pages/login.dart';
-import 'package:leblebiapp/providers/splashScreenProvider.dart';
+import 'package:patikmobile/pages/login.dart';
+import 'package:patikmobile/providers/splashScreenProvider.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
