@@ -4,11 +4,8 @@ import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leblebiapp/api/api_repository.dart';
-import 'package:leblebiapp/pages/forgotPassword.dart';
 import 'package:leblebiapp/pages/login.dart';
 import 'package:leblebiapp/pages/mailResponse.dart';
-import 'package:leblebiapp/pages/register.dart';
-import 'package:leblebiapp/widgets/customAlertDialog.dart';
 import 'package:leblebiapp/widgets/customAlertDialogOnlyOk.dart';
 
 class RegisterProvider extends ChangeNotifier {

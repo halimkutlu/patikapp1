@@ -7,4 +7,5 @@ class StaticVariables {
   static List<int> Roles = [];
   static String LangCode = "";
   static String LangName = "";
+  static bool FirstTimeLogin = true;
 }

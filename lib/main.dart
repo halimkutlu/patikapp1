@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leblebiapp/assets/mainColors.dart';
+import 'package:leblebiapp/locale/ChangeLanguage.dart';
 import 'package:leblebiapp/locale/Messages.dart';
 import 'package:leblebiapp/pages/splashScreen.dart';
 import 'package:leblebiapp/providers/dbprovider.dart';
@@ -12,6 +13,7 @@ import 'package:leblebiapp/providers/registerProvider.dart';
 import 'package:leblebiapp/providers/splashScreenProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 //telefona otomatik klasör oluşturucak
@@ -41,12 +43,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Locale language = Locale('tr', 'TR');
   @override
   void initState() {
     // downloadFile("https://lingobetik.com.tr/Downloads/GetLngFileStream",
     //     filename: 'tr-TR');
     // runTheProcedures();
+    getLang();
     super.initState();
+  }
+
+  getLang() async {
+    language = await getLanguage();
   }
 
   runTheProcedures() async {
@@ -61,7 +69,7 @@ class _MyAppState extends State<MyApp> {
       return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           translations: LocaleString(),
-          locale: Locale('de', 'DE'),
+          locale: Get.locale,
           title: 'Flutter Demo',
           theme: ThemeData(
             scaffoldBackgroundColor: MainColors.backgroundColor,

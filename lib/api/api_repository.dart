@@ -1,9 +1,11 @@
 // ignore_for_file: non_constant_identifier_names, unused_local_variable, avoid_print, depend_on_referenced_packages
 
+import 'dart:ffi';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:leblebiapp/api/api_urls.dart';
 import 'package:leblebiapp/api/static_variables.dart';
 import 'package:leblebiapp/models/http_response.model.dart';
@@ -98,25 +100,34 @@ class APIRepository {
 
         return result;
       } else {
-        result.data = User.fromJson(response.data);
-        if (result.data != null) {
-          ReloadApiBase(result.data!.token!);
-          // String userString = json.encode(response);
-          // print(userString);
-          StaticVariables.Name = result.data!.firstName!;
-          StaticVariables.Surname = result.data!.lastName!;
-          StaticVariables.Roles = result.data!.roles!;
-          StaticVariables.UserName = result.data!.username!;
+        if (response.data!['Token'] != null) {
+          result.data = User.fromJson(response.data);
+          if (result.data != null) {
+            ReloadApiBase(result.data!.token!);
+            // String userString = json.encode(response);
+            // print(userString);
 
-          saveToken(userName!, password!, result.data!.token!);
-          if (rememberMe != false) {
-            rememberMeOption();
+            getFirstTimeLogin();
+
+            StaticVariables.Name = result.data!.firstName!;
+            StaticVariables.Surname = result.data!.lastName!;
+            StaticVariables.Roles = result.data!.roles!;
+            StaticVariables.UserName = result.data!.username!;
+
+            saveToken(userName!, password!, result.data!.token!);
+            if (rememberMe != false) {
+              rememberMeOption();
+            }
+            return UserResult(
+              message: result.message,
+              data: result.data,
+              success: result.success,
+            );
           }
+        } else {
           return UserResult(
-            message: result.message,
-            data: result.data,
-            success: result.success,
-          );
+              message: response.data['Message'],
+              success: response.data['Success']);
         }
       }
     } on DioError catch (e) {
@@ -369,19 +380,7 @@ class APIRepository {
     // await prefs.setString("cryptedPassword", StaticVariables.cryptedPassword);
   }
 
-//Kullanıcı giriş yaptıktan sonra gelen tokenı local storage üzerinde kayıt edilmesini sağlayan alan
   void saveToken(String username, String password, String token) {
-    //Uygulama güvenliği için gelen kullanıcı kayıtları hashed edilir.
-
-    // var stringBytesSifre = utf8.encode(password);
-    // var stringBytesKadi = utf8.encode(username);
-    // var gzipBytesSifre = GZipEncoder().encode(stringBytesSifre);
-    // var gzipBytesKadi = GZipEncoder().encode(stringBytesKadi);
-    // var stringEncodedSifre = base64.encode(gzipBytesSifre!);
-    // var stringEncodedKadi = base64.encode(gzipBytesKadi!);
-
-    // StaticVariables.cryptedPassword = stringEncodedSifre;
-    // StaticVariables.cryptedUserName = stringEncodedKadi;
     StaticVariables.token = token;
   }
 
@@ -393,7 +392,20 @@ class APIRepository {
     // debugPrint('encoded: $stringEncoded');
   }
 
-//------------------------- ALTERNATİF KULLANIM-------------------------------------------------------------
+  getFirstTimeLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var firstTimeLogin = prefs.getBool("firstTimeLogin");
+    if (firstTimeLogin == null) {
+      prefs.setBool("firstTimeLogin", true);
+      firstTimeLogin = true;
+    }
+    StaticVariables.FirstTimeLogin = firstTimeLogin;
+    return firstTimeLogin;
+  }
 
-  //Verilen gönderilmesini ve dönüş olarak İstenilen model için dönmesini sağlayan sağlayan servis bağlantısı
+  setFirstTimeLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("firstTimeLogin", false);
+    StaticVariables.FirstTimeLogin = false;
+  }
 }

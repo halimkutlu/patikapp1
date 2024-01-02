@@ -36,7 +36,14 @@ class LocaleString extends Translations {
           'back': 'Geri',
           'forgotMessage':
               'Lütfen daha önce kayıt için kullandığınız e-mail adresinizi girin. Sonrasında otomatik olarak şifre yenileme ekranına yönlendirileceksiniz.',
-          'send': 'Gönder'
+          'send': 'Gönder',
+          'chooseUserLanguage': 'Kullanıcı dilini seç',
+          'chooseLearnLanguage': 'Öğrenmek istediğin dili seç',
+          'areYouSure': 'Emin misiniz?',
+          'yes': 'Evet',
+          'no': 'Hayır',
+          'applicationLanguage': 'Uygulama dili',
+          'applicationLanguage2': 'olacaktır.'
         },
         "de_DE": {
           "hello": "HALLO",
@@ -71,7 +78,14 @@ class LocaleString extends Translations {
           "back": "Zurück",
           'forgotMessage':
               'Almanca Lütfen daha önce kayıt için kullandığınız e-mail adresinizi girin. Sonrasında otomatik olarak şifre yenileme ekranına yönlendirileceksiniz.',
-          'send': ' Almanca Gönder'
+          'send': ' Almanca Gönder',
+          'chooseUserLanguage': 'Kullanıcı dilini seç',
+          'chooseLearnLanguage': 'Öğrenmek istediğin dili seç',
+          'areYouSure': 'Emin misiniz?',
+          'yes': 'Ja',
+          'no': 'Nein',
+          'applicationLanguage': 'Alamnca Uygulama dili',
+          'applicationLanguage2': 'Almanca olacaktır.'
         }
       };
 }

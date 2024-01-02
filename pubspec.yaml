@@ -47,6 +47,7 @@ dependencies:
   archive: ^3.4.9
   permission_handler: ^11.1.0
   device_info_plus: ^9.1.1
+  loading_indicator: ^3.1.1
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,8 @@ flutter:
      - lib/assets/dots_passive.png
      - lib/assets/intro_image_1.png
      - lib/assets/intro_image_2.png
+     - lib/assets/user_language.png
+     - lib/assets/learn_language.png
      #- lib/db/tr-TR.db
 
 

@@ -6,6 +6,7 @@ class User {
   late List<int>? roles;
   late String? token;
   late String? message;
+  late bool? Success;
 
   User(
       {this.firstName,
@@ -14,7 +15,8 @@ class User {
       this.roles,
       this.token,
       this.username,
-      this.message});
+      this.message,
+      this.Success});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['Id'];
@@ -24,5 +26,6 @@ class User {
     roles = List<int>.from(json['Roles']);
     token = json['Token'];
     message = json['message'];
+    Success = json['Success'];
   }
 }
