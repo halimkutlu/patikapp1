@@ -7,6 +7,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/information.dart';
+import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,6 +18,10 @@ class DbProvider extends ChangeNotifier {
   Database? database;
 
   runProcess(String filename) async {
+    FileDownloadStatus result = FileDownloadStatus();
+    result.status = false;
+    result.message = "";
+
     bool permissionStatus;
     final deviceInfo = await DeviceInfoPlugin().androidInfo;
 
@@ -47,14 +52,20 @@ class DbProvider extends ChangeNotifier {
             ..writeAsBytesSync(file.content);
         }
       } catch (e) {
+        result.message =
+            "İndirme işlemleri sırasında bir hata oluştu. Lütfen tekrar deneyiniz";
         print(e);
+        return result;
       }
-    } else {
-      //TO DO DOSYA YOKSA İNDİRME İŞLEMİ YAPILIR
+
+      result.status = true;
+      result.message = "İndirme işlemi başarılı";
+      return result;
     }
   }
 
-  Future<void> openDbConnection(String filename) async {
+  Future<FileDownloadStatus> openDbConnection(String filename) async {
+    FileDownloadStatus result = FileDownloadStatus();
     if (filename.isNotEmpty) {
       StaticVariables.LangName = filename;
 
@@ -64,7 +75,11 @@ class DbProvider extends ChangeNotifier {
       }
 
       database = await openDatabase(dbPath);
+      if (database!.isOpen) {
+        result.status = true;
+      }
     }
+    return result;
   }
 
   getDbPath() async {

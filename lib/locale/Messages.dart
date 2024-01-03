@@ -48,6 +48,8 @@ class LocaleString extends Translations {
           'errorAccured': 'Hata oluştu',
           'langSuccess': 'Dil başarı ile ayarlandı.',
           'success': 'Başarılı',
+          'choosenLearnLanguage':
+              'dili için indirme işlemi başlatılacaktır. Bu işlem boyunca lütfen uygulamayı kapatmayınız',
         },
         "de_DE": {
           "hello": "HALLO",
@@ -94,6 +96,8 @@ class LocaleString extends Translations {
           'error': 'Hata almanca',
           'langSuccess': 'Almanca Dil başarı ile ayarlandı.',
           'success': 'Almanca Başarılı',
+          'choosenLearnLanguage':
+              '(Almanca)dili için indirme işlemi başlatılacaktır. Bu işlem boyunca lütfen uygulamayı kapatmayınız',
         }
       };
 }

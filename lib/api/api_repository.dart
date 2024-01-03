@@ -47,7 +47,8 @@ class APIRepository {
         String token = tokenValue;
         if (token != "") {
           print("Token:$token");
-          options.headers["Authorization"] = token; //Sending token with every request accept login
+          options.headers["Authorization"] =
+              token; //Sending token with every request accept login
           options.followRedirects = false;
           return requestInterceptorHandler.next(options);
         } else {
@@ -379,7 +380,9 @@ class APIRepository {
     // await prefs.setString("cryptedPassword", StaticVariables.cryptedPassword);
   }
 
-  void saveToken(String username, String password, String token) {
+  void saveToken(String username, String password, String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("Token", token);
     StaticVariables.token = token;
   }
 

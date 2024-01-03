@@ -18,9 +18,21 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  late LoginProvider loginProvider;
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loginProvider = Provider.of<LoginProvider>(context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override

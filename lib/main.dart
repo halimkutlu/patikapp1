@@ -16,11 +16,9 @@ import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
-//telefona otomatik klasör oluşturucak
-//tr_TR yoksa uyarı çıkıcak, indirme ile zip gelecek
-//seçilen zipi açarak dizine atıcak
-//hangi dil seçilirse db bağlantısı o an kurulacak
-//stream ile dosya indirme
+//indirilen dilin kayıt edilmesi (tekrar uygulama açıldığında o dilden devam edicek)
+//progress indicator
+
 void main() {
   runApp(MultiProvider(providers: providers, child: const MyApp()));
 }

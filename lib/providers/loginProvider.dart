@@ -18,6 +18,8 @@ import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/pages/register.dart';
 import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/pages/select_learn_language.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
+import 'package:patikmobile/providers/download_file.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 
@@ -144,5 +146,52 @@ class LoginProvider extends ChangeNotifier {
           .push(MaterialPageRoute(builder: (context) => SelectLearnLanguage()));
       notifyListeners();
     }, "success".tr, "langSuccess".tr, ArtSweetAlertType.success, "ok".tr);
+  }
+
+  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
+      String code, BuildContext context, String name, int lcid) async {
+    DbProvider dbProvider = DbProvider();
+    FileDownloadStatus processResult = FileDownloadStatus();
+    processResult.status = false;
+
+    if (code.isNotEmpty) {
+      //yükleme ekranı açılır
+      _loading = true;
+      notifyListeners();
+
+      //DOSYA İNDİRME İŞLEMİ YAPILIR.
+      FileDownloadStatus resultDownloadFile =
+          await downloadFile("GetLngFileStream", lcid: lcid);
+
+      if (resultDownloadFile.status) {
+        //DOSYA İNDRİME İŞLEMİ BAŞARILI İSE DOSYAYI CACHEDEN ALARAK TELEFONA ÇIKARTMA İŞLEMİ YAPILIR
+        FileDownloadStatus result = await dbProvider.runProcess(code);
+        if (result.status == false) {
+          _loading = false;
+          notifyListeners();
+          processResult.status = false;
+          return processResult;
+        } else {
+          //EĞER DOSYA ÇIKARTMA İŞLEMİ BAŞARILI İSE
+          FileDownloadStatus dbresult = await dbProvider.openDbConnection(code);
+          if (dbresult.status) {
+            processResult.status = true;
+          } else {
+            processResult.status = false;
+          }
+          _loading = false;
+          notifyListeners();
+          return processResult;
+        }
+      } else {
+        processResult.status = false;
+        processResult.message = resultDownloadFile.message;
+        _loading = false;
+        notifyListeners();
+        return processResult;
+      }
+    }
+    notifyListeners();
+    return processResult;
   }
 }

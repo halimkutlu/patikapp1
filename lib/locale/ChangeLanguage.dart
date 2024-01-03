@@ -27,7 +27,8 @@ getLanguage() async {
   if (lc != null && cc != null && lc.isNotEmpty && cc.isNotEmpty) {
     Get.updateLocale(Locale(lc, cc));
     return Locale(lc, cc);
+  } else {
+    Get.updateLocale(Locale('tr', 'TR'));
+    return Locale('tr', 'TR');
   }
-
-  return Locale('tr', 'TR');
 }

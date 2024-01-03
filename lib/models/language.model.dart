@@ -136,7 +136,12 @@ class Languages {
   ];
 
   Languages.fromJson(List<dynamic> json) {
-    LngList = json.map((element) => Lcid(LCID: element['LCID'], Code: element['Code'], Name: element['Name'])).toList();
+    LngList = json
+        .map((element) => Lcid(
+            LCID: element['LCID'],
+            Code: element['Code'],
+            Name: element['Name']))
+        .toList();
   }
 
   static Lcid GetLngFromCode(String code) {
@@ -154,4 +159,9 @@ class Languages {
   static int GetLCIDFromCode(String code) {
     return LngList.firstWhere((element) => element.Code == code).LCID;
   }
+}
+
+class FileDownloadStatus {
+  String message = "";
+  bool status = false;
 }
