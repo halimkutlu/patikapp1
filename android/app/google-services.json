@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "587524623446",
+    "project_id": "patikmobile",
+    "storage_bucket": "patikmobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587524623446:android:4673d988efc27735a57ff7",
+        "android_client_info": {
+          "package_name": "com.patikmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "587524623446-hraf0471emk36mdbt3nat4stc9fne89e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.patikmobile",
+            "certificate_hash": "a473f001677f514a858ca8cda505595d3dc1ff04"
+          }
+        },
+        {
+          "client_id": "587524623446-7icmcist11ao44espnr09kgpngdoecg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFDNgEQpj6uQg_cIGYzUIBM3p7cEijcog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "587524623446-7icmcist11ao44espnr09kgpngdoecg2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

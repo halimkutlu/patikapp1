@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.patikapp1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.patikmobile">
     <!-- Devices running up to Android 12L -->
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

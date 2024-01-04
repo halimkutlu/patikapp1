@@ -1,5 +1,8 @@
 // ignore_for_file: unused_local_variable
 
+import 'dart:io';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/assets/mainColors.dart';
@@ -19,7 +22,20 @@ import 'package:sizer/sizer.dart';
 //indirilen dilin kayıt edilmesi (tekrar uygulama açıldığında o dilden devam edicek)
 //progress indicator
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isAndroid) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyBFDNgEQpj6uQg_cIGYzUIBM3p7cEijcog',
+        appId: '1:587524623446:android:4673d988efc27735a57ff7',
+        messagingSenderId: '',
+        projectId: 'patikmobile',
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   runApp(MultiProvider(providers: providers, child: const MyApp()));
 }
 
