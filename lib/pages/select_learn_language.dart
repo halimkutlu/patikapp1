@@ -3,6 +3,7 @@
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
@@ -107,34 +108,41 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                   itemBuilder: (BuildContext context, int index) {
                     var language = Languages.LngList[index];
                     return InkWell(
-                      onTap: () {
-                        CustomAlertDialog(context, () async {
-                          Navigator.pop(context);
-                          FileDownloadStatus status = await loginProvider
-                              .startProcessOfDownloadLearnLanguage(
-                                  language.Code,
-                                  context,
-                                  language.Name!,
-                                  language.LCID);
+                      onTap: () async {
+                        var lngCheck = await checkLanguage(language.LCID);
+                        if (lngCheck) {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => Dashboard()));
+                        } else {
+                          CustomAlertDialog(context, () async {
+                            Navigator.pop(context);
+                            FileDownloadStatus status = await loginProvider
+                                .startProcessOfDownloadLearnLanguage(
+                                    language.Code,
+                                    context,
+                                    language.Name!,
+                                    language.LCID);
 
-                          if (status.status) {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => Dashboard()));
-                          } else {
-                            CustomAlertDialogOnlyConfirm(context, () {
-                              Navigator.pop(context);
-                            }, "error".tr, status.message,
-                                ArtSweetAlertType.danger, "ok".tr);
-                          }
-                        },
-                            "areYouSure".tr,
-                            language.Name.toString() +
-                                " " +
-                                "choosenLearnLanguage".tr,
-                            ArtSweetAlertType.question,
-                            "ok".tr,
-                            "no".tr);
+                            if (status.status) {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => Dashboard()));
+                            } else {
+                              CustomAlertDialogOnlyConfirm(context, () {
+                                Navigator.pop(context);
+                              }, "error".tr, status.message,
+                                  ArtSweetAlertType.danger, "ok".tr);
+                            }
+                          },
+                              "areYouSure".tr,
+                              language.Name.toString() +
+                                  " " +
+                                  "choosenLearnLanguage".tr,
+                              ArtSweetAlertType.question,
+                              "ok".tr,
+                              "no".tr);
+                        }
                       },
                       child: Container(
                         width: 30.w,

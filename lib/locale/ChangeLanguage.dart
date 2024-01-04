@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
 import 'dart:ui';
 import 'package:get/get.dart';
+import 'package:patikmobile/models/language.model.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final List locale = [
@@ -31,4 +34,11 @@ getLanguage() async {
     Get.updateLocale(Locale('tr', 'TR'));
     return Locale('tr', 'TR');
   }
+}
+
+checkLanguage(int lcid) async {
+  var language = Languages.GetLngFromLCID(lcid).Code;
+  var path = await DbProvider().getDbPath(lngName: language);
+
+  return await File(path).exists();
 }

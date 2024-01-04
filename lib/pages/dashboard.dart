@@ -34,10 +34,8 @@ class _DashboardState extends State<Dashboard> {
             Padding(
               padding: const EdgeInsets.only(top: 208.0),
               child: Center(
-                child: Text("Hoşgeldin " +
-                    StaticVariables.Name +
-                    " " +
-                    StaticVariables.Surname),
+                child: Text(
+                    "Hoşgeldin ${StaticVariables.Name} ${StaticVariables.Surname}"),
               ),
             ),
             ElevatedButton(

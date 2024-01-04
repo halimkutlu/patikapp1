@@ -82,11 +82,12 @@ class DbProvider extends ChangeNotifier {
     return result;
   }
 
-  getDbPath() async {
+  getDbPath({String lngName = ""}) async {
+    if (lngName.isEmpty) lngName = StaticVariables.LangName;
+
     Directory dir = await getApplicationDocumentsDirectory();
-    final patikAppDir =
-        Directory('${dir.path}/${StaticVariables.LangName}').path;
-    String dbPath = File('$patikAppDir/${StaticVariables.LangName}.db').path;
+    final patikAppDir = Directory('${dir.path}/${lngName}').path;
+    String dbPath = File('$patikAppDir/${lngName}.db').path;
 
     return dbPath;
   }
