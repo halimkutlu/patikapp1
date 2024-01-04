@@ -1,0 +1,7 @@
+Config: debug
+Store: D:\AndroidSdk\debug.keystore
+Alias: AndroidDebugKey
+MD5: DE:02:39:41:D4:BB:D8:27:D1:34:19:2C:8B:70:24:5E
+SHA1: A4:73:F0:01:67:7F:51:4A:85:8C:A8:CD:A5:05:59:5D:3D:C1:FF:04
+SHA-256: 33:EF:90:ED:04:55:67:82:57:F9:20:2B:EB:D9:15:B4:4E:AA:8B:D4:9E:30:50:45:08:24:F7:B4:C8:4A:8C:0E
+Valid until: 11 Aral²k 2052 Ãar■amba
