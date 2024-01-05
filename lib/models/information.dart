@@ -5,7 +5,7 @@ class Information {
   String? code;
   String? version;
   String? directory;
-  String? lngPlanType;
+  int? lngPlanType;
   String? lngHash;
 
   Information({

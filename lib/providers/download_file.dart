@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/api_urls.dart';
@@ -20,16 +21,9 @@ Future<FileDownloadStatus> downloadFile(String endpoint,
   String url = "$BASE_URL/Downloads/$endpoint";
   String filename = Languages.GetCodeFromLCID(lcid);
   try {
-    bool permissionStatus;
-    final deviceInfo = await DeviceInfoPlugin().androidInfo;
-
-    if (deviceInfo.version.sdkInt > 32) {
-      permissionStatus =
-          await Permission.manageExternalStorage.request().isGranted;
-    } else {
-      permissionStatus =
-          await Permission.manageExternalStorage.request().isGranted;
-    }
+    final deviceId = await getPhoneId();
+    bool permissionStatus =
+        await Permission.manageExternalStorage.request().isGranted;
 
     if (!permissionStatus) {
       result.status = false;
@@ -53,7 +47,7 @@ Future<FileDownloadStatus> downloadFile(String endpoint,
     final Map<String, String> body = {
       "lcid": "0",
       "code": filename,
-      "phoneID": deviceInfo.id
+      "phoneID": deviceId
     };
 
     final request = http.Request('POST', Uri.parse(url));

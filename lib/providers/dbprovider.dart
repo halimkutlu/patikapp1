@@ -6,6 +6,7 @@ import 'package:archive/archive.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
+import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/information.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
@@ -13,9 +14,11 @@ import 'package:patikmobile/models/word_statistics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flutter_bcrypt/flutter_bcrypt.dart';
 
 class DbProvider extends ChangeNotifier {
-  Database? database;
+  static Database? database;
+  bool? checkInformation;
 
   runProcess(String filename) async {
     FileDownloadStatus result = FileDownloadStatus();
@@ -23,15 +26,9 @@ class DbProvider extends ChangeNotifier {
     result.message = "";
 
     bool permissionStatus;
-    final deviceInfo = await DeviceInfoPlugin().androidInfo;
+    final phoneId = await getPhoneId();
 
-    if (deviceInfo.version.sdkInt > 32) {
-      permissionStatus =
-          await Permission.manageExternalStorage.request().isGranted;
-    } else {
-      permissionStatus =
-          await Permission.manageExternalStorage.request().isGranted;
-    }
+    await Permission.manageExternalStorage.request().isGranted;
 
     final appDocDir = await getApplicationCacheDirectory();
 
@@ -70,13 +67,19 @@ class DbProvider extends ChangeNotifier {
       StaticVariables.LangName = filename;
 
       String dbPath = await getDbPath();
-      if (database != null && database!.isOpen) {
-        await database!.close();
+      if (database == null || !database!.isOpen) {
+        database = await openDatabase(dbPath);
+        checkInformation = true;
       }
-
-      database = await openDatabase(dbPath);
       if (database!.isOpen) {
-        result.status = true;
+        if (checkInformation == true) {
+          Information infrm = await getInformation();
+          String hash = infrm.lngHash!;
+          String phoneId = await getPhoneId();
+          result.status =
+              await FlutterBcrypt.verify(password: phoneId, hash: hash);
+        } else
+          result.status = true;
       }
     }
     return result;
@@ -116,7 +119,7 @@ class DbProvider extends ChangeNotifier {
     return list;
   }
 
-  Future<List<Information>> getInformationList() async {
+  Future<Information> getInformation() async {
     var res = await database!.query("Information", columns: [
       'LCID',
       'Code',
@@ -127,7 +130,7 @@ class DbProvider extends ChangeNotifier {
     ]);
 
     List<Information> list = res.map((c) => Information.fromMap(c)).toList();
-    return list;
+    return list.first;
   }
 
   Future<List<WordStatistics>> getWordStatisticsList() async {
