@@ -81,7 +81,9 @@ class APIRepository {
   Future<UserResult> login(
       {@required String? userName,
       @required String? password,
-      @required bool? rememberMe}) async {
+      @required bool? rememberMe,
+      String? Uid,
+      String? Name}) async {
     try {
       var result = UserResult(message: "Başarili", success: true);
 
@@ -92,6 +94,8 @@ class APIRepository {
       final response = await dio.post(loginUrl, data: {
         "userName": userName,
         "password": password,
+        "Uid": Uid,
+        "Name": Name
       });
       //Gelen response değerinin durumuna göre kontroller sağlanabilir.
       if (response.statusCode != 200) {

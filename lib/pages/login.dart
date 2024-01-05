@@ -118,7 +118,9 @@ class _LoginState extends State<Login> {
                     name: 'keepWithGoogle'.tr,
                     width: 0.3.w,
                     height: 2.5.h,
-                    onTap: () => {loginProvider.LoginWithGoogle()},
+                    onTap: () {
+                      loginProvider.LoginWithGoogle(context);
+                    },
                   ),
                 ),
                 Center(

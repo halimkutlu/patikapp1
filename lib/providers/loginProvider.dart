@@ -89,6 +89,61 @@ class LoginProvider extends ChangeNotifier {
     }
   }
 
+  void LoginWithGoogle(BuildContext context) async {
+    try {
+      _loading = true;
+      notifyListeners();
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount!.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      final UserCredential authResult =
+          await _auth.signInWithCredential(credential);
+      final User? user = authResult.user;
+
+      if (user == null || user.uid.isEmpty || user.email!.isEmpty) {
+        CustomAlertDialogOnlyConfirm(context, () {
+          Navigator.pop(context);
+        }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
+            "ok".tr);
+
+        return;
+      }
+
+      UserResult apiresult = await apirepository.login(
+          userName: user.email,
+          password: user.uid,
+          rememberMe: false,
+          Uid: user.uid,
+          Name: user.displayName);
+
+      if (apiresult.success!) {
+        if (StaticVariables.FirstTimeLogin) {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => SelectLanguage()));
+        } else {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const Dashboard()));
+        }
+      } else {
+        CustomAlertDialogOnlyConfirm(context, () {
+          Navigator.pop(context);
+        }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
+            "ok".tr);
+      }
+      _loading = false;
+      notifyListeners();
+    } catch (error) {
+      print(error);
+    }
+  }
+
   void forgotPassword(BuildContext context) {
     if (!forgotMailController.text.isEmail) {
       CustomAlertDialogOnlyConfirm(context, () {
@@ -198,29 +253,5 @@ class LoginProvider extends ChangeNotifier {
     }
     notifyListeners();
     return processResult;
-  }
-
-  Future<User?> LoginWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleSignInAccount =
-          await googleSignIn.signIn();
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount!.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-
-      final UserCredential authResult =
-          await _auth.signInWithCredential(credential);
-      final User? user = authResult.user;
-
-      print("Signed in: ${user!.displayName}");
-      return user;
-    } catch (error) {
-      print(error);
-      return null;
-    }
   }
 }
