@@ -10,6 +10,7 @@ import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../models/language.model.dart';
@@ -111,6 +112,10 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                       onTap: () async {
                         var lngCheck = await checkLanguage(language.LCID);
                         if (lngCheck) {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setString(
+                              "CurrentLanguageLCID", language.LCID.toString());
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) => Dashboard()));

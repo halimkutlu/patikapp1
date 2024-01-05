@@ -19,12 +19,14 @@ import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/pages/register.dart';
 import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/pages/select_learn_language.dart';
+import 'package:patikmobile/pages/survey.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/download_file.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginProvider extends ChangeNotifier {
   final apirepository = APIRepository();
@@ -76,7 +78,7 @@ class LoginProvider extends ChangeNotifier {
               .push(MaterialPageRoute(builder: (context) => SelectLanguage()));
         } else {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const Dashboard()));
+              .push(MaterialPageRoute(builder: (context) => const Survey()));
         }
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
@@ -211,6 +213,7 @@ class LoginProvider extends ChangeNotifier {
   Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
       String code, BuildContext context, String name, int lcid) async {
     DbProvider dbProvider = DbProvider();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     FileDownloadStatus processResult = FileDownloadStatus();
     processResult.status = false;
 
@@ -235,6 +238,7 @@ class LoginProvider extends ChangeNotifier {
           //EĞER DOSYA ÇIKARTMA İŞLEMİ BAŞARILI İSE
           FileDownloadStatus dbresult = await dbProvider.openDbConnection(code);
           if (dbresult.status) {
+            prefs.setString("CurrentLanguageLCID", lcid.toString());
             processResult.status = true;
           } else {
             processResult.status = false;

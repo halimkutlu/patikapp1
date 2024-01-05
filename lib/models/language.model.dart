@@ -1,9 +1,21 @@
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Lcid {
   late String Code;
   late String? Name;
   late int LCID;
 
   Lcid({required this.LCID, required this.Code, this.Name});
+
+  factory Lcid.fromJson(Map<String, dynamic> json) {
+    return Lcid(LCID: json['LCID'], Code: json['Code']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'LCID': LCID, 'Code': Code};
+  }
 }
 
 class Languages {
@@ -142,10 +154,42 @@ class Languages {
             Code: element['Code'],
             Name: element['Name']))
         .toList();
+
+    setLanguagesToLocalStorage(LngList);
   }
 
   static Lcid GetLngFromCode(String code) {
     return LngList.firstWhere((element) => element.Code == code);
+  }
+
+  static setLanguagesToLocalStorage(List<Lcid> list) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Liste öğelerini JSON formatına çevir
+    List<String> stringList =
+        list.map((lcid) => jsonEncode(lcid.toJson())).toList();
+
+    prefs.setStringList("languageList", stringList);
+  }
+
+  static getLanguagesFromLocalStorageWithLCID(int lcid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String>? stringList = prefs.getStringList("languageList");
+
+    if (stringList == null) {
+      return [];
+    }
+
+    // JSON formatındaki stringleri Lcid nesnelerine çevir
+    List<Lcid> lcidList =
+        stringList.map((value) => Lcid.fromJson(jsonDecode(value))).toList();
+
+    // LCID'ye göre eşleşen dil kodunu al
+    return lcidList
+        .firstWhere((element) => element.LCID == lcid,
+            orElse: () => Lcid(LCID: 0, Code: ""))
+        .Code;
   }
 
   static Lcid GetLngFromLCID(int lcid) {

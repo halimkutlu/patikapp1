@@ -13,6 +13,7 @@ import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_bcrypt/flutter_bcrypt.dart';
 
@@ -62,6 +63,7 @@ class DbProvider extends ChangeNotifier {
   }
 
   Future<FileDownloadStatus> openDbConnection(String filename) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     FileDownloadStatus result = FileDownloadStatus();
     if (filename.isNotEmpty) {
       StaticVariables.LangName = filename;
@@ -78,6 +80,7 @@ class DbProvider extends ChangeNotifier {
           String phoneId = await getPhoneId();
           result.status =
               await FlutterBcrypt.verify(password: phoneId, hash: hash);
+          if (result.status) prefs.setString("CurrentLanguageCode", filename);
         } else
           result.status = true;
       }
