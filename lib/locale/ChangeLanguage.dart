@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
+import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,14 +45,17 @@ checkLanguage(int lcid) async {
   return await File(path).exists();
 }
 
-getPhoneId() async {
-  var deviceInfo = DeviceInfoPlugin();
-  if (Platform.isIOS) {
-    // import 'dart:io'
-    var iosDeviceInfo = await deviceInfo.iosInfo;
-    return iosDeviceInfo.identifierForVendor; // unique ID on iOS
-  } else if (Platform.isAndroid) {
-    var androidDeviceInfo = await deviceInfo.androidInfo;
-    return androidDeviceInfo.id; // unique ID on Android
+String getPhoneId() {
+  if (StaticVariables.PhoneID.isEmpty) {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      // import 'dart:io'
+      deviceInfo.iosInfo.then(
+          (value) => StaticVariables.PhoneID = value.identifierForVendor!);
+    } else if (Platform.isAndroid) {
+      deviceInfo.androidInfo
+          .then((value) => StaticVariables.PhoneID = value.id);
+    }
   }
+  return StaticVariables.PhoneID;
 }

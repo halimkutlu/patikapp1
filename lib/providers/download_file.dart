@@ -21,7 +21,6 @@ Future<FileDownloadStatus> downloadFile(String endpoint,
   String url = "$BASE_URL/Downloads/$endpoint";
   String filename = Languages.GetCodeFromLCID(lcid);
   try {
-    final deviceId = await getPhoneId();
     bool permissionStatus =
         await Permission.manageExternalStorage.request().isGranted;
 
@@ -44,14 +43,11 @@ Future<FileDownloadStatus> downloadFile(String endpoint,
       return result;
     }
 
-    final Map<String, String> body = {
-      "lcid": "0",
-      "code": filename,
-      "phoneID": deviceId
-    };
+    final Map<String, Object> body = {"lcid": lcid, "code": filename};
 
     final request = http.Request('POST', Uri.parse(url));
     request.headers['Content-Type'] = "application/json";
+    request.headers['PhoneID'] = getPhoneId();
     request.body = jsonEncode(body);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("Token");

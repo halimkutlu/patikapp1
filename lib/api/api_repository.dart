@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
+import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/models/user.model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +27,7 @@ class APIRepository {
 //ise tekrar token alarak işlemlerine devam etmesi sağlanır.
 //RefreshToken
   ReloadApiBase(String tokenValue) async {
-    dio = Dio(BaseOptions(baseUrl: _baseUrl, headers: {
+    dio = Dio(BaseOptions(baseUrl: _baseUrl, followRedirects: true, headers: {
       "Accept": "application/json",
       "content-type": "application/json; charset=utf-8",
       "X-Requested-With": "XMLHttpRequest",
@@ -35,7 +36,6 @@ class APIRepository {
         (HttpClient dioClient) {
       dioClient.badCertificateCallback =
           ((X509Certificate cert, String host, int port) => true);
-
       return dioClient;
     };
     initializeInterceptors(tokenValue);
@@ -44,6 +44,7 @@ class APIRepository {
   initializeInterceptors(String tokenValue) {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, requestInterceptorHandler) {
+        options.headers['PhoneID'] = getPhoneId();
         String token = tokenValue;
         if (token != "") {
           print("Token:$token");

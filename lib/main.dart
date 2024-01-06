@@ -60,6 +60,7 @@ class _MyAppState extends State<MyApp> {
   Locale language = Locale('tr', 'TR');
   @override
   void initState() {
+    getPhoneId();
     // downloadFile("https://lingobetik.com.tr/Downloads/GetLngFileStream",
     //     filename: 'tr-TR');
     // runTheProcedures();

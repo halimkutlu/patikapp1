@@ -27,7 +27,7 @@ class DbProvider extends ChangeNotifier {
     result.message = "";
 
     bool permissionStatus;
-    final phoneId = await getPhoneId();
+    final phoneId = getPhoneId();
 
     await Permission.manageExternalStorage.request().isGranted;
 
@@ -77,7 +77,7 @@ class DbProvider extends ChangeNotifier {
         if (checkInformation == true) {
           Information infrm = await getInformation();
           String hash = infrm.lngHash!;
-          String phoneId = await getPhoneId();
+          String phoneId = getPhoneId();
           result.status =
               await FlutterBcrypt.verify(password: phoneId, hash: hash);
           if (result.status) prefs.setString("CurrentLanguageCode", filename);

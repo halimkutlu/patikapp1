@@ -8,4 +8,5 @@ class StaticVariables {
   static String LangCode = "";
   static String LangName = "";
   static bool FirstTimeLogin = true;
+  static String PhoneID = "";
 }
