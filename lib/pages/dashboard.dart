@@ -10,6 +10,7 @@ import 'package:patikmobile/assets/mainColors.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/login.dart';
+import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/providers/mainProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
@@ -61,6 +62,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final mainProvider = Provider.of<MainProvider>(context);
+    final loginProvider = Provider.of<LoginProvider>(context);
 
     return PopScope(
       canPop: false,
@@ -209,6 +211,15 @@ class _DashboardState extends State<Dashboard> {
                 onTap: () {
                   // Update the state of the app
                   _onItemTapped(2);
+                  // Then close the drawer
+                },
+              ),
+              ListTile(
+                title: Text('logout'.tr),
+                selected: _selectedIndex == 2,
+                onTap: () {
+                  // Update the state of the app
+                  loginProvider.logout(context);
                   // Then close the drawer
                 },
               ),

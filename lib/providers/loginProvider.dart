@@ -58,6 +58,15 @@ class LoginProvider extends ChangeNotifier {
         .push(MaterialPageRoute(builder: (context) => Register()));
   }
 
+  void logout(BuildContext context) async {
+    CustomAlertDialog(context, () {
+      apirepository.removeToken();
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
+    }, "logout".tr, "logoutMessage".tr, ArtSweetAlertType.question, "yes".tr,
+        "no".tr);
+  }
+
   void login(BuildContext context) async {
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       CustomAlertDialogOnlyConfirm(context, () {
@@ -146,15 +155,29 @@ class LoginProvider extends ChangeNotifier {
     }
   }
 
-  void forgotPassword(BuildContext context) {
+  void forgotPassword(BuildContext context) async {
     if (!forgotMailController.text.isEmail) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
       }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
           "ok".tr);
     } else {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
+      _loading = true;
+      notifyListeners();
+      httpSonucModel apiresult = await apirepository.post(
+          controller: forgotPasswordUrl,
+          data: {"Username": forgotMailController.text});
+      if (apiresult.success!) {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
+      } else {
+        CustomAlertDialogOnlyConfirm(context, () {
+          Navigator.pop(context);
+        }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
+            "ok".tr);
+      }
+      _loading = false;
+      notifyListeners();
     }
   }
 

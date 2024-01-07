@@ -50,6 +50,9 @@ class LocaleString extends Translations {
           'success': 'Başarılı',
           'choosenLearnLanguage':
               'dili için indirme işlemi başlatılacaktır. Bu işlem boyunca lütfen uygulamayı kapatmayınız',
+          'logout': 'Uygulamadan Çık',
+          'logoutMessage':
+              'Kullanıcı oturumunu sonlandırmak istediğinize emin misiniz?'
         },
         "de_DE": {
           "hello": "HALLO",
@@ -98,6 +101,9 @@ class LocaleString extends Translations {
           'success': 'Almanca Başarılı',
           'choosenLearnLanguage':
               '(Almanca)dili için indirme işlemi başlatılacaktır. Bu işlem boyunca lütfen uygulamayı kapatmayınız',
+          'logout': 'Almanca Uygulamadan Çık',
+          'logoutMessage':
+              'Almanca Kullanıcı oturumunu sonlandırmak istediğinize emin misiniz?'
         }
       };
 }

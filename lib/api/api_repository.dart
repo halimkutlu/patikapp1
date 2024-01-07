@@ -247,7 +247,7 @@ class APIRepository {
       @required dynamic data,
       bool redirectLogin = false}) async {
     try {
-      //ReloadApiBase(StaticVariables.token);
+      ReloadApiBase(StaticVariables.token);
       final response = await dio.post(controller!, data: data);
       httpSonucModel result = httpSonucModel.fromJsonData(response.data);
 
@@ -402,6 +402,17 @@ class APIRepository {
     await prefs.setString("roles", roles.toString()); //değiştirilicek
 
     StaticVariables.token = token;
+  }
+
+  void removeToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove("Token");
+    await prefs.remove("firstName");
+    await prefs.remove("lastName");
+    await prefs.remove("userName");
+    await prefs.remove("roles"); //değiştirilicek
+
+    StaticVariables.reset();
   }
 
 //Şifreler hashed olarak tutulması gerektiği için encode ediliyor.

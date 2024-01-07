@@ -9,4 +9,16 @@ class StaticVariables {
   static String LangName = "";
   static bool FirstTimeLogin = true;
   static String PhoneID = "";
+
+  StaticVariables.reset() {
+    token = "";
+    UserName = "";
+    Name = "";
+    Surname = "";
+    Roles = [];
+    LangCode = "";
+    LangName = "";
+    FirstTimeLogin = true;
+    PhoneID = "";
+  }
 }
