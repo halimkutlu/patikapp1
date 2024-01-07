@@ -83,9 +83,11 @@ class CustomIconButton extends StatelessWidget {
                                         MediaQuery.of(context).size.height /
                                             textSize),
                               ),
-                              Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: icons),
+                              icons == null
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: icons)
+                                  : Container(),
                             ],
                           ),
                         ),

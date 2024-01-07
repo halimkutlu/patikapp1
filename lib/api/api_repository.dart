@@ -114,12 +114,19 @@ class APIRepository {
 
             getFirstTimeLogin();
 
-            StaticVariables.Name = result.data!.firstName!;
-            StaticVariables.Surname = result.data!.lastName!;
+            StaticVariables.Name = result.data!.firstName ?? "";
+            StaticVariables.Surname = result.data!.lastName ?? "";
+
             StaticVariables.Roles = result.data!.roles!;
             StaticVariables.UserName = result.data!.username!;
 
-            saveToken(userName!, password!, result.data!.token!);
+            saveToken(
+                password!,
+                result.data!.token!,
+                result.data!.firstName!,
+                result.data!.lastName!,
+                result.data!.roles!,
+                result.data!.username!);
             if (rememberMe != false) {
               rememberMeOption();
             }
@@ -385,9 +392,15 @@ class APIRepository {
     // await prefs.setString("cryptedPassword", StaticVariables.cryptedPassword);
   }
 
-  void saveToken(String username, String password, String token) async {
+  void saveToken(String password, String token, String firstName,
+      String lastName, List<int> roles, String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("Token", token);
+    await prefs.setString("firstName", firstName);
+    await prefs.setString("lastName", lastName);
+    await prefs.setString("userName", username);
+    await prefs.setString("roles", roles.toString()); //değiştirilicek
+
     StaticVariables.token = token;
   }
 

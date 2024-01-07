@@ -12,6 +12,7 @@ import 'package:patikmobile/pages/splashScreen.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
+import 'package:patikmobile/providers/mainProvider.dart';
 import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/providers/splashScreenProvider.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,7 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<LoginProvider>(create: (_) => LoginProvider()),
   ChangeNotifierProvider<RegisterProvider>(create: (_) => RegisterProvider()),
   ChangeNotifierProvider<DbProvider>(create: (_) => DbProvider()),
+  ChangeNotifierProvider<MainProvider>(create: (_) => MainProvider()),
 ];
 
 class MyApp extends StatefulWidget {
