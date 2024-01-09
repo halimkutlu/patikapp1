@@ -34,17 +34,10 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Save a reference to the ancestor here
-    loginProvider = Provider.of<LoginProvider>(context);
   }
 
   @override
   void dispose() {
-    // Use the saved reference here in dispose()
-    // Make sure to check if the widget is mounted before accessing it
-    if (mounted) {
-      loginProvider.dispose();
-    }
     super.dispose();
   }
 

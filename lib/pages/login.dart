@@ -27,7 +27,6 @@ class _LoginState extends State<Login> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    loginProvider = Provider.of<LoginProvider>(context);
   }
 
   @override

@@ -60,6 +60,16 @@ class _DashboardState extends State<Dashboard> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final mainProvider = Provider.of<MainProvider>(context);
     final loginProvider = Provider.of<LoginProvider>(context);
