@@ -54,6 +54,8 @@ class DbProvider extends ChangeNotifier {
             "İndirme işlemleri sırasında bir hata oluştu. Lütfen tekrar deneyiniz";
         print(e);
         return result;
+      } finally {
+        await file.delete();
       }
 
       result.status = true;

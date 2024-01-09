@@ -9,6 +9,7 @@ import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:patikmobile/widgets/loading_bar.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -24,6 +25,8 @@ class SelectLearnLanguage extends StatefulWidget {
 
 class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
   late LoginProvider loginProvider;
+  late double received = 0;
+  late bool isDownloading = false;
   List<dynamic> llanguage = [];
   @override
   void initState() {
@@ -41,6 +44,12 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
     super.dispose();
   }
 
+  void onReceiveProgress(int received_, int total_) {
+    setState(() {
+      received = received_ / total_;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(context);
@@ -48,153 +57,180 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
 
     return Scaffold(
       body: Stack(children: [
-        SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.only(top: 10.h, left: 10.w, right: 10.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  width: 30.w,
-                  height: 5.h,
-                  margin: EdgeInsets.only(bottom: 2.h),
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(width: 0.50, color: Color(0xFF7E7B7B)),
+        Visibility(
+            visible: isDownloading,
+            child: Center(
+                child: CircularPercentIndicator(
+                    radius: 100,
+                    lineWidth: 35,
+                    percent: received.toPrecision(2),
+                    center: Text(
+                      "${(received * 100).round()}%",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
+                    footer: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Downloading Files',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                    ),
+                    circularStrokeCap: CircularStrokeCap.round,
+                    progressColor: Colors.green,
+                    backgroundColor: Colors.redAccent))),
+        Visibility(
+            visible: !isDownloading,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(top: 10.h, left: 10.w, right: 10.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      width: 30.w,
+                      height: 5.h,
+                      margin: EdgeInsets.only(bottom: 2.h),
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          side:
+                              BorderSide(width: 0.50, color: Color(0xFF7E7B7B)),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: Image.asset(
-                              'lib/assets/learn_language.png',
-                              fit: BoxFit.cover,
-                              height: 2.3.h,
-                            ),
-                          ),
-                          Text(
-                            "chooseLearnLanguage".tr,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color(0xFF0F1011),
-                              fontSize: 2.h,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w400,
-                              height: 0.06,
-                            ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Image.asset(
+                                  'lib/assets/learn_language.png',
+                                  fit: BoxFit.cover,
+                                  height: 2.3.h,
+                                ),
+                              ),
+                              Text(
+                                "chooseLearnLanguage".tr,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xFF0F1011),
+                                  fontSize: 2.h,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                  height: 0.06,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: Languages.LngList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var language = Languages.LngList[index];
-                    return InkWell(
-                      onTap: () async {
-                        var lngCheck = await checkLanguage(language.LCID);
-                        if (lngCheck) {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          prefs.setString(
-                              "CurrentLanguageName", language.Name!);
-                          prefs.setString(
-                              "CurrentLanguageLCID", language.LCID.toString());
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => Dashboard()));
-                        } else {
-                          CustomAlertDialog(context, () async {
-                            Navigator.pop(context);
-                            FileDownloadStatus status = await loginProvider
-                                .startProcessOfDownloadLearnLanguage(
-                                    language.Code,
-                                    context,
-                                    language.Name!,
-                                    language.LCID);
-
-                            if (status.status) {
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: Languages.LngList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        var language = Languages.LngList[index];
+                        return InkWell(
+                          onTap: () async {
+                            var lngCheck = await checkLanguage(language.LCID);
+                            if (lngCheck) {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setString(
+                                  "CurrentLanguageName", language.Name!);
+                              prefs.setString("CurrentLanguageLCID",
+                                  language.LCID.toString());
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (context) => Dashboard()));
                             } else {
-                              CustomAlertDialogOnlyConfirm(context, () {
+                              CustomAlertDialog(context, () async {
                                 Navigator.pop(context);
-                              }, "error".tr, status.message,
-                                  ArtSweetAlertType.danger, "ok".tr);
+                                isDownloading = true;
+                                FileDownloadStatus status = await loginProvider
+                                    .startProcessOfDownloadLearnLanguage(
+                                        language.Code,
+                                        context,
+                                        language.Name!,
+                                        language.LCID,
+                                        onReceiveProgress);
+                                if (status.status) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) => Dashboard()));
+                                } else {
+                                  CustomAlertDialogOnlyConfirm(context, () {
+                                    Navigator.pop(context);
+                                  }, "error".tr, status.message,
+                                      ArtSweetAlertType.danger, "ok".tr);
+                                }
+
+                                isDownloading = false;
+                              },
+                                  "areYouSure".tr,
+                                  "${language.Name} ${"choosenLearnLanguage".tr}",
+                                  ArtSweetAlertType.question,
+                                  "ok".tr,
+                                  "no".tr);
                             }
                           },
-                              "areYouSure".tr,
-                              language.Name.toString() +
-                                  " " +
-                                  "choosenLearnLanguage".tr,
-                              ArtSweetAlertType.question,
-                              "ok".tr,
-                              "no".tr);
-                        }
-                      },
-                      child: Container(
-                        width: 30.w,
-                        height: 5.h,
-                        margin: EdgeInsets.only(bottom: 2.h),
-                        decoration: ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                                width: 0.50, color: Color(0xFF7E7B7B)),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              language.Name!,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color(0xFF0F1011),
-                                fontSize: 2.h,
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.w400,
-                                height: 0.06,
+                          child: Container(
+                            width: 30.w,
+                            height: 5.h,
+                            margin: EdgeInsets.only(bottom: 2.h),
+                            decoration: ShapeDecoration(
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 0.50, color: Color(0xFF7E7B7B)),
                               ),
                             ),
-                          ],
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  language.Name!,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xFF0F1011),
+                                    fontSize: 2.h,
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.w400,
+                                    height: 0.06,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 5.h),
+                        child: Container(
+                          width: 90,
+                          height: 90,
+                          child: Image.asset(
+                            'lib/assets/logo.png',
+                            width: 600.0,
+                            height: 240.0,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    );
-                  },
+                    )
+                  ],
                 ),
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 5.h),
-                    child: Container(
-                      width: 90,
-                      height: 90,
-                      child: Image.asset(
-                        'lib/assets/logo.png',
-                        width: 600.0,
-                        height: 240.0,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
+              ),
+            )),
         Container(child: loginProvider.loading ? Loading() : Container())
       ]),
     );

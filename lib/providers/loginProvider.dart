@@ -245,7 +245,11 @@ class LoginProvider extends ChangeNotifier {
   }
 
   Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
-      String code, BuildContext context, String name, int lcid) async {
+      String code,
+      BuildContext context,
+      String name,
+      int lcid,
+      void Function(int, int)? onReceiveProgress) async {
     DbProvider dbProvider = DbProvider();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     FileDownloadStatus processResult = FileDownloadStatus();
@@ -253,12 +257,14 @@ class LoginProvider extends ChangeNotifier {
 
     if (code.isNotEmpty) {
       //yükleme ekranı açılır
-      _loading = true;
+      //_loading = true;
       notifyListeners();
 
       //DOSYA İNDİRME İŞLEMİ YAPILIR.
-      FileDownloadStatus resultDownloadFile =
-          await downloadFile("GetLngFileStream", lcid: lcid);
+      FileDownloadStatus resultDownloadFile = await downloadFile(
+          "GetLngFileStream",
+          lcid: lcid,
+          onReceiveProgress: onReceiveProgress);
 
       if (resultDownloadFile.status) {
         //DOSYA İNDRİME İŞLEMİ BAŞARILI İSE DOSYAYI CACHEDEN ALARAK TELEFONA ÇIKARTMA İŞLEMİ YAPILIR
@@ -279,14 +285,14 @@ class LoginProvider extends ChangeNotifier {
           } else {
             processResult.status = false;
           }
-          _loading = false;
+          //_loading = false;
           notifyListeners();
           return processResult;
         }
       } else {
         processResult.status = false;
         processResult.message = resultDownloadFile.message;
-        _loading = false;
+        //_loading = false;
         notifyListeners();
         return processResult;
       }
