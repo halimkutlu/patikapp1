@@ -9,11 +9,14 @@ import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/assets/mainColors.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/user_roles.dart';
+import 'package:patikmobile/pages/app_info.dart';
 import 'package:patikmobile/pages/login.dart';
+import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/providers/mainProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
+import 'package:patikmobile/widgets/menu_item.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -113,13 +116,18 @@ class _DashboardState extends State<Dashboard> {
                       Container(
                         color: MainColors.primaryColor,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                icon: Icon(Icons.chevron_left_outlined))
+                                icon: Icon(Icons.chevron_left_outlined)),
+                            IconButton(
+                                onPressed: () {
+                                  loginProvider.logout(context);
+                                },
+                                icon: Icon(Icons.logout))
                           ],
                         ),
                       ),
@@ -195,44 +203,65 @@ class _DashboardState extends State<Dashboard> {
                   )),
                 ),
               ),
-              ListTile(
-                title: const Text('Home'),
-                selected: _selectedIndex == 0,
-                onTap: () {
-                  // Update the state of the app
-                  _onItemTapped(0);
-                  // Then close the drawer
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Text('Business'),
-                selected: _selectedIndex == 1,
-                onTap: () {
-                  // Update the state of the app
-                  _onItemTapped(1);
-                  // Then close the drawer
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Text('School'),
-                selected: _selectedIndex == 2,
-                onTap: () {
-                  // Update the state of the app
-                  _onItemTapped(2);
-                  // Then close the drawer
-                },
-              ),
-              ListTile(
-                title: Text('logout'.tr),
-                selected: _selectedIndex == 2,
-                onTap: () {
-                  // Update the state of the app
-                  loginProvider.logout(context);
-                  // Then close the drawer
-                },
-              ),
+              MenuItem(
+                  logo: 'lib/assets/user_language.png',
+                  text: "Kullanıcı Dili",
+                  centerWidget: Text(mainProvider.useLanguageName),
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => SelectLanguage(
+                              dashboard: true,
+                            )));
+                  }),
+              MenuItem(
+                  logo: 'lib/assets/learn_language.png',
+                  text: "Öğrenme Dili",
+                  centerWidget: Text(mainProvider.learnLanguageName),
+                  onTap: () {}),
+              MenuItem(
+                  logo: 'lib/assets/internet.png',
+                  text: "Çevrimdışı Mod",
+                  centerWidget: CustomIconButton(
+                    textSize: 60,
+                    textInlinePadding: 25,
+                    width: 4,
+                    colors: Colors.red,
+                    name: "Satın Al",
+                  ),
+                  onTap: () {}),
+              MenuItem(
+                  logo: 'lib/assets/key.png',
+                  text: "Şifre Değiştir",
+                  centerWidget: Text(""),
+                  onTap: () {}),
+              MenuItem(
+                  logo: 'lib/assets/edit.png',
+                  text: "Profil Adını Değiştir",
+                  centerWidget: Text(""),
+                  onTap: () {}),
+              MenuItem(
+                  logo: 'lib/assets/privacy.png',
+                  text: "Gizlilik Politikası",
+                  centerWidget: Text(""),
+                  onTap: () {}),
+              MenuItem(
+                  logo: 'lib/assets/star_.png',
+                  text: "Uygulamayı deperlendir",
+                  centerWidget: Text(""),
+                  onTap: () {}),
+              MenuItem(
+                  logo: 'lib/assets/mail.png',
+                  text: "Geri Bildirim",
+                  centerWidget: Text(""),
+                  onTap: () {}),
+              MenuItem(
+                  logo: 'lib/assets/mail.png',
+                  text: "Uygulama Hakkında",
+                  centerWidget: Text(""),
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => AppInfo()));
+                  }),
             ],
           ),
         ),

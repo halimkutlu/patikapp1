@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, unused_local_variable, avoid_print, depend_on_referenced_packages
+// ignore_for_file: non_constant_identifier_names, unused_local_variable, avoid_print, depend_on_referenced_packages, deprecated_member_use
 
 import 'dart:ffi';
 import 'dart:io';
@@ -92,6 +92,8 @@ class APIRepository {
 
       Future.delayed(const Duration(seconds: 2)).whenComplete(() {});
       //Kullanılacak servisin içeriğine göre içerik değiştirilebilir.
+      print("login olunuyor.");
+      print("$userName $password $Uid $Name");
       final response = await dio.post(loginUrl, data: {
         "userName": userName,
         "password": password,
@@ -99,7 +101,11 @@ class APIRepository {
         "Name": Name
       });
       //Gelen response değerinin durumuna göre kontroller sağlanabilir.
+      print("login cevap geldi");
+
       if (response.statusCode != 200) {
+        print("login cevap geldi: hata");
+
         result.message =
             response.statusMessage ?? response.statusMessage ?? "Giris Hatasi";
 

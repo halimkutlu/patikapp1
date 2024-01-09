@@ -85,6 +85,14 @@ flutter:
      - lib/assets/user_language.png
      - lib/assets/learn_language.png
      - lib/assets/avatar.png
+     - lib/assets/edit.png
+     - lib/assets/internet.png
+     - lib/assets/key.png
+     - lib/assets/mail.png
+     - lib/assets/privacy.png
+     - lib/assets/star_.png
+
+
 
      #- lib/db/tr-TR.db
 

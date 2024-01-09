@@ -27,6 +27,12 @@ class MainProvider extends ChangeNotifier {
   String? _roleName = "";
   String get roleName => _roleName!;
 
+  String? _useLanguageName = "";
+  String get useLanguageName => _useLanguageName ?? "";
+
+  String? _learnLanguageName = "";
+  String get learnLanguageName => _learnLanguageName ?? "";
+
   int? _roleid = 0;
   int get roleid => _roleid!;
   init() async {
@@ -35,6 +41,8 @@ class MainProvider extends ChangeNotifier {
     _nameLastname = (prefs.getString("firstName") ?? "") +
         " " +
         (prefs.getString("lastName") ?? "");
+    _useLanguageName = prefs.getString("language_name");
+    _learnLanguageName = prefs.getString("CurrentLanguageName");
     getRoles(prefs);
 
     notifyListeners();

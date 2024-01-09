@@ -75,7 +75,10 @@ class LoginProvider extends ChangeNotifier {
           "ok".tr);
     } else {
       _loading = true;
+      print("login provider girdi.");
       notifyListeners();
+      print("login provider girdi. : işlem başlıyor");
+
       UserResult apiresult = await apirepository.login(
           userName: _usernameController.text,
           password: _passwordController.text,
@@ -208,9 +211,9 @@ class LoginProvider extends ChangeNotifier {
     }
   }
 
-  setUseLanguage(language, BuildContext context) {
+  setUseLanguage(language, BuildContext context, bool dashboard) {
     CustomAlertDialog(context, () {
-      changeLanguage(language['locale'], context);
+      changeLanguage(language['locale'], context, language['name'], dashboard);
     },
         "areYouSure".tr,
         "applicationLanguage".tr +
@@ -223,12 +226,20 @@ class LoginProvider extends ChangeNotifier {
         "no".tr);
   }
 
-  changeLanguage(Locale locale, BuildContext context) {
-    updateLanguage(locale);
+  changeLanguage(
+      Locale locale, BuildContext context, String name, bool dashboard) {
+    updateLanguage(locale, name);
     Navigator.pop(context);
     CustomAlertDialogOnlyConfirm(context, () {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => SelectLearnLanguage()));
+      if (dashboard) {
+        Navigator.pop(context);
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => Dashboard()));
+      } else {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => SelectLearnLanguage()));
+      }
+
       notifyListeners();
     }, "success".tr, "langSuccess".tr, ArtSweetAlertType.success, "ok".tr);
   }
@@ -262,6 +273,8 @@ class LoginProvider extends ChangeNotifier {
           FileDownloadStatus dbresult = await dbProvider.openDbConnection(code);
           if (dbresult.status) {
             prefs.setString("CurrentLanguageLCID", lcid.toString());
+            prefs.setString("CurrentLanguageName", name);
+
             processResult.status = true;
           } else {
             processResult.status = false;

@@ -16,11 +16,13 @@ final List locale = [
   {'name': 'Türkçe', 'locale': Locale('tr', 'TR'), 'code': 'tr-TR'},
   {'name': 'Deutsche Sprache', 'locale': Locale('de', 'DE'), 'code': 'de-DE'},
 ];
-updateLanguage(Locale locale) async {
+updateLanguage(Locale locale, String name) async {
   Get.updateLocale(locale);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString("language_code", locale.languageCode);
   prefs.setString("countryCode", locale.countryCode!);
+  prefs.setString("language_name", name);
+
   // Sayfayı yeniden oluşturarak getLanguage fonksiyonunu tekrar çağır
   // Get.back();
 }

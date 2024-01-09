@@ -108,6 +108,8 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           prefs.setString(
+                              "CurrentLanguageName", language.Name!);
+                          prefs.setString(
                               "CurrentLanguageLCID", language.LCID.toString());
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(

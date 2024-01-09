@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class SelectLanguage extends StatefulWidget {
-  const SelectLanguage({super.key});
+  final bool? dashboard;
+  const SelectLanguage({super.key, this.dashboard = false});
 
   @override
   State<SelectLanguage> createState() => _SelectLanguageState();
@@ -78,7 +79,8 @@ class _SelectLanguageState extends State<SelectLanguage> {
               for (var language in loginProvider.getUseLanguage())
                 InkWell(
                   onTap: () {
-                    loginProvider.setUseLanguage(language, context);
+                    loginProvider.setUseLanguage(
+                        language, context, widget.dashboard ?? false);
                   },
                   child: Container(
                     width: 30.w,
