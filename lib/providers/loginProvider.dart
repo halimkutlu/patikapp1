@@ -244,12 +244,8 @@ class LoginProvider extends ChangeNotifier {
     }, "success".tr, "langSuccess".tr, ArtSweetAlertType.success, "ok".tr);
   }
 
-  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
-      String code,
-      BuildContext context,
-      String name,
-      int lcid,
-      void Function(int, int)? onReceiveProgress) async {
+  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(String code,
+      String name, int lcid, void Function(int, int)? onReceiveProgress) async {
     DbProvider dbProvider = DbProvider();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     FileDownloadStatus processResult = FileDownloadStatus();
