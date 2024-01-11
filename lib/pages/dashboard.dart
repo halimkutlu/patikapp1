@@ -10,6 +10,7 @@ import 'package:patikmobile/assets/mainColors.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/app_info.dart';
+import 'package:patikmobile/pages/forgotPassword.dart';
 import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
@@ -208,7 +209,7 @@ class _DashboardState extends State<Dashboard> {
                   text: "Kullanıcı Dili",
                   centerWidget: Text(mainProvider.useLanguageName),
                   onTap: () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SelectLanguage(
                               dashboard: true,
                             )));
@@ -259,7 +260,7 @@ class _DashboardState extends State<Dashboard> {
                   text: "Uygulama Hakkında",
                   centerWidget: Text(""),
                   onTap: () {
-                    Navigator.of(context).pushReplacement(
+                    Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => AppInfo()));
                   }),
             ],
