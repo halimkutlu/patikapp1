@@ -9,6 +9,7 @@ import 'package:patikmobile/assets/mainColors.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/locale/Messages.dart';
 import 'package:patikmobile/pages/splashScreen.dart';
+import 'package:patikmobile/providers/changePasswordProvider.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
@@ -49,6 +50,8 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<RegisterProvider>(create: (_) => RegisterProvider()),
   ChangeNotifierProvider<DbProvider>(create: (_) => DbProvider()),
   ChangeNotifierProvider<MainProvider>(create: (_) => MainProvider()),
+  ChangeNotifierProvider<ChangePasswordProvider>(
+      create: (_) => ChangePasswordProvider()),
 ];
 
 class MyApp extends StatefulWidget {

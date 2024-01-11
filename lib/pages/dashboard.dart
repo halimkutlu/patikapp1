@@ -10,9 +10,11 @@ import 'package:patikmobile/assets/mainColors.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/app_info.dart';
+import 'package:patikmobile/pages/change_password.dart';
 import 'package:patikmobile/pages/forgotPassword.dart';
 import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/pages/select_language.dart';
+import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/providers/mainProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
@@ -218,7 +220,10 @@ class _DashboardState extends State<Dashboard> {
                   logo: 'lib/assets/learn_language.png',
                   text: "Öğrenme Dili",
                   centerWidget: Text(mainProvider.learnLanguageName),
-                  onTap: () {}),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SelectLearnLanguage()));
+                  }),
               MenuItem(
                   logo: 'lib/assets/internet.png',
                   text: "Çevrimdışı Mod",
@@ -234,7 +239,10 @@ class _DashboardState extends State<Dashboard> {
                   logo: 'lib/assets/key.png',
                   text: "Şifre Değiştir",
                   centerWidget: Text(""),
-                  onTap: () {}),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ChangePassword()));
+                  }),
               MenuItem(
                   logo: 'lib/assets/edit.png',
                   text: "Profil Adını Değiştir",
