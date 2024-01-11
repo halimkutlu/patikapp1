@@ -9,7 +9,8 @@ import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/assets/mainColors.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/user_roles.dart';
-import 'package:patikmobile/pages/app_info.dart';
+import 'package:patikmobile/pages/about_app.dart';
+import 'package:patikmobile/pages/faq.dart';
 import 'package:patikmobile/pages/change_password.dart';
 import 'package:patikmobile/pages/feedback.dart';
 import 'package:patikmobile/pages/forgotPassword.dart';
@@ -268,7 +269,7 @@ class _DashboardState extends State<Dashboard> {
                   centerWidget: Text(""),
                   onTap: () {
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => AppInfo()));
+                        MaterialPageRoute(builder: (context) => AboutApp()));
                   }),
             ],
           ),
