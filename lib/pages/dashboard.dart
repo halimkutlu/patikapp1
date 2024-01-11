@@ -11,6 +11,7 @@ import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/app_info.dart';
 import 'package:patikmobile/pages/change_password.dart';
+import 'package:patikmobile/pages/feedback.dart';
 import 'package:patikmobile/pages/forgotPassword.dart';
 import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/pages/select_language.dart';
@@ -244,11 +245,6 @@ class _DashboardState extends State<Dashboard> {
                         builder: (context) => ChangePassword()));
                   }),
               MenuItem(
-                  logo: 'lib/assets/edit.png',
-                  text: "Profil Adını Değiştir",
-                  centerWidget: Text(""),
-                  onTap: () {}),
-              MenuItem(
                   logo: 'lib/assets/privacy.png',
                   text: "Gizlilik Politikası",
                   centerWidget: Text(""),
@@ -262,7 +258,10 @@ class _DashboardState extends State<Dashboard> {
                   logo: 'lib/assets/mail.png',
                   text: "Geri Bildirim",
                   centerWidget: Text(""),
-                  onTap: () {}),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => FeedbackPage()));
+                  }),
               MenuItem(
                   logo: 'lib/assets/mail.png',
                   text: "Uygulama Hakkında",
