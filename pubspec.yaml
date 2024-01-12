@@ -92,6 +92,7 @@ flutter:
      - lib/assets/mail.png
      - lib/assets/privacy.png
      - lib/assets/star_.png
+     - lib/assets/aboutapp_image.png
 
 
 
