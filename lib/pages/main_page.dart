@@ -4,9 +4,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/providers/mainPageProvider.dart';
 import 'package:patikmobile/services/appTimer.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:patikmobile/widgets/icon_list_item.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
@@ -19,23 +21,18 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   AppLifecycleObserver? _lifecycleObserver;
-  Timer? _timer;
+  late MainPageProvider mainProvider;
   int appMinute = 0;
-  int learnedWordCount = 444;
-  int repeatWordCount = 333;
-  int workHardWordCount = 222;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _lifecycleObserver = AppLifecycleObserver();
     _lifecycleObserver!.startTimer();
     WidgetsBinding.instance.addObserver(_lifecycleObserver!);
     getMinute();
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
-      getMinute();
-    });
+    mainProvider = Provider.of<MainPageProvider>(context, listen: false);
+    mainProvider.init();
   }
 
   @override
@@ -118,7 +115,7 @@ class _MainPageState extends State<MainPage> {
                 style: TextStyle(fontSize: 2.0.h, fontWeight: FontWeight.bold),
               ),
               Text(
-                learnedWordCount.toString(),
+                mainProvider.getLernedWordCount.toString(),
                 style: TextStyle(
                     fontSize: 3.0.h,
                     color: Colors.red,
@@ -219,19 +216,19 @@ class _MainPageState extends State<MainPage> {
           box(
             "Öğrendim",
             MainColors.boxColor1,
-            learnedWordCount.toString(),
+            mainProvider.getLernedWordCount.toString(),
             'lib/assets/ilearned.png',
           ),
           box(
             "Tekrar et",
             MainColors.boxColor2,
-            repeatWordCount.toString(),
+            mainProvider.getRepeatedWordCount.toString(),
             'lib/assets/repeat.png',
           ),
           box(
             "Sıkı çalış",
             MainColors.boxColor3,
-            workHardWordCount.toString(),
+            mainProvider.getWorkHardCount.toString(),
             'lib/assets/sun.png',
           ),
         ],

@@ -45,7 +45,6 @@ class _DashboardState extends State<Dashboard> {
     mainProvider.init();
   }
 
-  int _selectedIndex = 0;
   int _selectedTab = 0;
 
   List _pages = [
@@ -58,12 +57,6 @@ class _DashboardState extends State<Dashboard> {
   _changeTab(int index) {
     setState(() {
       _selectedTab = index;
-    });
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
     });
   }
 

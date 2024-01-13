@@ -13,6 +13,7 @@ import 'package:patikmobile/providers/changePasswordProvider.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
+import 'package:patikmobile/providers/mainPageProvider.dart';
 import 'package:patikmobile/providers/mainProvider.dart';
 import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/providers/splashScreenProvider.dart';
@@ -52,6 +53,7 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<MainProvider>(create: (_) => MainProvider()),
   ChangeNotifierProvider<ChangePasswordProvider>(
       create: (_) => ChangePasswordProvider()),
+  ChangeNotifierProvider<MainPageProvider>(create: (_) => MainPageProvider()),
 ];
 
 class MyApp extends StatefulWidget {
