@@ -1,19 +1,9 @@
-// ignore_for_file: prefer_final_fields
-
-import 'dart:convert';
-
-import 'package:art_sweetalert/art_sweetalert.dart';
+// ignore_for_file: prefer_final_fields, avoid_print
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:patikmobile/api/api_repository.dart';
-import 'package:patikmobile/models/information.dart';
-import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/models/word_statistics.dart';
-import 'package:patikmobile/pages/login.dart';
-import 'package:patikmobile/pages/mailResponse.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
-import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:patikmobile/providers/dashboardProvider.dart';
 
 class MainPageProvider extends ChangeNotifier {
   final apirepository = APIRepository();
@@ -47,5 +37,10 @@ class MainPageProvider extends ChangeNotifier {
     print('Learned Count: $_getLernedWordCount');
     print('Repeat Count: $_getRepeatedWordCount');
     print('Work Hard Count: $_getWorkHardCount');
+  }
+
+  void changePage(int index) {
+    DashboardProvider mainProvider = DashboardProvider();
+    mainProvider.changeTab(index);
   }
 }

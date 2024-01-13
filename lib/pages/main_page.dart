@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/pages/dashboard.dart';
+import 'package:patikmobile/pages/learn_page.dart';
 import 'package:patikmobile/providers/mainPageProvider.dart';
 import 'package:patikmobile/services/appTimer.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
@@ -54,16 +56,20 @@ class _MainPageState extends State<MainPage> {
         Column(
           children: [
             IconListItem(
-              Text: "Yeni Kelimeler Öğren",
-              imageStr: 'lib/assets/graduate.png',
-            ),
+                Text: "Yeni Kelimeler Öğren",
+                imageStr: 'lib/assets/graduate.png',
+                onTap: () {}),
             IconListItem(
-              Text: "Antrenman Yap",
-              imageStr: 'lib/assets/muscle.png',
-            ),
+                Text: "Antrenman Yap",
+                imageStr: 'lib/assets/muscle.png',
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => Dashboard(1)));
+                }),
             IconListItem(
               Text: "Diyaloglar",
               imageStr: 'lib/assets/chat.png',
+              onTap: () => mainProvider.changePage(3),
             ),
             statusArea(),
             brandArea(),

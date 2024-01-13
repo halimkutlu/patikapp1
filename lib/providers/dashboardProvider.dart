@@ -7,13 +7,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/user_roles.dart';
+import 'package:patikmobile/pages/learn_page.dart';
 import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/pages/mailResponse.dart';
+import 'package:patikmobile/pages/main_page.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MainProvider extends ChangeNotifier {
+class DashboardProvider extends ChangeNotifier {
   final apirepository = APIRepository();
+
+  List _pages = [
+    MainPage(),
+    LearnPage(),
+    LearnPage(),
+    LearnPage(),
+  ];
+
+  List get pages => _pages;
 
   String? _userName = "";
   String get userName => _userName!;
@@ -32,6 +43,9 @@ class MainProvider extends ChangeNotifier {
 
   String? _learnLanguageName = "";
   String get learnLanguageName => _learnLanguageName ?? "";
+
+  int? _selectedTab = 0;
+  int get selectedTab => _selectedTab ?? 0;
 
   int? _roleid = 0;
   int get roleid => _roleid!;
@@ -80,5 +94,11 @@ class MainProvider extends ChangeNotifier {
       return UserRole
           .unknown; // Varsayılan olarak unknown ya da istediğiniz başka bir değer
     }
+  }
+
+  changeTab(int index) {
+    _selectedTab = index;
+
+    notifyListeners();
   }
 }

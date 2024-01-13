@@ -50,7 +50,7 @@ class _FeedbackSuccess extends State<FeedbackSuccess> {
               onTap: () {
                 if (true) {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const Dashboard()));
+                      builder: (context) => const Dashboard(0)));
                 }
               },
             ),

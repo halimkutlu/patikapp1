@@ -142,8 +142,8 @@ class LoginProvider extends ChangeNotifier {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => SelectLanguage()));
         } else {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const Dashboard()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const Dashboard(0)));
         }
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
@@ -234,7 +234,7 @@ class LoginProvider extends ChangeNotifier {
       if (dashboard) {
         Navigator.pop(context);
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => Dashboard()));
+            .push(MaterialPageRoute(builder: (context) => Dashboard(0)));
       } else {
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => SelectLearnLanguage()));

@@ -150,7 +150,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                 language.LCID.toString());
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                    builder: (context) => Dashboard()));
+                                    builder: (context) => Dashboard(0)));
                           } else {
                             CustomAlertDialog(_scaffoldKey.currentContext!,
                                 () async {
@@ -165,7 +165,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                               if (status.status) {
                                 Navigator.of(_scaffoldKey.currentContext!)
                                     .pushReplacement(MaterialPageRoute(
-                                        builder: (context) => Dashboard()));
+                                        builder: (context) => Dashboard(0)));
                               } else {
                                 CustomAlertDialogOnlyConfirm(
                                     _scaffoldKey.currentContext!, () {

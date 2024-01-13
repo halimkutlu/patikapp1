@@ -1,34 +1,22 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields, unused_element
-
-import 'dart:io';
-
-import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/assets/mainColors.dart';
-import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/about_app.dart';
-import 'package:patikmobile/pages/faq.dart';
 import 'package:patikmobile/pages/change_password.dart';
 import 'package:patikmobile/pages/feedback.dart';
-import 'package:patikmobile/pages/forgotPassword.dart';
-import 'package:patikmobile/pages/learn_page.dart';
-import 'package:patikmobile/pages/login.dart';
-import 'package:patikmobile/pages/main_page.dart';
 import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
-import 'package:patikmobile/providers/mainProvider.dart';
-import 'package:patikmobile/widgets/customAlertDialog.dart';
+import 'package:patikmobile/providers/dashboardProvider.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:patikmobile/widgets/menu_item.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final int? selectedPageIndex;
+  const Dashboard(this.selectedPageIndex, {super.key});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -37,27 +25,15 @@ class Dashboard extends StatefulWidget {
 bool a = true;
 
 class _DashboardState extends State<Dashboard> {
-  late MainProvider mainProvider;
+  late DashboardProvider mainProvider;
   @override
   void initState() {
     super.initState();
-    mainProvider = Provider.of<MainProvider>(context, listen: false);
+    mainProvider = Provider.of<DashboardProvider>(context, listen: false);
     mainProvider.init();
-  }
-
-  int _selectedTab = 0;
-
-  List _pages = [
-    MainPage(),
-    LearnPage(),
-    LearnPage(),
-    LearnPage(),
-  ];
-
-  _changeTab(int index) {
-    setState(() {
-      _selectedTab = index;
-    });
+    if (widget.selectedPageIndex != null && widget.selectedPageIndex! > 0) {
+      mainProvider.changeTab(0);
+    }
   }
 
   @override
@@ -72,7 +48,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final mainProvider = Provider.of<MainProvider>(context);
+    final mainProvider = Provider.of<DashboardProvider>(context);
     final loginProvider = Provider.of<LoginProvider>(context);
 
     return PopScope(
@@ -82,7 +58,7 @@ class _DashboardState extends State<Dashboard> {
           backgroundColor: MainColors.backgroundColor,
         ),
         body: Center(
-          child: _pages[_selectedTab],
+          child: mainProvider.pages[mainProvider.selectedTab],
         ),
         drawer: Drawer(
           backgroundColor: MainColors.backgroundColor,
@@ -285,8 +261,8 @@ class _DashboardState extends State<Dashboard> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: MainColors.primaryColor,
-          currentIndex: _selectedTab,
-          onTap: (index) => _changeTab(index),
+          currentIndex: mainProvider.selectedTab,
+          onTap: (index) => mainProvider.changeTab(index),
           selectedItemColor: Colors.black,
           showUnselectedLabels: true,
           unselectedItemColor: Color(0xff7E7B7B),

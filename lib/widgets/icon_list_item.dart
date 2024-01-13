@@ -6,8 +6,10 @@ import 'package:sizer/sizer.dart';
 class IconListItem extends StatefulWidget {
   final String? imageStr;
   final String? Text;
+  final VoidCallback? onTap;
 
-  const IconListItem({super.key, required this.imageStr, required this.Text});
+  const IconListItem(
+      {super.key, required this.imageStr, required this.Text, this.onTap});
 
   @override
   State<IconListItem> createState() => _IconListItemState();
@@ -17,7 +19,7 @@ class _IconListItemState extends State<IconListItem> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: widget.onTap ?? () {},
       child: Padding(
         padding: EdgeInsets.only(left: 2.h, right: 2.h, top: 1.h),
         child: Container(
