@@ -309,7 +309,9 @@ class _MainPageState extends State<MainPage> {
 
   void getMinute() async {
     appMinute = await _getStoredTime();
-    print("Appminute: $appMinute");
-    setState(() {}); // setState'ı burada çağırın
+    print("Gösterilen dakika: $appMinute");
+    if (mounted) {
+      setState(() {});
+    }
   }
 }

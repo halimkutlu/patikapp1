@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields, unused_element
 
 import 'dart:io';
 
@@ -14,6 +14,7 @@ import 'package:patikmobile/pages/faq.dart';
 import 'package:patikmobile/pages/change_password.dart';
 import 'package:patikmobile/pages/feedback.dart';
 import 'package:patikmobile/pages/forgotPassword.dart';
+import 'package:patikmobile/pages/learn_page.dart';
 import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/pages/main_page.dart';
 import 'package:patikmobile/pages/select_language.dart';
@@ -45,19 +46,20 @@ class _DashboardState extends State<Dashboard> {
   }
 
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
+  int _selectedTab = 0;
+
+  List _pages = [
     MainPage(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+    LearnPage(),
+    LearnPage(),
+    LearnPage(),
   ];
+
+  _changeTab(int index) {
+    setState(() {
+      _selectedTab = index;
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -87,7 +89,7 @@ class _DashboardState extends State<Dashboard> {
           backgroundColor: MainColors.backgroundColor,
         ),
         body: Center(
-          child: _widgetOptions[_selectedIndex],
+          child: _pages[_selectedTab],
         ),
         drawer: Drawer(
           backgroundColor: MainColors.backgroundColor,
@@ -287,6 +289,47 @@ class _DashboardState extends State<Dashboard> {
               ))
             ],
           ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: MainColors.primaryColor,
+          currentIndex: _selectedTab,
+          onTap: (index) => _changeTab(index),
+          selectedItemColor: Colors.black,
+          showUnselectedLabels: true,
+          unselectedItemColor: Color(0xff7E7B7B),
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined),
+                label: "Ana Ekran",
+                backgroundColor: MainColors.primaryColor),
+            BottomNavigationBarItem(
+                icon: Image.asset(
+                  'lib/assets/graduate.png',
+                  width: 5.5.w,
+                  height: 2.4.h,
+                  fit: BoxFit.cover,
+                ),
+                label: "Öğren",
+                backgroundColor: MainColors.primaryColor),
+            BottomNavigationBarItem(
+                icon: Image.asset(
+                  'lib/assets/muscle.png',
+                  width: 5.5.w,
+                  height: 2.4.h,
+                  fit: BoxFit.cover,
+                ),
+                label: "Antrenman",
+                backgroundColor: MainColors.primaryColor),
+            BottomNavigationBarItem(
+                icon: Image.asset(
+                  'lib/assets/chat.png',
+                  width: 5.5.w,
+                  height: 2.4.h,
+                  fit: BoxFit.cover,
+                ),
+                label: "Diyaloglar",
+                backgroundColor: MainColors.primaryColor),
+          ],
         ),
       ),
     );
