@@ -15,6 +15,7 @@ import 'package:patikmobile/pages/change_password.dart';
 import 'package:patikmobile/pages/feedback.dart';
 import 'package:patikmobile/pages/forgotPassword.dart';
 import 'package:patikmobile/pages/login.dart';
+import 'package:patikmobile/pages/main_page.dart';
 import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
@@ -47,10 +48,7 @@ class _DashboardState extends State<Dashboard> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
+    MainPage(),
     Text(
       'Index 1: Business',
       style: optionStyle,
@@ -85,7 +83,9 @@ class _DashboardState extends State<Dashboard> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        appBar: AppBar(title: Text("test")),
+        appBar: AppBar(
+          backgroundColor: MainColors.backgroundColor,
+        ),
         body: Center(
           child: _widgetOptions[_selectedIndex],
         ),
@@ -202,7 +202,7 @@ class _DashboardState extends State<Dashboard> {
                                                   : Text(""),
                                 )),
                             CustomIconButton(
-                              height: 15,
+                              height: 2.8.h,
                               textInlinePadding: 20,
                               width: 3,
                               colors: Colors.red,

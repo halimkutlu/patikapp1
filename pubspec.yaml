@@ -92,7 +92,21 @@ flutter:
      - lib/assets/mail.png
      - lib/assets/privacy.png
      - lib/assets/star_.png
-     - lib/assets/aboutapp_image.png
+     - lib/assets/bicyle.png
+     - lib/assets/chat.png
+     - lib/assets/facebook.png
+     - lib/assets/graduate.png
+     - lib/assets/ilearned.png
+     - lib/assets/instagram.png
+     - lib/assets/muscle.png
+     - lib/assets/repeat.png
+     - lib/assets/sun.png
+     - lib/assets/twitter.png
+     - lib/assets/whatsapp.png
+     - lib/assets/hat.png
+     - lib/assets/box.png
+
+
 
 
 
