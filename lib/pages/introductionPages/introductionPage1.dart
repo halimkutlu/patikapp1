@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -45,8 +45,8 @@ class _MyWidgetState extends State<IntroductionPage1> {
               height: 150,
               child: Image.asset(
                 !introProvider.secondPage
-                    ? 'lib/assets/intro_image_1.png'
-                    : 'lib/assets/intro_image_2.png',
+                    ? 'lib/assets/img/intro_image_1.png'
+                    : 'lib/assets/img/intro_image_2.png',
                 width: 600.0,
                 height: 240.0,
                 fit: BoxFit.cover,
@@ -84,7 +84,7 @@ class _MyWidgetState extends State<IntroductionPage1> {
             width: 90,
             height: 90,
             child: Image.asset(
-              'lib/assets/logo.png',
+              'lib/assets/img/logo.png',
               width: 600.0,
               height: 240.0,
               fit: BoxFit.cover,
@@ -128,8 +128,8 @@ class _MyWidgetState extends State<IntroductionPage1> {
                   height: 20,
                   child: Image.asset(
                     empty
-                        ? 'lib/assets/dots_active.png'
-                        : 'lib/assets/dots_passive.png',
+                        ? 'lib/assets/img/dots_active.png'
+                        : 'lib/assets/img/dots_passive.png',
                     width: 600.0,
                     height: 240.0,
                     fit: BoxFit.cover,

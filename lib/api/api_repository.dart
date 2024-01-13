@@ -11,6 +11,7 @@ import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/models/user.model.dart';
+import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user.dart';
@@ -44,7 +45,7 @@ class APIRepository {
   initializeInterceptors(String tokenValue) {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, requestInterceptorHandler) {
-        options.headers['PhoneID'] = getPhoneId();
+        options.headers['PhoneID'] = DeviceProvider.getPhoneId();
         String token = tokenValue;
         if (token != "") {
           print("Token:$token");

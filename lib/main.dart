@@ -4,18 +4,22 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/locale/Messages.dart';
+import 'package:patikmobile/locale/app_localization_delegate.dart';
 import 'package:patikmobile/pages/splashScreen.dart';
 import 'package:patikmobile/providers/changePasswordProvider.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
+import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/providers/mainProvider.dart';
 import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/providers/splashScreenProvider.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,19 +66,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale language = Locale('tr', 'TR');
   @override
   void initState() {
-    getPhoneId();
-    // downloadFile("https://lingobetik.com.tr/Downloads/GetLngFileStream",
-    //     filename: 'tr-TR');
-    // runTheProcedures();
-    getLang();
+    StorageProvider.load();
+    DeviceProvider.getPhoneId();
     super.initState();
-  }
-
-  getLang() async {
-    language = await getLanguage();
   }
 
   runTheProcedures() async {
@@ -88,14 +84,47 @@ class _MyAppState extends State<MyApp> {
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          translations: LocaleString(),
-          locale: Get.locale,
+          //translations: LocaleString(),
+          //locale: const Locale('hy', 'HW'), //Get.locale,
           title: 'Flutter Demo',
           theme: ThemeData(
             scaffoldBackgroundColor: MainColors.backgroundColor,
             primarySwatch: Colors.blue,
           ),
-          home: SplashScreen());
+          // Localization delegates
+          localizationsDelegates: const [
+            AppLocalizationsDelegate(),
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          // Supported locales for this app
+          supportedLocales: const [
+            Locale('ar', 'EG'),
+            Locale('bg', 'BG'),
+            Locale('bs-Latn', 'BA'),
+            Locale('de', 'DE'),
+            Locale('el', 'GR'),
+            Locale('en', 'US'),
+            Locale('es', 'ES'),
+            Locale('fa', 'IR'),
+            Locale('fr', 'FR'),
+            Locale('hy', 'AM'),
+            Locale('hy', 'AW'),
+            Locale('it', 'IT'),
+            Locale('ja', 'JP'),
+            Locale('ka', 'GE'),
+            Locale('kb', 'KR'),
+            Locale('mk', 'MK'),
+            Locale('nl', 'NL'),
+            Locale('pl', 'PL'),
+            Locale('pt', 'BR'),
+            Locale('pt', 'PT'),
+            Locale('ru', 'RU'),
+            Locale('tr', 'TR'),
+            Locale('zh', 'CN')
+          ],
+          home: const SplashScreen());
     });
   }
 }

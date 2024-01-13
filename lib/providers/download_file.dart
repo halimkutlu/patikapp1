@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
+import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/api_urls.dart';
@@ -48,7 +49,7 @@ Future<FileDownloadStatus> downloadFile(String endpoint,
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("Token");
     Map<String, Object> header = {
-      "PhoneID": getPhoneId(),
+      "PhoneID": DeviceProvider.getPhoneId(),
       "Authorization": token ?? "",
       "Content-Type": "application/json"
     };

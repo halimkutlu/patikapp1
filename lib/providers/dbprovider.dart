@@ -12,6 +12,7 @@ import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -27,7 +28,7 @@ class DbProvider extends ChangeNotifier {
     result.message = "";
 
     bool permissionStatus;
-    final phoneId = getPhoneId();
+    final phoneId = DeviceProvider.getPhoneId();
 
     await Permission.manageExternalStorage.request().isGranted;
 
@@ -79,7 +80,7 @@ class DbProvider extends ChangeNotifier {
         if (checkInformation == true) {
           Information infrm = await getInformation();
           String hash = infrm.lngHash!;
-          String phoneId = getPhoneId();
+          String phoneId = DeviceProvider.getPhoneId();
           result.status =
               await FlutterBcrypt.verify(password: phoneId, hash: hash);
           if (result.status) prefs.setString("CurrentLanguageCode", filename);
@@ -151,5 +152,12 @@ class DbProvider extends ChangeNotifier {
     List<WordStatistics> list =
         res.map((c) => WordStatistics.fromMap(c)).toList();
     return list;
+  }
+
+  checkLanguage(int lcid) async {
+    var language = Languages.GetLngFromLCID(lcid).Code;
+    var path = await getDbPath(lngName: language);
+
+    return await File(path).exists();
   }
 }

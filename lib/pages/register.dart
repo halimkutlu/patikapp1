@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/widgets/custom_textfield.dart';
 import 'package:patikmobile/widgets/icon_button.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:sizer/sizer.dart';
 
@@ -23,7 +23,7 @@ class _LoadingState extends State<Loading> {
             children: [
               Center(
                   child: Image.asset(
-                'lib/assets/logo.png',
+                'lib/assets/img/logo.png',
                 fit: BoxFit.cover,
               )),
               Container(

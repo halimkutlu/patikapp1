@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/widgets/custom_textfield.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
@@ -153,7 +153,7 @@ class _LoginState extends State<Login> {
                       width: 90,
                       height: 90,
                       child: Image.asset(
-                        'lib/assets/logo.png',
+                        'lib/assets/img/logo.png',
                         width: 600.0,
                         height: 240.0,
                         fit: BoxFit.cover,

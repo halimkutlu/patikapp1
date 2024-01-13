@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -55,7 +56,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                         Padding(
                           padding: const EdgeInsets.all(3.0),
                           child: Image.asset(
-                            'lib/assets/user_language.png',
+                            'lib/assets/img/user_language.png',
                             fit: BoxFit.cover,
                             height: 2.3.h,
                           ),
@@ -76,7 +77,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                   ],
                 ),
               ),
-              for (var language in loginProvider.getUseLanguage())
+              for (var language in Languages.LngList)
                 InkWell(
                   onTap: () {
                     loginProvider.setUseLanguage(
@@ -97,7 +98,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          language['name'],
+                          language.Name!,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color(0xFF0F1011),
@@ -118,7 +119,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                     width: 90,
                     height: 90,
                     child: Image.asset(
-                      'lib/assets/logo.png',
+                      'lib/assets/img/logo.png',
                       width: 600.0,
                       height: 240.0,
                       fit: BoxFit.cover,

@@ -22,6 +22,7 @@ import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/pages/survey.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/download_file.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -189,36 +190,28 @@ class LoginProvider extends ChangeNotifier {
         .push(MaterialPageRoute(builder: (context) => ForgotPassword()));
   }
 
-  getUseLanguage() {
-    return locale;
-  }
-
   getLearnLanguage(BuildContext context) async {
-    _loading = true;
-    //_learnLanguage = locale;
-    _loading = false;
-    //notifyListeners();
-
     httpSonucModel lngList =
         await apirepository.get(controller: learnLanguageUrl);
     if (lngList.success!) {
       Languages.fromJson(lngList.data);
       notifyListeners();
-    } else {
-      CustomAlertDialogOnlyConfirm(context, () {
-        Navigator.pop(context);
-      }, "error".tr, "errorAccured".tr, ArtSweetAlertType.info, "ok".tr);
     }
+    // else {
+    //   CustomAlertDialogOnlyConfirm(context, () {
+    //     Navigator.pop(context);
+    //   }, "error".tr, "errorAccured".tr, ArtSweetAlertType.info, "ok".tr);
+    // }
   }
 
-  setUseLanguage(language, BuildContext context, bool dashboard) {
+  setUseLanguage(Lcid language, BuildContext context, bool dashboard) {
     CustomAlertDialog(context, () {
-      changeLanguage(language['locale'], context, language['name'], dashboard);
+      changeLanguage(language, context, dashboard);
     },
         "areYouSure".tr,
         "applicationLanguage".tr +
             " " +
-            language['name'] +
+            language.Name! +
             " " +
             "applicationLanguage2".tr,
         ArtSweetAlertType.question,
@@ -226,9 +219,9 @@ class LoginProvider extends ChangeNotifier {
         "no".tr);
   }
 
-  changeLanguage(
-      Locale locale, BuildContext context, String name, bool dashboard) {
-    updateLanguage(locale, name);
+  changeLanguage(Lcid locale, BuildContext context, bool dashboard) {
+    StorageProvider.updateLanguage(context, locale);
+    notifyListeners();
     Navigator.pop(context);
     CustomAlertDialogOnlyConfirm(context, () {
       if (dashboard) {

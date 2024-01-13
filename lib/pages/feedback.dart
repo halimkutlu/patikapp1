@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/pages/feedbackSuccess.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:sizer/sizer.dart';

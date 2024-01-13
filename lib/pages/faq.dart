@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/pages/feedback.dart';
 
 class Faq extends StatefulWidget {
@@ -30,7 +30,7 @@ class _Faq extends State<Faq> {
               padding: const EdgeInsets.all(18.0),
               child: Container(
                 child: Image.asset(
-                  'lib/assets/aboutapp_image.png',
+                  'lib/assets/img/aboutapp_image.png',
                   width: 600.0,
                   height: 240.0,
                   fit: BoxFit.contain,

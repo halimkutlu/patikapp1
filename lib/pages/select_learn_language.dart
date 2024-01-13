@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/pages/dashboard.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/providers/staticNavigateProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
@@ -58,6 +59,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
   @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(context);
+    final dbProvider = Provider.of<DbProvider>(context);
     if (Languages.LngList.isEmpty) loginProvider.getLearnLanguage(context);
 
     return Scaffold(
@@ -111,7 +113,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                             Padding(
                               padding: const EdgeInsets.all(3.0),
                               child: Image.asset(
-                                'lib/assets/learn_language.png',
+                                'lib/assets/img/learn_language.png',
                                 fit: BoxFit.cover,
                                 height: 2.3.h,
                               ),
@@ -140,7 +142,8 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                       var language = Languages.LngList[index];
                       return InkWell(
                         onTap: () async {
-                          var lngCheck = await checkLanguage(language.LCID);
+                          var lngCheck =
+                              await dbProvider.checkLanguage(language.LCID);
                           if (lngCheck) {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
@@ -222,7 +225,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                         width: 90,
                         height: 90,
                         child: Image.asset(
-                          'lib/assets/logo.png',
+                          'lib/assets/img/logo.png',
                           width: 600.0,
                           height: 240.0,
                           fit: BoxFit.cover,

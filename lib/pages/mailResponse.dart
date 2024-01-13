@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:provider/provider.dart';
@@ -82,7 +82,7 @@ class _MailResponseState extends State<MailResponse> {
                     width: 90,
                     height: 90,
                     child: Image.asset(
-                      'lib/assets/logo.png',
+                      'lib/assets/img/logo.png',
                       width: 600.0,
                       height: 240.0,
                       fit: BoxFit.cover,

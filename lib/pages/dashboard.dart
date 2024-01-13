@@ -6,7 +6,7 @@ import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/api/static_variables.dart';
-import 'package:patikmobile/assets/mainColors.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/about_app.dart';
@@ -147,7 +147,7 @@ class _DashboardState extends State<Dashboard> {
                                 shape: OvalBorder(),
                               ),
                               child: Image.asset(
-                                'lib/assets/avatar.png',
+                                'lib/assets/img/avatar.png',
                                 height: 10,
                                 width: 10,
                               ),
@@ -221,7 +221,7 @@ class _DashboardState extends State<Dashboard> {
                 shrinkWrap: true,
                 children: <Widget>[
                   MenuItem(
-                      logo: 'lib/assets/user_language.png',
+                      logo: 'lib/assets/img/user_language.png',
                       text: "Kullanıcı Dili",
                       centerWidget: Text(mainProvider.useLanguageName),
                       onTap: () {
@@ -231,7 +231,7 @@ class _DashboardState extends State<Dashboard> {
                                 )));
                       }),
                   MenuItem(
-                      logo: 'lib/assets/learn_language.png',
+                      logo: 'lib/assets/img/learn_language.png',
                       text: "Öğrenme Dili",
                       centerWidget: Text(mainProvider.learnLanguageName),
                       onTap: () {
@@ -239,7 +239,7 @@ class _DashboardState extends State<Dashboard> {
                             builder: (context) => SelectLearnLanguage()));
                       }),
                   MenuItem(
-                      logo: 'lib/assets/internet.png',
+                      logo: 'lib/assets/img/internet.png',
                       text: "Çevrimdışı Mod",
                       centerWidget: CustomIconButton(
                         textSize: 60,
@@ -250,7 +250,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       onTap: () {}),
                   MenuItem(
-                      logo: 'lib/assets/key.png',
+                      logo: 'lib/assets/img/key.png',
                       text: "Şifre Değiştir",
                       centerWidget: Text(""),
                       onTap: () {
@@ -258,17 +258,17 @@ class _DashboardState extends State<Dashboard> {
                             builder: (context) => ChangePassword()));
                       }),
                   MenuItem(
-                      logo: 'lib/assets/privacy.png',
+                      logo: 'lib/assets/img/privacy.png',
                       text: "Gizlilik Politikası",
                       centerWidget: Text(""),
                       onTap: () {}),
                   MenuItem(
-                      logo: 'lib/assets/star_.png',
+                      logo: 'lib/assets/img/star_.png',
                       text: "Uygulamayı deperlendir",
                       centerWidget: Text(""),
                       onTap: () {}),
                   MenuItem(
-                      logo: 'lib/assets/mail.png',
+                      logo: 'lib/assets/img/mail.png',
                       text: "Geri Bildirim",
                       centerWidget: Text(""),
                       onTap: () {
@@ -276,7 +276,7 @@ class _DashboardState extends State<Dashboard> {
                             builder: (context) => FeedbackPage()));
                       }),
                   MenuItem(
-                      logo: 'lib/assets/mail.png',
+                      logo: 'lib/assets/img/mail.png',
                       text: "Uygulama Hakkında",
                       centerWidget: Text(""),
                       onTap: () {
