@@ -43,7 +43,7 @@ class SplashScreenProvider extends ChangeNotifier {
             if (status.status) {
               print("Db local storage üzerinden aktif");
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const Dashboard()),
+                  MaterialPageRoute(builder: (context) => const Dashboard(0)),
                   (Route<dynamic> route) => false);
             }
           } else {

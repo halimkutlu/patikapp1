@@ -96,7 +96,19 @@ flutter:
     - lib/assets/img/privacy.png
     - lib/assets/img/star_.png
     - lib/assets/img/aboutapp_image.png
-
+    - lib/assets/img/bicyle.png
+    - lib/assets/img/chat.png
+    - lib/assets/img/facebook.png
+    - lib/assets/img/graduate.png
+    - lib/assets/img/ilearned.png
+    - lib/assets/img/instagram.png
+    - lib/assets/img/muscle.png
+    - lib/assets/img/repeat.png
+    - lib/assets/img/sun.png
+    - lib/assets/img/twitter.png
+    - lib/assets/img/whatsapp.png
+    - lib/assets/img/hat.png
+    - lib/assets/img/box.png
 
 
      #- lib/db/tr-TR.db
