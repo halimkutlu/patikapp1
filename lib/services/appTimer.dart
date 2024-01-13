@@ -49,6 +49,6 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     stopwatch.stop();
     timer?.cancel();
-    prefs.setInt("app_duration", stopwatch.elapsed.inSeconds);
+    prefs.setInt("app_duration", stopwatch.elapsed.inMinutes);
   }
 }
