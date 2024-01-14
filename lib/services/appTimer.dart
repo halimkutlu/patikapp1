@@ -29,8 +29,8 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
 
     stopwatch.start();
     timer = Timer.periodic(Duration(minutes: 1), (timer) {
-      print("Geçen süre: " + stopwatch.elapsed.inMinutes.toString());
-      print("Kayıt edilen zaman" + savedTime.toString());
+      // print("Geçen süre: " + stopwatch.elapsed.inMinutes.toString());
+      // print("Kayıt edilen zaman" + savedTime.toString());
       if (savedTime != null) {
         prefs.setInt("app_duration", stopwatch.elapsed.inMinutes + savedTime);
       } else {

@@ -310,13 +310,11 @@ class _MainPageState extends State<MainPage> {
   Future<int> _getStoredTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int time = prefs.getInt("app_duration") ?? 0;
-    print(time);
     return time;
   }
 
   void getMinute() async {
     appMinute = await _getStoredTime();
-    print("Gösterilen dakika: $appMinute");
     if (mounted) {
       setState(() {});
     }
