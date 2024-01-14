@@ -267,7 +267,7 @@ class LoginProvider extends ChangeNotifier {
           //EĞER DOSYA ÇIKARTMA İŞLEMİ BAŞARILI İSE
           FileDownloadStatus dbresult = await dbProvider.openDbConnection(code);
           if (dbresult.status) {
-            prefs.setString("CurrentLanguageLCID", lcid.toString());
+            prefs.setInt(StorageProvider.learnLcidKey, lcid);
             prefs.setString("CurrentLanguageName", name);
 
             processResult.status = true;

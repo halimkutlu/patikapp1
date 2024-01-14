@@ -57,42 +57,42 @@ class Languages {
             Name: element['Name']))
         .toList();
 
-    setLanguagesToLocalStorage(LngList);
+    //setLanguagesToLocalStorage(LngList);
   }
 
   static Lcid GetLngFromCode(String code) {
     return LngList.firstWhere((element) => element.Code == code);
   }
 
-  static setLanguagesToLocalStorage(List<Lcid> list) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  // static setLanguagesToLocalStorage(List<Lcid> list) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // Liste öğelerini JSON formatına çevir
-    List<String> stringList =
-        list.map((lcid) => jsonEncode(lcid.toJson())).toList();
+  //   // Liste öğelerini JSON formatına çevir
+  //   List<String> stringList =
+  //       list.map((lcid) => jsonEncode(lcid.toJson())).toList();
 
-    prefs.setStringList("languageList", stringList);
-  }
+  //   prefs.setStringList("languageList", stringList);
+  // }
 
-  static getLanguagesFromLocalStorageWithLCID(int lcid) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  // static getLanguagesFromLocalStorageWithLCID(int lcid) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    List<String>? stringList = prefs.getStringList("languageList");
+  //   List<String>? stringList = prefs.getStringList("languageList");
 
-    if (stringList == null) {
-      return [];
-    }
+  //   if (stringList == null) {
+  //     return [];
+  //   }
 
-    // JSON formatındaki stringleri Lcid nesnelerine çevir
-    List<Lcid> lcidList =
-        stringList.map((value) => Lcid.fromJson(jsonDecode(value))).toList();
+  //   // JSON formatındaki stringleri Lcid nesnelerine çevir
+  //   List<Lcid> lcidList =
+  //       stringList.map((value) => Lcid.fromJson(jsonDecode(value))).toList();
 
-    // LCID'ye göre eşleşen dil kodunu al
-    return lcidList
-        .firstWhere((element) => element.LCID == lcid,
-            orElse: () => Lcid(LCID: 0, Code: ""))
-        .Code;
-  }
+  //   // LCID'ye göre eşleşen dil kodunu al
+  //   return lcidList
+  //       .firstWhere((element) => element.LCID == lcid,
+  //           orElse: () => Lcid(LCID: 0, Code: ""))
+  //       .Code;
+  // }
 
   static Lcid GetLngFromLCID(int lcid) {
     return LngList.firstWhere((element) => element.LCID == lcid);
@@ -103,7 +103,8 @@ class Languages {
   }
 
   static int GetLCIDFromCode(String code) {
-    return LngList.firstWhere((element) => element.Code == code).LCID;
+    return LngList.where((element) => element.Code == code).firstOrNull?.LCID ??
+        1033;
   }
 }
 

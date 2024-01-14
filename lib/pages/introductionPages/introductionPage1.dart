@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -54,13 +55,13 @@ class _MyWidgetState extends State<IntroductionPage1> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: introductionText(
-                  !introProvider.secondPage ? "introText1" : "introText3", 2.5),
+              child:
+                  introductionText(!introProvider.secondPage ? "1" : "2", 2.5),
             ),
             Padding(
               padding: const EdgeInsets.all(18.0),
-              child: introductionText(
-                  !introProvider.secondPage ? "introText2" : "introText4", 2.0),
+              child:
+                  introductionText(!introProvider.secondPage ? "1" : "2", 2.0),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +147,7 @@ class _MyWidgetState extends State<IntroductionPage1> {
   Widget introductionText(String text, double fontSize) {
     return Container(
       child: Text(
-        text.tr,
+        AppLocalizations.of(context).translate(text),
         textAlign: TextAlign.center,
         maxLines: 10,
         style: TextStyle(

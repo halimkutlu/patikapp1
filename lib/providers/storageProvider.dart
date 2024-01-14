@@ -23,13 +23,13 @@ class StorageProvider {
 
       SharedPreferences shrdp = await SharedPreferences.getInstance();
 
-      applcid = shrdp.getInt(appLcidKey) ?? 0;
+      applcid = shrdp.getInt(StorageProvider.appLcidKey) ?? 0;
       if (applcid == 0) {
         applcid = 1033;
-        await shrdp.setInt(appLcidKey, applcid);
+        await shrdp.setInt(StorageProvider.appLcidKey, applcid);
       }
-
       StorageProvider.appLanguge = Languages.GetLngFromLCID(applcid);
+      await shrdp.setString("language_name", StorageProvider.appLanguge!.Name!);
     }
     return StorageProvider.appLanguge!;
   }
@@ -39,8 +39,7 @@ class StorageProvider {
       int learnlcid = 0;
 
       SharedPreferences shrdp = await SharedPreferences.getInstance();
-
-      learnlcid = shrdp.getInt(learnLcidKey) ?? 0;
+      learnlcid = shrdp.getInt(StorageProvider.learnLcidKey) ?? 0;
       if (learnlcid > 0) {
         StorageProvider.learnLanguge = Languages.GetLngFromLCID(learnlcid);
       }
@@ -51,6 +50,7 @@ class StorageProvider {
   static updateLanguage(BuildContext context, Lcid locale) async {
     SharedPreferences shrdp = await SharedPreferences.getInstance();
     await shrdp.setInt(appLcidKey, locale.LCID);
+    await shrdp.setString("language_name", locale.Name!);
     AppLocalizationsDelegate().load(const Locale('en'));
     Get.updateLocale(Locale(locale.Code.split('-').first));
   }

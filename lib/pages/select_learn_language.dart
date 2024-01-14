@@ -8,6 +8,7 @@ import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/providers/staticNavigateProvider.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:patikmobile/widgets/loading_bar.dart';
@@ -149,7 +150,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                 await SharedPreferences.getInstance();
                             prefs.setString(
                                 "CurrentLanguageName", language.Name!);
-                            prefs.setString("CurrentLanguageLCID",
+                            prefs.setString(StorageProvider.learnLcidKey,
                                 language.LCID.toString());
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(

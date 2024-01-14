@@ -9,6 +9,7 @@ import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/introductionPages/introductionPage1.dart';
 import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -23,17 +24,13 @@ class SplashScreenProvider extends ChangeNotifier {
             (Route<dynamic> route) => false);
       } else {
         String? token = prefs.getString("Token");
-        String? currentLanguageLCID = prefs.getString("CurrentLanguageLCID");
-        List<String>? languageList = prefs.getStringList("languageList");
-        if ((token == null) ||
-            (currentLanguageLCID == null) ||
-            (languageList == null)) {
+        int? learningLanguageLCID = prefs.getInt(StorageProvider.learnLcidKey);
+        if ((token == null) || (learningLanguageLCID == null)) {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const Login()),
               (Route<dynamic> route) => false);
         } else {
-          var language = await Languages.getLanguagesFromLocalStorageWithLCID(
-              int.parse(currentLanguageLCID));
+          var language = Languages.GetCodeFromLCID(learningLanguageLCID);
           var path = await DbProvider().getDbPath(lngName: language);
           var pathExist = await File(path).exists();
           if (pathExist) {

@@ -72,7 +72,9 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
     // }
 
     SharedPreferences shrdp = await SharedPreferences.getInstance();
-    int llcid = shrdp.getInt(StorageProvider.appLcidKey)!;
+    int llcid = shrdp.getInt(StorageProvider.appLcidKey) ??
+        Languages.GetLCIDFromCode(
+            "${locale.languageCode}-${locale.countryCode}"); // default en-US
     StorageProvider.appLanguge = Languages.GetLngFromLCID(llcid);
 
     AppLocalizations localizations =

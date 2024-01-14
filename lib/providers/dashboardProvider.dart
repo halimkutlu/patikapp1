@@ -52,9 +52,8 @@ class DashboardProvider extends ChangeNotifier {
   init() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _userName = prefs.getString("userName") ?? "";
-    _nameLastname = (prefs.getString("firstName") ?? "") +
-        " " +
-        (prefs.getString("lastName") ?? "");
+    _nameLastname =
+        "${prefs.getString("firstName") ?? ""} ${prefs.getString("lastName") ?? ""}";
     _useLanguageName = prefs.getString("language_name");
     _learnLanguageName = prefs.getString("CurrentLanguageName");
     getRoles(prefs);
