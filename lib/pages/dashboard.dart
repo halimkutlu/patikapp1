@@ -122,8 +122,8 @@ class _DashboardState extends State<Dashboard> {
                               ),
                               child: Image.asset(
                                 'lib/assets/img/avatar.png',
-                                height: 10,
-                                width: 10,
+                                height: 10.h,
+                                width: 10.w,
                               ),
                             ),
                             Padding(

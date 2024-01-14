@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, use_build_context_synchronously, prefer_const_constructors, prefer_interpolation_to_compose_strings
+// ignore_for_file: prefer_final_fields, use_build_context_synchronously, prefer_const_constructors, prefer_interpolation_to_compose_strings, curly_braces_in_flow_control_structures
 
 import 'dart:convert';
 import 'dart:io';
@@ -86,12 +86,22 @@ class LoginProvider extends ChangeNotifier {
           rememberMe: false);
 
       if (apiresult.success!) {
-        if (StaticVariables.FirstTimeLogin) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => SelectLanguage()));
+        //dil kontrolü
+        if (StorageProvider.learnLanguge != null &&
+            StorageProvider.learnLanguge!.LCID > 0) {
+          DbProvider dbProvider = DbProvider();
+          bool isLanguageExist = await dbProvider
+              .checkLanguage(StorageProvider.learnLanguge!.LCID);
+
+          if (isLanguageExist)
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const Dashboard(0)));
+          else
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => SelectLearnLanguage()));
         } else {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const Survey()));
+              .push(MaterialPageRoute(builder: (context) => SelectLanguage()));
         }
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
@@ -237,14 +247,13 @@ class LoginProvider extends ChangeNotifier {
     }, "success".tr, "langSuccess".tr, ArtSweetAlertType.success, "ok".tr);
   }
 
-  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(String code,
-      String name, int lcid, void Function(int, int)? onReceiveProgress) async {
+  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
+      Lcid lcid, void Function(int, int)? onReceiveProgress) async {
     DbProvider dbProvider = DbProvider();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     FileDownloadStatus processResult = FileDownloadStatus();
     processResult.status = false;
 
-    if (code.isNotEmpty) {
+    if (lcid.Code.isNotEmpty) {
       //yükleme ekranı açılır
       //_loading = true;
       notifyListeners();
@@ -252,12 +261,12 @@ class LoginProvider extends ChangeNotifier {
       //DOSYA İNDİRME İŞLEMİ YAPILIR.
       FileDownloadStatus resultDownloadFile = await downloadFile(
           "GetLngFileStream",
-          lcid: lcid,
+          lcid: lcid.LCID,
           onReceiveProgress: onReceiveProgress);
 
       if (resultDownloadFile.status) {
         //DOSYA İNDRİME İŞLEMİ BAŞARILI İSE DOSYAYI CACHEDEN ALARAK TELEFONA ÇIKARTMA İŞLEMİ YAPILIR
-        FileDownloadStatus result = await dbProvider.runProcess(code);
+        FileDownloadStatus result = await dbProvider.runProcess(lcid.Code);
         if (result.status == false) {
           _loading = false;
           notifyListeners();
@@ -265,11 +274,9 @@ class LoginProvider extends ChangeNotifier {
           return processResult;
         } else {
           //EĞER DOSYA ÇIKARTMA İŞLEMİ BAŞARILI İSE
-          FileDownloadStatus dbresult = await dbProvider.openDbConnection(code);
-          if (dbresult.status) {
-            prefs.setInt(StorageProvider.learnLcidKey, lcid);
-            prefs.setString("CurrentLanguageName", name);
 
+          FileDownloadStatus dbresult = await dbProvider.openDbConnection(lcid);
+          if (dbresult.status) {
             processResult.status = true;
           } else {
             processResult.status = false;

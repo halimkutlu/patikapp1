@@ -22,6 +22,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  Timer? _timer;
   AppLifecycleObserver? _lifecycleObserver;
   late MainPageProvider mainProvider;
   int appMinute = 0;
@@ -35,6 +36,9 @@ class _MainPageState extends State<MainPage> {
     getMinute();
     mainProvider = Provider.of<MainPageProvider>(context, listen: false);
     mainProvider.init();
+    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
+      getMinute();
+    });
   }
 
   @override

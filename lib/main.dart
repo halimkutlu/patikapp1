@@ -11,6 +11,7 @@ import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/locale/Messages.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
 import 'package:patikmobile/pages/splashScreen.dart';
+import 'package:patikmobile/providers/categoriesProvider.dart';
 import 'package:patikmobile/providers/changePasswordProvider.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
@@ -58,6 +59,8 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<ChangePasswordProvider>(
       create: (_) => ChangePasswordProvider()),
   ChangeNotifierProvider<MainPageProvider>(create: (_) => MainPageProvider()),
+  ChangeNotifierProvider<CategoriesProvider>(
+      create: (_) => CategoriesProvider()),
 ];
 
 class MyApp extends StatefulWidget {
@@ -73,12 +76,6 @@ class _MyAppState extends State<MyApp> {
     StorageProvider.load();
     DeviceProvider.getPhoneId();
     super.initState();
-  }
-
-  runTheProcedures() async {
-    var dbProvider = DbProvider();
-    await dbProvider.openDbConnection("tr-TR");
-    await dbProvider.getWordList();
   }
 
   @override

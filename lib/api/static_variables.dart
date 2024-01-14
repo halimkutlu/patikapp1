@@ -6,7 +6,6 @@ class StaticVariables {
   static String Surname = "";
   static List<int> Roles = [];
   static String LangCode = "";
-  static String LangName = "";
   static bool FirstTimeLogin = true;
   static String PhoneID = "";
 
@@ -17,7 +16,6 @@ class StaticVariables {
     Surname = "";
     Roles = [];
     LangCode = "";
-    LangName = "";
     FirstTimeLogin = true;
     PhoneID = "";
   }

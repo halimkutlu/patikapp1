@@ -119,7 +119,7 @@ class APIRepository {
             // String userString = json.encode(response);
             // print(userString);
 
-            getFirstTimeLogin();
+            // getFirstTimeLogin();
 
             StaticVariables.Name = result.data!.firstName ?? "";
             StaticVariables.Surname = result.data!.lastName ?? "";
@@ -430,20 +430,20 @@ class APIRepository {
     // debugPrint('encoded: $stringEncoded');
   }
 
-  getFirstTimeLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var firstTimeLogin = prefs.getBool("firstTimeLogin");
-    if (firstTimeLogin == null) {
-      prefs.setBool("firstTimeLogin", true);
-      firstTimeLogin = true;
-    }
-    StaticVariables.FirstTimeLogin = firstTimeLogin;
-    return firstTimeLogin;
-  }
+  // getFirstTimeLogin() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   var firstTimeLogin = prefs.getBool("firstTimeLogin");
+  //   if (firstTimeLogin == null) {
+  //     prefs.setBool("firstTimeLogin", true);
+  //     firstTimeLogin = true;
+  //   }
+  //   StaticVariables.FirstTimeLogin = firstTimeLogin;
+  //   return firstTimeLogin;
+  // }
 
-  setFirstTimeLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool("firstTimeLogin", false);
-    StaticVariables.FirstTimeLogin = false;
-  }
+  // setFirstTimeLogin() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setBool("firstTimeLogin", false);
+  //   StaticVariables.FirstTimeLogin = false;
+  // }
 }

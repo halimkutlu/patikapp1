@@ -13,6 +13,7 @@ import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -65,12 +66,10 @@ class DbProvider extends ChangeNotifier {
     }
   }
 
-  Future<FileDownloadStatus> openDbConnection(String filename) async {
+  Future<FileDownloadStatus> openDbConnection(Lcid LCID) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     FileDownloadStatus result = FileDownloadStatus();
-    if (filename.isNotEmpty) {
-      StaticVariables.LangName = filename;
-
+    if (LCID.Code.isNotEmpty) {
       String dbPath = await getDbPath();
       if (database == null || !database!.isOpen) {
         database = await openDatabase(dbPath);
@@ -83,7 +82,8 @@ class DbProvider extends ChangeNotifier {
           String phoneId = DeviceProvider.getPhoneId();
           result.status =
               await FlutterBcrypt.verify(password: phoneId, hash: hash);
-          if (result.status) prefs.setString("CurrentLanguageCode", filename);
+          if (result.status)
+            prefs.setInt(StorageProvider.learnLcidKey, LCID.LCID);
         } else
           result.status = true;
       }
@@ -92,7 +92,8 @@ class DbProvider extends ChangeNotifier {
   }
 
   getDbPath({String lngName = ""}) async {
-    if (lngName.isEmpty) lngName = StaticVariables.LangName;
+    Lcid language = await StorageProvider.getLearnLanguage();
+    if (lngName.isEmpty) lngName = language.Code;
 
     Directory dir = await getApplicationDocumentsDirectory();
     final patikAppDir = Directory('${dir.path}/${lngName}').path;
@@ -155,8 +156,12 @@ class DbProvider extends ChangeNotifier {
   }
 
   checkLanguage(int lcid) async {
-    var language = Languages.GetLngFromLCID(lcid).Code;
-    var path = await getDbPath(lngName: language);
+    Lcid language = Languages.GetLngFromLCID(lcid);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(StorageProvider.learnLcidKey, lcid);
+    await prefs.setString("CurrentLanguageName", language.Name!);
+
+    var path = await getDbPath(lngName: language.Code);
 
     return await File(path).exists();
   }

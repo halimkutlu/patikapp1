@@ -152,6 +152,8 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                 "CurrentLanguageName", language.Name!);
                             prefs.setString(StorageProvider.learnLcidKey,
                                 language.LCID.toString());
+                            prefs.setInt(
+                                StorageProvider.learnLcidKey, language.LCID);
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) => Dashboard(0)));
@@ -160,12 +162,10 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                 () async {
                               Navigator.pop(_scaffoldKey.currentContext!);
                               isDownloading = true;
+
                               FileDownloadStatus status = await loginProvider
                                   .startProcessOfDownloadLearnLanguage(
-                                      language.Code,
-                                      language.Name!,
-                                      language.LCID,
-                                      onReceiveProgress);
+                                      language, onReceiveProgress);
                               if (status.status) {
                                 Navigator.of(_scaffoldKey.currentContext!)
                                     .pushReplacement(MaterialPageRoute(

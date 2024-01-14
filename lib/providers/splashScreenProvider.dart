@@ -30,8 +30,8 @@ class SplashScreenProvider extends ChangeNotifier {
               MaterialPageRoute(builder: (context) => const Login()),
               (Route<dynamic> route) => false);
         } else {
-          var language = Languages.GetCodeFromLCID(learningLanguageLCID);
-          var path = await DbProvider().getDbPath(lngName: language);
+          var language = Languages.GetLngFromLCID(learningLanguageLCID);
+          var path = await DbProvider().getDbPath(lngName: language.Code);
           var pathExist = await File(path).exists();
           if (pathExist) {
             var dbProvider = DbProvider();
