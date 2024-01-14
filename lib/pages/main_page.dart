@@ -1,11 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/dashboard.dart';
-import 'package:patikmobile/pages/learn_page.dart';
 import 'package:patikmobile/providers/mainPageProvider.dart';
 import 'package:patikmobile/services/appTimer.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
@@ -53,25 +52,25 @@ class _MainPageState extends State<MainPage> {
       body: Column(children: [
         Center(
           child: Text(
-            "Hemen Başla!",
+            AppLocalizations.of(context).translate("96"),
             style: TextStyle(fontSize: 4.h, fontWeight: FontWeight.bold),
           ),
         ),
         Column(
           children: [
             IconListItem(
-                Text: "Yeni Kelimeler Öğren",
+                Text: AppLocalizations.of(context).translate("97"),
                 imageStr: 'lib/assets/img/graduate.png',
                 onTap: () {}),
             IconListItem(
-                Text: "Antrenman Yap",
+                Text: AppLocalizations.of(context).translate("98"),
                 imageStr: 'lib/assets/img/muscle.png',
                 onTap: () {
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => Dashboard(1)));
                 }),
             IconListItem(
-              Text: "Diyaloglar",
+              Text: AppLocalizations.of(context).translate("99"),
               imageStr: 'lib/assets/img/chat.png',
               onTap: () => mainProvider.changePage(3),
             ),
@@ -90,18 +89,18 @@ class _MainPageState extends State<MainPage> {
       child: Column(
         children: [
           Text(
-            "Harika!",
+            AppLocalizations.of(context).translate("64"),
             style: TextStyle(fontSize: 2.5.h),
           ),
           Text(
-            "Çok iyi ilerliyorsun.",
+            AppLocalizations.of(context).translate("65"),
             style: TextStyle(fontSize: 2.5.h),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Uygulamada toplam ",
+                AppLocalizations.of(context).translate("66", addRight: " "),
                 style: TextStyle(fontSize: 2.0.h, fontWeight: FontWeight.bold),
               ),
               Text(
@@ -112,7 +111,7 @@ class _MainPageState extends State<MainPage> {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                " dakika zaman geçirdin",
+                AppLocalizations.of(context).translate("63"),
                 style: TextStyle(fontSize: 2.0.h, fontWeight: FontWeight.bold),
               ),
             ],
@@ -121,7 +120,7 @@ class _MainPageState extends State<MainPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Bu sürede ",
+                AppLocalizations.of(context).translate("67", addRight: " "),
                 style: TextStyle(fontSize: 2.0.h, fontWeight: FontWeight.bold),
               ),
               Text(
@@ -130,10 +129,6 @@ class _MainPageState extends State<MainPage> {
                     fontSize: 3.0.h,
                     color: Colors.red,
                     fontWeight: FontWeight.bold),
-              ),
-              Text(
-                " kelime öğrendin",
-                style: TextStyle(fontSize: 2.0.h, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -183,7 +178,7 @@ class _MainPageState extends State<MainPage> {
                 fit: BoxFit.cover,
               ),
               Text(
-                "Hoşuna gitti mi?",
+                AppLocalizations.of(context).translate("68"),
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 2.h),
               ),
               Image.asset(
@@ -206,7 +201,7 @@ class _MainPageState extends State<MainPage> {
               textColor: Colors.white,
               colors: Colors.red,
               icons: Icon(Icons.send),
-              name: "Arkadaşlarına tavsiye et",
+              name: AppLocalizations.of(context).translate("100"),
               width: 0.3.w,
               height: 2.5.h,
               onTap: () {},
@@ -224,19 +219,19 @@ class _MainPageState extends State<MainPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           box(
-            "Öğrendim",
+            AppLocalizations.of(context).translate("101"),
             MainColors.boxColor1,
             mainProvider.getLernedWordCount.toString(),
             'lib/assets/img/ilearned.png',
           ),
           box(
-            "Tekrar et",
+            AppLocalizations.of(context).translate("102"),
             MainColors.boxColor2,
             mainProvider.getRepeatedWordCount.toString(),
             'lib/assets/img/repeat.png',
           ),
           box(
-            "Sıkı çalış",
+            AppLocalizations.of(context).translate("103"),
             MainColors.boxColor3,
             mainProvider.getWorkHardCount.toString(),
             'lib/assets/img/sun.png',
@@ -263,7 +258,7 @@ class _MainPageState extends State<MainPage> {
           child: Center(
               child: Text(
             text,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 1.5.h, fontWeight: FontWeight.bold),
           )),
         ),
         Container(

@@ -3,11 +3,10 @@
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:patikmobile/locale/ChangeLanguage.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
-import 'package:patikmobile/providers/staticNavigateProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
@@ -35,7 +34,6 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
   List<dynamic> llanguage = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -120,7 +118,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                               ),
                             ),
                             Text(
-                              "chooseLearnLanguage".tr,
+                              AppLocalizations.of(context).translate("28"),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Color(0xFF0F1011),
@@ -150,8 +148,6 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                 await SharedPreferences.getInstance();
                             prefs.setString(
                                 "CurrentLanguageName", language.Name!);
-                            prefs.setString(StorageProvider.learnLcidKey,
-                                language.LCID.toString());
                             prefs.setInt(
                                 StorageProvider.learnLcidKey, language.LCID);
                             await dbProvider.closeDbConnection();

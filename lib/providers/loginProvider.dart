@@ -1,7 +1,4 @@
-// ignore_for_file: prefer_final_fields, use_build_context_synchronously, prefer_const_constructors, prefer_interpolation_to_compose_strings, curly_braces_in_flow_control_structures
-
-import 'dart:convert';
-import 'dart:io';
+// ignore_for_file: file_names, prefer_final_fields, use_build_context_synchronously, curly_braces_in_flow_control_structures, prefer_const_constructors
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
-import 'package:patikmobile/locale/ChangeLanguage.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/user.model.dart';
@@ -19,7 +16,6 @@ import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/pages/register.dart';
 import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/pages/select_learn_language.dart';
-import 'package:patikmobile/pages/survey.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/download_file.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
@@ -27,7 +23,6 @@ import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginProvider extends ChangeNotifier {
   final apirepository = APIRepository();
@@ -64,8 +59,8 @@ class LoginProvider extends ChangeNotifier {
       apirepository.removeToken();
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
-    }, "logout".tr, "logoutMessage".tr, ArtSweetAlertType.question, "yes".tr,
-        "no".tr);
+    }, AppLocalizations.of(context).translate("81"), "logoutMessage".tr,
+        ArtSweetAlertType.question, "yes".tr, "no".tr);
   }
 
   void login(BuildContext context) async {
@@ -219,11 +214,7 @@ class LoginProvider extends ChangeNotifier {
       changeLanguage(language, context, dashboard);
     },
         "areYouSure".tr,
-        "applicationLanguage".tr +
-            " " +
-            language.Name! +
-            " " +
-            "applicationLanguage2".tr,
+        "${"applicationLanguage".tr} ${language.Name!} ${"applicationLanguage2".tr}",
         ArtSweetAlertType.question,
         "yes".tr,
         "no".tr);

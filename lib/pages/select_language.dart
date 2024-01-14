@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:provider/provider.dart';
@@ -62,7 +62,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                           ),
                         ),
                         Text(
-                          "chooseUserLanguage".tr,
+                          AppLocalizations.of(context).translate("27"),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color(0xFF0F1011),

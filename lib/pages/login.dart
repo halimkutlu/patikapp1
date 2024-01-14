@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/widgets/custom_textfield.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
@@ -48,7 +48,7 @@ class _LoginState extends State<Login> {
                 ),
                 Center(
                   child: Text(
-                    'welcome'.tr,
+                    AppLocalizations.of(context).translate("8"),
                     style: TextStyle(fontSize: 3.h),
                   ),
                 ),
@@ -58,15 +58,15 @@ class _LoginState extends State<Login> {
                   child: CTextfield(
                       controller: loginProvider.userName,
                       icon: Icons.person_outline,
-                      name: "userName".tr,
-                      hintText: "userName".tr),
+                      name: AppLocalizations.of(context).translate("9"),
+                      hintText: AppLocalizations.of(context).translate("9")),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
                   child: CTextfield(
                     controller: loginProvider.password,
-                    name: "password".tr,
-                    hintText: "password".tr,
+                    name: AppLocalizations.of(context).translate("10"),
+                    hintText: AppLocalizations.of(context).translate("10"),
                     icon: Icons.lock_outline,
                   ),
                 ),
@@ -76,7 +76,7 @@ class _LoginState extends State<Login> {
                     textColor: Colors.black,
                     colors: MainColors.primaryColor,
                     icons: Icon(Icons.send),
-                    name: 'login'.tr,
+                    name: AppLocalizations.of(context).translate("7"),
                     width: 0.3.w,
                     height: 2.5.h,
                     onTap: () {
@@ -94,7 +94,7 @@ class _LoginState extends State<Login> {
                       child: Padding(
                         padding: EdgeInsets.only(right: 10.w),
                         child: Text(
-                          'forgotPassword'.tr,
+                          AppLocalizations.of(context).translate("11"),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
                 ),
                 Center(
                   child: Text(
-                    'or'.tr,
+                    AppLocalizations.of(context).translate("12"),
                     style:
                         TextStyle(fontWeight: FontWeight.w500, fontSize: 2.h),
                   ),
@@ -114,7 +114,7 @@ class _LoginState extends State<Login> {
                     textColor: Colors.black,
                     colors: Colors.white,
                     icons: Icon(Icons.invert_colors),
-                    name: 'keepWithGoogle'.tr,
+                    name: AppLocalizations.of(context).translate("13"),
                     width: 0.3.w,
                     height: 2.5.h,
                     onTap: () {
@@ -127,7 +127,8 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'noAccount'.tr + " ",
+                        AppLocalizations.of(context)
+                            .translate("14", addRight: " "),
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 1.4.h),
                       ),
@@ -136,7 +137,7 @@ class _LoginState extends State<Login> {
                           loginProvider.gotoRegisterPage(context);
                         },
                         child: Text(
-                          'register'.tr,
+                          AppLocalizations.of(context).translate("15"),
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 1.4.h,

@@ -56,12 +56,12 @@ class _MyWidgetState extends State<IntroductionPage1> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child:
-                  introductionText(!introProvider.secondPage ? "1" : "2", 2.5),
+                  introductionText(!introProvider.secondPage ? "1" : "5", 2.5),
             ),
             Padding(
               padding: const EdgeInsets.all(18.0),
               child:
-                  introductionText(!introProvider.secondPage ? "1" : "2", 2.0),
+                  introductionText(!introProvider.secondPage ? "2" : "6", 2.0),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -94,14 +94,14 @@ class _MyWidgetState extends State<IntroductionPage1> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Button('skip', false, () {
+              Button("3", false, () {
                 introProvider.skip(context);
               }),
               introProvider.secondPage
-                  ? Button('login', true, () {
+                  ? Button("7", true, () {
                       introProvider.goToLoginPage(context);
                     })
-                  : Button('next', true, () {
+                  : Button("4", true, () {
                       introProvider.nextPage();
                     })
             ],
@@ -161,6 +161,7 @@ class _MyWidgetState extends State<IntroductionPage1> {
   }
 
   Widget Button(String text, bool border, Function()? func) {
+    text = AppLocalizations.of(context).translate(text);
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: border
@@ -179,7 +180,7 @@ class _MyWidgetState extends State<IntroductionPage1> {
                   ),
               onPressed: func,
               child: Text(
-                text.tr,
+                text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF0F1011),
@@ -192,7 +193,7 @@ class _MyWidgetState extends State<IntroductionPage1> {
           : InkWell(
               onTap: func,
               child: Text(
-                text.tr,
+                text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF0F1011),

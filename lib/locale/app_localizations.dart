@@ -38,8 +38,50 @@ class AppLocalizations {
   }
 
   // Method to get a localized string
-  String translate(String key) {
+  String translate(String key, {String? addRight, String? addLeft}) {
     // Return the localized string if it exists, otherwise return a default message
-    return _localizedStrings[key] ?? 'Key not found';
+    return (addLeft ?? "") +
+        (_localizedStrings[key] ?? 'Key not found') +
+        (addRight ?? "");
   }
+
+  String translateLngName(Lcid? lng, {String? addRight, String? addLeft}) {
+    // Return the localized string if it exists, otherwise return a default message
+    if (lng == null) return "";
+
+    if (!lngTranslateIds.keys.any((element) => element == lng!.Code)) return "";
+
+    String key = lngTranslateIds[lng!.Code]!;
+    return (addLeft ?? "") +
+        (_localizedStrings[key] ?? 'Key not found') +
+        (addRight ?? "");
+  }
+
+  Map<String, String> lngTranslateIds = {
+    "bg-BG": "34",
+    "de-DE": "29",
+    "el-GR": "53",
+    "en-US": "41",
+    "fr-FR": "38",
+    "it-IT": "43",
+    "ja-JP": "44",
+    "ko-KR": "45",
+    "nl-NL": "40",
+    "pl-PL": "48",
+    "pt-BR": "33",
+    "ru-RU": "51",
+    "tr-TR": "52",
+    "fa-IR": "37",
+    "hy-AM": "36",
+    "mk-MK": "49",
+    "ka-GE": "39",
+    "zh-CN": "35",
+    "pt-PT": "50",
+    "ar-EG": "30",
+    "es-ES": "42",
+    "bs-Latn-BA": "32",
+    "hy-AW": "31",
+    "tr-KU": "46",
+    "tr-LZ": "47"
+  };
 }

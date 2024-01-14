@@ -3,10 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:archive/archive.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:patikmobile/api/static_variables.dart';
-import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/information.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';

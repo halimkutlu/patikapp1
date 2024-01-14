@@ -1,9 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields, unused_element
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:patikmobile/api/static_variables.dart';
-import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/about_app.dart';
 import 'package:patikmobile/pages/change_password.dart';
@@ -12,6 +10,7 @@ import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/providers/dashboardProvider.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:patikmobile/widgets/menu_item.dart';
 import 'package:provider/provider.dart';
@@ -180,7 +179,8 @@ class _DashboardState extends State<Dashboard> {
                               textInlinePadding: 20,
                               width: 3,
                               colors: Colors.red,
-                              name: "Satın Al",
+                              name:
+                                  AppLocalizations.of(context).translate("73"),
                             )
                           ],
                         ),
@@ -196,8 +196,9 @@ class _DashboardState extends State<Dashboard> {
                 children: <Widget>[
                   MenuItem(
                       logo: 'lib/assets/img/user_language.png',
-                      text: "Kullanıcı Dili",
-                      centerWidget: Text(mainProvider.useLanguageName),
+                      text: AppLocalizations.of(context).translate("27"),
+                      centerWidget: Text(AppLocalizations.of(context)
+                          .translateLngName(StorageProvider.appLanguge)),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelectLanguage(
@@ -206,26 +207,27 @@ class _DashboardState extends State<Dashboard> {
                       }),
                   MenuItem(
                       logo: 'lib/assets/img/learn_language.png',
-                      text: "Öğrenme Dili",
-                      centerWidget: Text(mainProvider.learnLanguageName),
+                      text: AppLocalizations.of(context).translate("28"),
+                      centerWidget: Text(AppLocalizations.of(context)
+                          .translateLngName(StorageProvider.learnLanguge)),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelectLearnLanguage()));
                       }),
                   MenuItem(
                       logo: 'lib/assets/img/internet.png',
-                      text: "Çevrimdışı Mod",
+                      text: AppLocalizations.of(context).translate("74"),
                       centerWidget: CustomIconButton(
                         textSize: 60,
                         textInlinePadding: 25,
                         width: 4,
                         colors: Colors.red,
-                        name: "Satın Al",
+                        name: AppLocalizations.of(context).translate("73"),
                       ),
                       onTap: () {}),
                   MenuItem(
                       logo: 'lib/assets/img/key.png',
-                      text: "Şifre Değiştir",
+                      text: AppLocalizations.of(context).translate("22"),
                       centerWidget: Text(""),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -233,17 +235,17 @@ class _DashboardState extends State<Dashboard> {
                       }),
                   MenuItem(
                       logo: 'lib/assets/img/privacy.png',
-                      text: "Gizlilik Politikası",
+                      text: AppLocalizations.of(context).translate("77"),
                       centerWidget: Text(""),
                       onTap: () {}),
                   MenuItem(
                       logo: 'lib/assets/img/star_.png',
-                      text: "Uygulamayı deperlendir",
+                      text: AppLocalizations.of(context).translate("69"),
                       centerWidget: Text(""),
                       onTap: () {}),
                   MenuItem(
                       logo: 'lib/assets/img/mail.png',
-                      text: "Geri Bildirim",
+                      text: AppLocalizations.of(context).translate("80"),
                       centerWidget: Text(""),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -251,7 +253,7 @@ class _DashboardState extends State<Dashboard> {
                       }),
                   MenuItem(
                       logo: 'lib/assets/img/mail.png',
-                      text: "Uygulama Hakkında",
+                      text: AppLocalizations.of(context).translate("78"),
                       centerWidget: Text(""),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -272,7 +274,7 @@ class _DashboardState extends State<Dashboard> {
           items: [
             BottomNavigationBarItem(
                 icon: Icon(Icons.home_outlined),
-                label: "Ana Ekran",
+                label: AppLocalizations.of(context).translate("104"),
                 backgroundColor: MainColors.primaryColor),
             BottomNavigationBarItem(
                 icon: Image.asset(
@@ -281,7 +283,7 @@ class _DashboardState extends State<Dashboard> {
                   height: 2.4.h,
                   fit: BoxFit.cover,
                 ),
-                label: "Öğren",
+                label: AppLocalizations.of(context).translate("105"),
                 backgroundColor: MainColors.primaryColor),
             BottomNavigationBarItem(
                 icon: Image.asset(
@@ -290,7 +292,7 @@ class _DashboardState extends State<Dashboard> {
                   height: 2.4.h,
                   fit: BoxFit.cover,
                 ),
-                label: "Antrenman",
+                label: AppLocalizations.of(context).translate("106"),
                 backgroundColor: MainColors.primaryColor),
             BottomNavigationBarItem(
                 icon: Image.asset(
@@ -299,7 +301,7 @@ class _DashboardState extends State<Dashboard> {
                   height: 2.4.h,
                   fit: BoxFit.cover,
                 ),
-                label: "Diyaloglar",
+                label: AppLocalizations.of(context).translate("99"),
                 backgroundColor: MainColors.primaryColor),
           ],
         ),
