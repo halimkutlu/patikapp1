@@ -31,7 +31,7 @@ class CategoriesProvider extends ChangeNotifier {
     List<Word> list = await dbProvider.getWordList();
     List<Word> categories =
         list.where((x) => x.isCategoryName == true).toList();
-    print(list);
+    print(categories[0].word);
   }
 
   void getCountInformation() async {

@@ -160,6 +160,7 @@ class DbProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt(StorageProvider.learnLcidKey, lcid);
     await prefs.setString("CurrentLanguageName", language.Name!);
+    StorageProvider.learnLanguge = Languages.GetLngFromLCID(lcid);
 
     var path = await getDbPath(lngName: language.Code);
 

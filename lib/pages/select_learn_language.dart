@@ -154,6 +154,8 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                 language.LCID.toString());
                             prefs.setInt(
                                 StorageProvider.learnLcidKey, language.LCID);
+                            await dbProvider.closeDbConnection();
+                            await dbProvider.openDbConnection(language);
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) => Dashboard(0)));

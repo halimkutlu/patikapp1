@@ -274,7 +274,7 @@ class LoginProvider extends ChangeNotifier {
           return processResult;
         } else {
           //EĞER DOSYA ÇIKARTMA İŞLEMİ BAŞARILI İSE
-
+          if (dbProvider.ifConnectionAlive()) dbProvider.closeDbConnection();
           FileDownloadStatus dbresult = await dbProvider.openDbConnection(lcid);
           if (dbresult.status) {
             processResult.status = true;
