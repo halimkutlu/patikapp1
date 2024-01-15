@@ -93,8 +93,8 @@ class DbProvider extends ChangeNotifier {
     if (lngName.isEmpty) lngName = language.Code;
 
     Directory dir = await getApplicationDocumentsDirectory();
-    final patikAppDir = Directory('${dir.path}/${lngName}').path;
-    String dbPath = File('$patikAppDir/${lngName}.db').path;
+    final patikAppDir = Directory('${dir.path}/$lngName').path;
+    String dbPath = File('$patikAppDir/$lngName.db').path;
 
     return dbPath;
   }

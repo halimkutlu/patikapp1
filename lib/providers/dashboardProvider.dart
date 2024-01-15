@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/user_roles.dart';
+import 'package:patikmobile/pages/dialog_page.dart';
 import 'package:patikmobile/pages/learn_page.dart';
 import 'package:patikmobile/pages/main_page.dart';
+import 'package:patikmobile/pages/training_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardProvider extends ChangeNotifier {
@@ -14,8 +16,8 @@ class DashboardProvider extends ChangeNotifier {
   List _pages = [
     MainPage(),
     LearnPage(),
-    LearnPage(),
-    LearnPage(),
+    DialogPage(),
+    TrainingPage(),
   ];
 
   List get pages => _pages;

@@ -101,7 +101,7 @@ class _MainPageState extends State<MainPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                AppLocalizations.of(context).translate("66", addRight: " "),
+                AppLocalizations.of(context).translate("66", addRight: ""),
                 style: TextStyle(fontSize: 2.0.h, fontWeight: FontWeight.bold),
               ),
               Text(
@@ -112,7 +112,7 @@ class _MainPageState extends State<MainPage> {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                AppLocalizations.of(context).translate("63"),
+                AppLocalizations.of(context).translate("63", addLeft: " "),
                 style: TextStyle(fontSize: 2.0.h, fontWeight: FontWeight.bold),
               ),
             ],
