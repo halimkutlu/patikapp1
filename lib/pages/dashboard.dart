@@ -165,14 +165,8 @@ class _DashboardState extends State<Dashboard> {
                                           ),
                                           textAlign: TextAlign.center,
                                         )
-                                      : mainProvider.roleid == UserRole.premium
-                                          ? Text("Premium")
-                                          : mainProvider.roleid == UserRole.qr
-                                              ? Text("QR")
-                                              : mainProvider.roleid ==
-                                                      UserRole.admin
-                                                  ? Text("Admin")
-                                                  : Text(""),
+                                      : Text(UserRole.getRoleDescriptionFromId(
+                                          mainProvider.roleid)),
                                 )),
                             CustomIconButton(
                               textSize: 80,
@@ -219,7 +213,7 @@ class _DashboardState extends State<Dashboard> {
                       logo: 'lib/assets/img/internet.png',
                       text: AppLocalizations.of(context).translate("74"),
                       centerWidget: CustomIconButton(
-                        textSize: 70,
+                        textSize: 30,
                         textInlinePadding: 25,
                         width: 4,
                         colors: Colors.red,

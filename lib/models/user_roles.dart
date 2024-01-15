@@ -27,6 +27,21 @@ class UserRole {
         return "Unknown";
     }
   }
+
+  static String getRoleDescriptionFromId(int r) {
+    switch (r) {
+      case 1:
+        return "Admin";
+      case 2:
+        return "Premium";
+      case 3:
+        return "QR";
+      case 4:
+        return "Free";
+      default:
+        return "";
+    }
+  }
 }
 
 String getRoleName(int id) {

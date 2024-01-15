@@ -18,7 +18,7 @@ class CustomIconButton extends StatelessWidget {
   final num textInlinePadding;
   final num textOutSpace_right;
   final Color? textColor;
-  final num textSize;
+  final double textSize;
   CustomIconButton({
     Key? key,
     this.onTap,
@@ -29,7 +29,7 @@ class CustomIconButton extends StatelessWidget {
     this.textOutSpace_left = 45,
     this.textOutSpace_right = 45,
     this.textColor,
-    this.textSize = 50,
+    this.textSize = 30,
     this.colors,
     this.height = 15,
     this.width = 4,
@@ -80,9 +80,7 @@ class CustomIconButton extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: textColor ?? Colors.white,
-                                    fontSize:
-                                        MediaQuery.of(context).size.height /
-                                            textSize),
+                                    fontSize: textSize),
                               ),
                               icons == null
                                   ? Padding(
