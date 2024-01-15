@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, avoid_print
+// ignore_for_file: prefer_final_fields, avoid_print, unused_local_variable
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/word.dart';
@@ -8,6 +8,7 @@ import 'package:patikmobile/providers/dashboardProvider.dart';
 
 class CategoriesProvider extends ChangeNotifier {
   final apirepository = APIRepository();
+  final dbProvider = DbProvider();
 
   int? _getLernedWordCount = 0;
   int get getLernedWordCount => _getLernedWordCount!;
@@ -26,17 +27,14 @@ class CategoriesProvider extends ChangeNotifier {
   }
 
   void getCategories() async {
-    DbProvider dbProvider = DbProvider();
+    List<WordListInformation> wordList;
 
     List<Word> list = await dbProvider.getWordList();
     List<Word> categories =
         list.where((x) => x.isCategoryName == true).toList();
-    print(categories[0].word);
   }
 
   void getCountInformation() async {
-    DbProvider dbProvider = DbProvider();
-
     List<WordStatistics> list = await dbProvider.getWordStatisticsList();
     _getLernedWordCount =
         list.where((wordStat) => wordStat.learned == 1).length;
@@ -48,10 +46,5 @@ class CategoriesProvider extends ChangeNotifier {
     print('Learned Count: $_getLernedWordCount');
     print('Repeat Count: $_getRepeatedWordCount');
     print('Work Hard Count: $_getWorkHardCount');
-  }
-
-  void changePage(int index) {
-    DashboardProvider mainProvider = DashboardProvider();
-    mainProvider.changeTab(index);
   }
 }
