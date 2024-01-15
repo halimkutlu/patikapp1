@@ -56,7 +56,6 @@ dependencies:
   google_sign_in: ^6.2.1
   percent_indicator: ^4.2.3
   auto_size_text: ^3.0.0
-  responsive_sizer: ^3.2.0
 
 dev_dependencies:
   flutter_test:

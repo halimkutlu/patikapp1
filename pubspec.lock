@@ -509,14 +509,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.1"
-  responsive_sizer:
-    dependency: "direct main"
-    description:
-      name: responsive_sizer
-      sha256: "206d1f77f65ed8394ef2a526583e38e874ee36f036f3fe9aefb0f58ecba9bef9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.0"
   shared_preferences:
     dependency: "direct main"
     description:
