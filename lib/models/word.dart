@@ -53,3 +53,16 @@ class Word {
     return Word.fromMap(data);
   }
 }
+
+class WordListInformation {
+  String? categoryName;
+  int? categoryWordCount;
+  int? totalCount;
+  String? categoryImage;
+
+  WordListInformation(
+      {this.categoryImage,
+      this.categoryName,
+      this.categoryWordCount,
+      this.totalCount});
+}
