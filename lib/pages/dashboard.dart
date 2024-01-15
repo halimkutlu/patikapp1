@@ -175,7 +175,8 @@ class _DashboardState extends State<Dashboard> {
                                                   : Text(""),
                                 )),
                             CustomIconButton(
-                              height: 2.8.h,
+                              textSize: 80,
+                              height: 3.5.h,
                               textInlinePadding: 20,
                               width: 3,
                               colors: Colors.red,
@@ -218,7 +219,7 @@ class _DashboardState extends State<Dashboard> {
                       logo: 'lib/assets/img/internet.png',
                       text: AppLocalizations.of(context).translate("74"),
                       centerWidget: CustomIconButton(
-                        textSize: 60,
+                        textSize: 70,
                         textInlinePadding: 25,
                         width: 4,
                         colors: Colors.red,

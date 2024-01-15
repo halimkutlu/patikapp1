@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -37,7 +38,7 @@ class _MenuItemState extends State<MenuItem> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 18.0),
+                  padding: EdgeInsets.only(left: 1.5.h),
                   child: Image.asset(
                     widget.logo,
                     fit: BoxFit.cover,
@@ -45,19 +46,22 @@ class _MenuItemState extends State<MenuItem> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 18.0),
-                  child: Text(widget.text!),
+                  padding: EdgeInsets.only(left: 1.5.h),
+                  child: AutoSizeText(
+                    widget.text!,
+                    maxLines: 1,
+                  ),
                 ),
               ],
             ),
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(right: 10.0),
+                  padding: EdgeInsets.only(right: 1.h),
                   child: widget.centerWidget,
                 ),
                 Padding(
-                    padding: EdgeInsets.only(left: 18.0),
+                    padding: EdgeInsets.only(left: 0.h),
                     child: Icon(Icons.chevron_right)),
               ],
             )

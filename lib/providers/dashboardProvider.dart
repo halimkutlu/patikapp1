@@ -1,17 +1,11 @@
 // ignore_for_file: prefer_final_fields
 
 import 'dart:convert';
-
-import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/learn_page.dart';
-import 'package:patikmobile/pages/login.dart';
-import 'package:patikmobile/pages/mailResponse.dart';
 import 'package:patikmobile/pages/main_page.dart';
-import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardProvider extends ChangeNotifier {

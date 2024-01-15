@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
@@ -203,7 +204,7 @@ class _MainPageState extends State<MainPage> {
               icons: Icon(Icons.send),
               name: AppLocalizations.of(context).translate("100"),
               width: 0.3.w,
-              height: 2.5.h,
+              height: 3.0.h,
               onTap: () {},
             ),
           ),
@@ -256,9 +257,9 @@ class _MainPageState extends State<MainPage> {
               color: color,
               border: Border.all(width: 3, color: Colors.black38)),
           child: Center(
-              child: Text(
+              child: AutoSizeText(
             text,
-            style: TextStyle(fontSize: 1.5.h, fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold),
           )),
         ),
         Container(
@@ -288,10 +289,9 @@ class _MainPageState extends State<MainPage> {
                 child: Container(
                   color: Colors.white,
                   child: Center(
-                      child: Text(
+                      child: AutoSizeText(
                     value,
-                    style:
-                        TextStyle(fontWeight: FontWeight.w600, fontSize: 2.2.h),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   )),
                 ),
               ),

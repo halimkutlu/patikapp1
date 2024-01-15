@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
-import 'package:patikmobile/locale/ChangeLanguage.dart';
-import 'package:patikmobile/locale/Messages.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
 import 'package:patikmobile/pages/splashScreen.dart';
 import 'package:patikmobile/providers/categoriesProvider.dart';
@@ -24,7 +22,6 @@ import 'package:patikmobile/providers/splashScreenProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 //indirilen dilin kayıt edilmesi (tekrar uygulama açıldığında o dilden devam edicek)
