@@ -207,7 +207,9 @@ class _DashboardState extends State<Dashboard> {
                           .translateLngName(StorageProvider.learnLanguge)),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SelectLearnLanguage()));
+                            builder: (context) => SelectLearnLanguage(
+                                  noReturn: true,
+                                )));
                       }),
                   MenuItem(
                       logo: 'lib/assets/img/internet.png',

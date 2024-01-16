@@ -19,7 +19,8 @@ import 'package:sizer/sizer.dart';
 import '../models/language.model.dart';
 
 class SelectLearnLanguage extends StatefulWidget {
-  const SelectLearnLanguage({super.key});
+  final bool? noReturn;
+  const SelectLearnLanguage({super.key, this.noReturn = false});
 
   @override
   State<SelectLearnLanguage> createState() => _SelectLearnLanguageState();
@@ -152,9 +153,17 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                 StorageProvider.learnLcidKey, language.LCID);
                             await dbProvider.closeDbConnection();
                             await dbProvider.openDbConnection(language);
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => Dashboard(0)));
+                            if (widget.noReturn == true) {
+                              Navigator.of(_scaffoldKey.currentContext!)
+                                  .pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) => Dashboard(0)),
+                                      (Route<dynamic> route) => false);
+                            } else {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => Dashboard(0)));
+                            }
                           } else {
                             CustomAlertDialog(_scaffoldKey.currentContext!,
                                 () async {
@@ -165,9 +174,18 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                   .startProcessOfDownloadLearnLanguage(
                                       language, onReceiveProgress);
                               if (status.status) {
-                                Navigator.of(_scaffoldKey.currentContext!)
-                                    .pushReplacement(MaterialPageRoute(
-                                        builder: (context) => Dashboard(0)));
+                                if (widget.noReturn == true) {
+                                  Navigator.of(_scaffoldKey.currentContext!)
+                                      .pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Dashboard(0)),
+                                          (Route<dynamic> route) => false);
+                                } else {
+                                  Navigator.of(_scaffoldKey.currentContext!)
+                                      .pushReplacement(MaterialPageRoute(
+                                          builder: (context) => Dashboard(0)));
+                                }
                               } else {
                                 CustomAlertDialogOnlyConfirm(
                                     _scaffoldKey.currentContext!, () {
