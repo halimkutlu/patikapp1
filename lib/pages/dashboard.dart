@@ -83,8 +83,8 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.black, width: 0.3),
                     ),
                     borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(100),
-                        bottomRight: Radius.circular(100)),
+                        bottomLeft: Radius.circular(200),
+                        bottomRight: Radius.circular(200)),
                     color: MainColors.primaryColor,
                   ),
                   child: Center(
