@@ -33,9 +33,6 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     mainProvider = Provider.of<DashboardProvider>(context, listen: false);
     mainProvider.init();
-    if (widget.selectedPageIndex != null && widget.selectedPageIndex! > 0) {
-      mainProvider.changeTab(0);
-    }
   }
 
   @override
@@ -83,8 +80,8 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.black, width: 0.3),
                     ),
                     borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(100),
-                        bottomRight: Radius.circular(100)),
+                        bottomLeft: Radius.circular(200),
+                        bottomRight: Radius.circular(200)),
                     color: MainColors.primaryColor,
                   ),
                   child: Center(
@@ -264,7 +261,7 @@ class _DashboardState extends State<Dashboard> {
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: MainColors.primaryColor,
           currentIndex: mainProvider.selectedTab,
-          onTap: (index) => mainProvider.changeTab(index),
+          onTap: (index) => () {},
           selectedItemColor: Colors.black,
           showUnselectedLabels: true,
           unselectedItemColor: Color(0xff7E7B7B),

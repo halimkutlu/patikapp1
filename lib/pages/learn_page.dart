@@ -65,15 +65,17 @@ class _LearnPageState extends State<LearnPage> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      left: 8.0.w, top: 1.h, bottom: 1.h),
+                                      left: 8.0.w, top: 1.h, bottom: 0.h),
                                   child: Text(
                                     '${category.categoryOrderName}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 2.3.h),
                                   ),
                                 ),
                               ],
                             ),
+                            Divider(),
                             SizedBox(
                               height: 13.h,
                               child: ListView.builder(
@@ -123,8 +125,8 @@ class _LearnPageState extends State<LearnPage> {
         margin: EdgeInsets.symmetric(horizontal: 5.0),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(width: 0.2),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          border: Border.all(width: 0.4),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
