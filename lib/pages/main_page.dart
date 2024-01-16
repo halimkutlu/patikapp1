@@ -50,6 +50,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MainColors.backgroundColor,
       body: Column(children: [
         Center(
           child: Text(

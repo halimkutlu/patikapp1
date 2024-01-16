@@ -59,10 +59,16 @@ class WordListInformation {
   int? categoryWordCount;
   int? totalCount;
   String? categoryImage;
+  String? categoryOrderName;
+  int? order;
+  int? orderColor;
 
   WordListInformation(
       {this.categoryImage,
       this.categoryName,
       this.categoryWordCount,
+      this.order,
+      this.categoryOrderName,
+      this.orderColor,
       this.totalCount});
 }

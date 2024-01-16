@@ -9,6 +9,7 @@ import 'package:patikmobile/providers/dashboardProvider.dart';
 class CategoriesProvider extends ChangeNotifier {
   final apirepository = APIRepository();
   final dbProvider = DbProvider();
+  final List<WordListInformation> wordList = [];
 
   int? _getLernedWordCount = 0;
   int get getLernedWordCount => _getLernedWordCount!;
@@ -19,19 +20,60 @@ class CategoriesProvider extends ChangeNotifier {
   int? _getWorkHardCount = 0;
   int get getWorkHardCount => _getWorkHardCount!;
 
+  List<WordListInformation> _categoryList = [];
+  List<WordListInformation> get categoryList => _categoryList;
+
   int? _roleid = 0;
   int get roleid => _roleid!;
   init() async {
     getCategories();
-    // getCountInformation();
+    getCountInformation();
   }
 
-  void getCategories() async {
-    List<WordListInformation> wordList;
+  List<String> CategoryNames = [
+    "Birinci Adım",
+    "İkinci Adım",
+    "Üçüncü Adım",
+    "Dördüncü Adım",
+    "Adım dışı"
+  ];
+  List<int> ColorList = [
+    0xFF1A57FF,
+    0xFF22AA00,
+    0xFFC70000,
+    0xFFFF761A,
+  ];
 
+  void getCategories() async {
+    _categoryList = [];
     List<Word> list = await dbProvider.getWordList();
     List<Word> categories =
         list.where((x) => x.isCategoryName == true).toList();
+
+    int i = 1;
+    int j = 1;
+    for (var category in categories) {
+      i++;
+      var wordModel = WordListInformation(
+          categoryName: category.word,
+          categoryImage: "",
+          totalCount: list.length,
+          order: i % 4 == 0 ? ++j : j,
+          orderColor: ColorList[j - 1],
+          categoryOrderName: CategoryNames[j - 1],
+          categoryWordCount: category.categories != null
+              ? list
+                  .where((x) =>
+                      x.isCategoryName == false &&
+                      (x.categories != null &&
+                          x.categories! == category.id.toString()))
+                  .length
+              : 0);
+
+      _categoryList.add(wordModel);
+    }
+
+    notifyListeners();
   }
 
   void getCountInformation() async {
