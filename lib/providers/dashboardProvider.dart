@@ -90,4 +90,10 @@ class DashboardProvider extends ChangeNotifier {
           .unknown; // Varsayılan olarak unknown ya da istediğiniz başka bir değer
     }
   }
+
+  changeTab(int index) {
+    _selectedTab = index;
+
+    notifyListeners();
+  }
 }

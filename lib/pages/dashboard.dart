@@ -33,6 +33,9 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     mainProvider = Provider.of<DashboardProvider>(context, listen: false);
     mainProvider.init();
+    if (widget.selectedPageIndex != null && widget.selectedPageIndex! > 0) {
+      mainProvider.changeTab(0);
+    }
   }
 
   @override
@@ -261,7 +264,7 @@ class _DashboardState extends State<Dashboard> {
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: MainColors.primaryColor,
           currentIndex: mainProvider.selectedTab,
-          onTap: (index) => () {},
+          onTap: (index) => mainProvider.changeTab(index),
           selectedItemColor: Colors.black,
           showUnselectedLabels: true,
           unselectedItemColor: Color(0xff7E7B7B),
