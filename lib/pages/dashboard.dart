@@ -169,10 +169,10 @@ class _DashboardState extends State<Dashboard> {
                                           mainProvider.roleid)),
                                 )),
                             CustomIconButton(
-                              textSize: 80,
-                              height: 3.5.h,
-                              textInlinePadding: 20,
-                              width: 3,
+                              textSize: 20,
+                              height: 2.7.h,
+                              textInlinePadding: 3.h,
+                              width: 0.3.h,
                               colors: Colors.red,
                               name:
                                   AppLocalizations.of(context).translate("73"),
@@ -215,9 +215,10 @@ class _DashboardState extends State<Dashboard> {
                       logo: 'lib/assets/img/internet.png',
                       text: AppLocalizations.of(context).translate("74"),
                       centerWidget: CustomIconButton(
-                        textSize: 30,
-                        textInlinePadding: 25,
-                        width: 4,
+                        textSize: 10,
+                        textInlinePadding: 3.0.h,
+                        width: 0.5.h,
+                        height: 0.5.h,
                         colors: Colors.red,
                         name: AppLocalizations.of(context).translate("73"),
                       ),
