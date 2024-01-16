@@ -7,7 +7,6 @@ class CustomIconButton extends StatelessWidget {
   final VoidCallback? onTap;
   final String name;
   final Color? colors;
-  final num outSpace;
   final num height;
   final Widget? icons;
   final num width;
@@ -23,15 +22,14 @@ class CustomIconButton extends StatelessWidget {
     Key? key,
     this.onTap,
     this.name = "İsim",
-    this.outSpace = 40,
     this.textOutSpace_top = 70,
     this.textOutSpace_bottom = 100,
-    this.textOutSpace_left = 45,
-    this.textOutSpace_right = 45,
+    this.textOutSpace_left = 100,
+    this.textOutSpace_right = 100,
     this.textColor,
     this.textSize = 30,
     this.colors,
-    this.height = 15,
+    this.height = 20,
     this.width = 4,
     this.icons,
     this.textInlinePadding = 200,
