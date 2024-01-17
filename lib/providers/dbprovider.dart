@@ -63,10 +63,25 @@ class DbProvider extends ChangeNotifier {
     }
   }
 
-  Future<FileDownloadStatus> openDbConnection(Lcid LCID) async {
+  Future<bool> reOpenDbConnection() async {
+    if (database!.isOpen) return true;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     FileDownloadStatus result = FileDownloadStatus();
-    if (LCID.Code.isNotEmpty) {
+
+    if (StorageProvider.learnLanguge!.Code.isNotEmpty) {
+      String dbPath = await getDbPath();
+      if (database == null || !database!.isOpen) {
+        database = await openDatabase(dbPath);
+        return database!.isOpen;
+      }
+    }
+    return false;
+  }
+
+  Future<FileDownloadStatus> openDbConnection(Lcid lcid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    FileDownloadStatus result = FileDownloadStatus();
+    if (lcid.Code.isNotEmpty) {
       String dbPath = await getDbPath();
       if (database == null || !database!.isOpen) {
         database = await openDatabase(dbPath);
@@ -80,7 +95,7 @@ class DbProvider extends ChangeNotifier {
           result.status =
               await FlutterBcrypt.verify(password: phoneId, hash: hash);
           if (result.status)
-            prefs.setInt(StorageProvider.learnLcidKey, LCID.LCID);
+            prefs.setInt(StorageProvider.learnLcidKey, lcid.LCID);
         } else
           result.status = true;
       }
@@ -108,6 +123,9 @@ class DbProvider extends ChangeNotifier {
   }
 
   Future<List<Word>> getWordList() async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
     var res = await database!.query('Words', columns: [
       'Id',
       'Word',
@@ -124,6 +142,9 @@ class DbProvider extends ChangeNotifier {
   }
 
   Future<Information> getInformation() async {
+    var status = await reOpenDbConnection();
+    if (!status) return Information();
+
     var res = await database!.query("Information", columns: [
       'LCID',
       'Code',
@@ -138,6 +159,9 @@ class DbProvider extends ChangeNotifier {
   }
 
   Future<List<WordStatistics>> getWordStatisticsList() async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
     var res = await database!.query('WordStatistics', columns: [
       'WordId',
       'Learned',
