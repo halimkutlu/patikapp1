@@ -23,7 +23,7 @@ class _LearnPageState extends State<LearnPage> {
     super.initState();
     categoriesProvider =
         Provider.of<CategoriesProvider>(context, listen: false);
-    categoriesProvider.init();
+    categoriesProvider.init(context);
   }
 
   @override

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_function_literals_in_foreach_calls, curly_braces_in_flow_control_structures, unused_local_variable, avoid_print
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_function_literals_in_foreach_calls, curly_braces_in_flow_control_structures, unused_local_variable, avoid_print, prefer_interpolation_to_compose_strings
 
 import 'dart:async';
 import 'dart:io';
@@ -122,20 +122,12 @@ class DbProvider extends ChangeNotifier {
     if (database != null && database!.isOpen) await database!.close();
   }
 
-  Future<List<Word>> getWordList() async {
+  Future<List<Word>> getWordList({bool withoutCategoryName = false}) async {
     var status = await reOpenDbConnection();
     if (!status) return [];
 
-    var res = await database!.query('Words', columns: [
-      'Id',
-      'Word',
-      'WordA',
-      'WordT',
-      'IsCategoryName',
-      'Categories',
-      'Activities',
-      'OrderId'
-    ]);
+    var res = await database!.rawQuery('Select * from Words' +
+        (withoutCategoryName ? ' where IsCategoryName != 1' : ''));
 
     List<Word> list = res.map((c) => Word.fromMap(c)).toList();
     return list;
