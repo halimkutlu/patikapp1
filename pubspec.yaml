@@ -57,6 +57,7 @@ dependencies:
   percent_indicator: ^4.2.3
   auto_size_text: ^3.0.0
   flutter_card_swiper: ^6.1.0
+  audioplayers: ^5.2.1
 
 dev_dependencies:
   flutter_test:
