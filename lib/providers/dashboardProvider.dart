@@ -16,8 +16,8 @@ class DashboardProvider extends ChangeNotifier {
   List _pages = [
     MainPage(),
     LearnPage(),
-    DialogPage(),
     TrainingPage(),
+    DialogPage(),
   ];
 
   List get pages => _pages;

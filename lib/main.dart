@@ -20,6 +20,7 @@ import 'package:patikmobile/providers/dashboardProvider.dart';
 import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/providers/splashScreenProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
+import 'package:patikmobile/providers/trainingProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sizer/sizer.dart';
@@ -58,6 +59,7 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<MainPageProvider>(create: (_) => MainPageProvider()),
   ChangeNotifierProvider<CategoriesProvider>(
       create: (_) => CategoriesProvider()),
+  ChangeNotifierProvider<TrainingProvider>(create: (_) => TrainingProvider()),
 ];
 
 class MyApp extends StatefulWidget {
