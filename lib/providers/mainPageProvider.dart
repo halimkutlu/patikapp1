@@ -37,6 +37,7 @@ class MainPageProvider extends ChangeNotifier {
     print('Learned Count: $_getLernedWordCount');
     print('Repeat Count: $_getRepeatedWordCount');
     print('Work Hard Count: $_getWorkHardCount');
+    notifyListeners();
   }
 
   void changePage(int index) {

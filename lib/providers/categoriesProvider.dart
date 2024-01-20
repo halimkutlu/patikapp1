@@ -131,6 +131,7 @@ class CategoriesProvider extends ChangeNotifier {
     _getRepeatedWordCount =
         list.where((wordStat) => wordStat.repeat == 1).length;
     _getWorkHardCount = list.where((wordStat) => wordStat.workHard == 1).length;
+    notifyListeners();
 
     print(list);
     print('Learned Count: $_getLernedWordCount');

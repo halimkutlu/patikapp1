@@ -57,6 +57,7 @@ class SwipeCardGameProvider extends ChangeNotifier {
     if (_selectedCategoryWords!.isEmpty) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
+        Navigator.pop(context);
       }, "warning".tr, "Kategoriye ait kelime bulunamadı",
           ArtSweetAlertType.info, "ok".tr);
     } else {
@@ -91,14 +92,29 @@ class SwipeCardGameProvider extends ChangeNotifier {
       String? dbId, DbProvider dbProvider) async {
     List<Word> allWords =
         await dbProvider.getWordList(withoutCategoryName: true);
+
+    List<WordStatistics> allWordStatistics =
+        await dbProvider.getWordStatisticsList();
+
     if (allWords.isNotEmpty) {
       // Rastgele sıralama işlemi
       Random random = Random();
       allWords.shuffle(random);
-      //----
-      _selectedCategoryWords =
-          allWords.where((x) => x.categories == dbId).take(5).toList();
+
+      // allWordStatistics içindeki WordId'leri al
+      Set<int> existingWordIds =
+          allWordStatistics.map((statistics) => statistics.wordId!).toSet();
+
+      // allWords içinde allWordStatistics'te bulunmayan WordId'lere sahip kelimeleri filtrele
+      _selectedCategoryWords = allWords
+          .where(
+            (word) =>
+                word.categories == dbId && !existingWordIds.contains(word.id),
+          )
+          .take(400)
+          .toList();
     }
+
     return _selectedCategoryWords!;
   }
 
@@ -125,6 +141,11 @@ class SwipeCardGameProvider extends ChangeNotifier {
 
         _wordListDbInformation!.add(wordInfo);
       }
+      WordListDBInformation lastCard = WordListDBInformation(
+        lastCard: true,
+        word: "Tüm kartları öğrendiniz",
+      );
+      _wordListDbInformation!.add(lastCard);
     }
     print(_wordListDbInformation);
   }

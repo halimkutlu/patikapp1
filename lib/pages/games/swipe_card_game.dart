@@ -59,7 +59,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                     backCardOffset: Offset(-25, -40),
                     cardsCount: provider.wordsLoaded == true
                         ? provider.wordListDbInformation!.length
-                        : 0,
+                        : 1,
                     cardBuilder:
                         (context, index, percentThresholdX, percentThresholdY) {
                       WordListDBInformation cardInfo =
@@ -76,23 +76,25 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      _playAudio(cardInfo.audio);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.volume_up_outlined,
-                                        size: 6.h,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                              !cardInfo.lastCard!
+                                  ? Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            _playAudio(cardInfo.audio);
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.volume_up_outlined,
+                                              size: 6.h,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  : Container(),
                               Column(
                                 children: [
                                   Text(
@@ -117,10 +119,12 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                               ),
                               Column(
                                 children: [
-                                  SvgPicture.file(
-                                    cardInfo.imageUrl!,
-                                    height: 19.h,
-                                  ),
+                                  !cardInfo.lastCard!
+                                      ? SvgPicture.file(
+                                          cardInfo.imageUrl!,
+                                          height: 19.h,
+                                        )
+                                      : Container(),
                                   Padding(
                                     padding: EdgeInsets.all(4.0.h),
                                     child: Text(
@@ -134,57 +138,65 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                               ),
                               Padding(
                                 padding: EdgeInsets.all(8.0.w),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)
-                                          .translate("137"),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: InkWell(
-                                        onTap: () async {
-                                          DbProvider db = DbProvider();
-                                          if (cardInfo.isAddedToWorkHard !=
-                                              true) {
-                                            var status = await db
-                                                .addToWorkHardBox(cardInfo.id!);
-                                            if (status == true) {
-                                              setState(() {
-                                                cardInfo.isAddedToWorkHard =
-                                                    true;
-                                              });
-                                            }
-                                          } else {
-                                            //remove
-                                            var status = await db
-                                                .updateWorkHard(cardInfo.id!);
-                                            if (status == true) {
-                                              setState(() {
-                                                cardInfo.isAddedToWorkHard =
-                                                    false;
-                                              });
-                                            }
-                                          }
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 8.0),
-                                          child: Icon(
-                                            cardInfo.isAddedToWorkHard == true
-                                                ? Icons.check_circle_outline
-                                                : Icons
-                                                    .add_circle_outline_outlined,
-                                            color: cardInfo.isAddedToWorkHard ==
-                                                    true
-                                                ? Colors.green
-                                                : Colors.red,
+                                child: !cardInfo.lastCard!
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)
+                                                .translate("137"),
                                           ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                          Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  DbProvider db = DbProvider();
+                                                  if (cardInfo
+                                                          .isAddedToWorkHard !=
+                                                      true) {
+                                                    var status = await db
+                                                        .addToWorkHardBox(
+                                                            cardInfo.id!);
+                                                    if (status == true) {
+                                                      setState(() {
+                                                        cardInfo.isAddedToWorkHard =
+                                                            true;
+                                                      });
+                                                    }
+                                                  } else {
+                                                    //remove
+                                                    var status =
+                                                        await db.updateWorkHard(
+                                                            cardInfo.id!);
+                                                    if (status == true) {
+                                                      setState(() {
+                                                        cardInfo.isAddedToWorkHard =
+                                                            false;
+                                                      });
+                                                    }
+                                                  }
+                                                },
+                                                child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 8.0),
+                                                    child: Icon(
+                                                      cardInfo.isAddedToWorkHard ==
+                                                              true
+                                                          ? Icons
+                                                              .check_circle_outline
+                                                          : Icons
+                                                              .add_circle_outline_outlined,
+                                                      color:
+                                                          cardInfo.isAddedToWorkHard ==
+                                                                  true
+                                                              ? Colors.green
+                                                              : Colors.red,
+                                                    )),
+                                              ))
+                                        ],
+                                      )
+                                    : Container(),
                               ),
                             ],
                           ),

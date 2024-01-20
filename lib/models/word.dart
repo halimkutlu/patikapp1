@@ -84,6 +84,7 @@ class WordListDBInformation {
   File? imageUrl;
   int? id;
   bool? isAddedToWorkHard = false;
+  bool? lastCard = false;
 
   WordListDBInformation(
       {this.audio,
@@ -92,5 +93,6 @@ class WordListDBInformation {
       this.wordA,
       this.wordT,
       this.id,
-      this.isAddedToWorkHard});
+      this.isAddedToWorkHard,
+      this.lastCard = false});
 }
