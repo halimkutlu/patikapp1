@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
@@ -12,6 +15,7 @@ import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:path_provider/path_provider.dart';
 
 class SwipeCardGame extends StatefulWidget {
   final WordListInformation? selectedCategoryInfo;
@@ -24,6 +28,7 @@ class SwipeCardGame extends StatefulWidget {
 class _SwipeCardGameState extends State<SwipeCardGame> {
   bool contentLoaded = false;
   late SwipeCardGameProvider swipeCardProvider;
+  AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -76,11 +81,16 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.volume_up_outlined,
-                                    size: 6.h,
+                                InkWell(
+                                  onTap: () {
+                                    _playAudio(cardInfo.audio);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.volume_up_outlined,
+                                      size: 6.h,
+                                    ),
                                   ),
                                 )
                               ],
@@ -127,7 +137,16 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                     AppLocalizations.of(context)
                                         .translate("137"),
                                   ),
-                                  Icon(Icons.h_plus_mobiledata_outlined)
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 8.0),
+                                      child: Icon(
+                                        Icons.add_circle_outline_outlined,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
@@ -146,5 +165,14 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
 
   Future<File> _getLocalFile(File file) async {
     return file;
+  }
+
+  Future<void> _playAudio(File? audio) async {
+    final player = AudioPlayer();
+
+    await player.play(
+      UrlSource(audio!.path),
+      volume: 300,
+    );
   }
 }
