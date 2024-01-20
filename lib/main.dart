@@ -13,6 +13,7 @@ import 'package:patikmobile/providers/categoriesProvider.dart';
 import 'package:patikmobile/providers/changePasswordProvider.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
+import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/providers/mainPageProvider.dart';
@@ -60,6 +61,9 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<CategoriesProvider>(
       create: (_) => CategoriesProvider()),
   ChangeNotifierProvider<TrainingProvider>(create: (_) => TrainingProvider()),
+  ChangeNotifierProvider<SwipeCardGameProvider>(
+    create: (_) => SwipeCardGameProvider(),
+  ),
 ];
 
 class MyApp extends StatefulWidget {

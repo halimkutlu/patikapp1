@@ -113,6 +113,7 @@ class CategoriesProvider extends ChangeNotifier {
         order: item.StepOrder,
         orderColor: ColorList[item.StepOrder - 1],
         categoryOrderName: item.getStepName(context),
+        dbId: item.DbId,
         categoryWordCount: list
             .where(
                 (element) => element.categories!.split(',').contains(item.DbId))

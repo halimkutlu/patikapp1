@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 class Word {
   int? id;
@@ -62,6 +63,7 @@ class WordListInformation {
   String? categoryOrderName;
   int? order;
   int? orderColor;
+  String? dbId;
 
   WordListInformation(
       {this.categoryImage,
@@ -70,5 +72,17 @@ class WordListInformation {
       this.order,
       this.categoryOrderName,
       this.orderColor,
-      this.totalCount});
+      this.totalCount,
+      this.dbId});
+}
+
+class WordListDBInformation {
+  String? word;
+  String? wordA;
+  String? wordT;
+  File? audio;
+  File? imageUrl;
+
+  WordListDBInformation(
+      {this.audio, this.imageUrl, this.word, this.wordA, this.wordT});
 }
