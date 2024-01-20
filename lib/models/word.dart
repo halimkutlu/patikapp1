@@ -82,7 +82,15 @@ class WordListDBInformation {
   String? wordT;
   File? audio;
   File? imageUrl;
+  int? id;
+  bool? isAddedToWorkHard = false;
 
   WordListDBInformation(
-      {this.audio, this.imageUrl, this.word, this.wordA, this.wordT});
+      {this.audio,
+      this.imageUrl,
+      this.word,
+      this.wordA,
+      this.wordT,
+      this.id,
+      this.isAddedToWorkHard});
 }

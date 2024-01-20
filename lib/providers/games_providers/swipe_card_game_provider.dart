@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously
 import 'dart:io';
+import 'dart:math';
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,11 @@ import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 
 class SwipeCardGameProvider extends ChangeNotifier {
   final apirepository = APIRepository();
+  final database = Database;
 
   bool? _wordsLoaded = false;
   bool? get wordsLoaded => _wordsLoaded;
@@ -37,6 +40,10 @@ class SwipeCardGameProvider extends ChangeNotifier {
   }
 
   Future<void> startSwipeCardGame(String? dbId, BuildContext context) async {
+    //KAYIT EDİLEN 5 KELİMEYİ EN BAŞTA TEMİZLİYORUM. ÇÜNKÜ EĞER OYUNUN ORTASINDA ÇIKAR İSE EN BAŞTAN BAŞLAMALI.
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('selectedWords', []);
+
     _wordsLoaded = false;
     DbProvider dbProvider = DbProvider();
     //ADIM 1 ==> Seçilen dbId si ile öncelikle o kategoriye ait liste getirilir.
@@ -50,11 +57,34 @@ class SwipeCardGameProvider extends ChangeNotifier {
     if (_selectedCategoryWords!.isEmpty) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
-        Navigator.pop(context);
       }, "warning".tr, "Kategoriye ait kelime bulunamadı",
           ArtSweetAlertType.info, "ok".tr);
+    } else {
+      //ADIM 3 ==> Seçilen 5 kelimeyi kayıt altında tut! (Diğer oyunlar için kullanacağız)
+      await saveSelectedWords(_selectedCategoryWords!);
+      var words = await getSavedWords();
     }
     print(_selectedCategoryWords);
+  }
+
+  Future<void> saveSelectedWords(List<Word> selectedWords) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> serializedWords =
+        selectedWords.map((word) => word.toJson()).toList();
+    prefs.setStringList('selectedWords', serializedWords);
+    print('Selected words saved to SharedPreferences');
+  }
+
+  Future<List<Word>> getSavedWords() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? serializedWords = prefs.getStringList('selectedWords');
+    if (serializedWords != null) {
+      var words = serializedWords.map((word) => Word.fromJson(word)).toList();
+      print(words);
+      return words;
+    } else {
+      return [];
+    }
   }
 
   Future<List<Word>> getCategoriesWordsFromDB(
@@ -62,8 +92,12 @@ class SwipeCardGameProvider extends ChangeNotifier {
     List<Word> allWords =
         await dbProvider.getWordList(withoutCategoryName: true);
     if (allWords.isNotEmpty) {
+      // Rastgele sıralama işlemi
+      Random random = Random();
+      allWords.shuffle(random);
+      //----
       _selectedCategoryWords =
-          allWords.where((x) => x.categories == dbId).toList();
+          allWords.where((x) => x.categories == dbId).take(5).toList();
     }
     return _selectedCategoryWords!;
   }
@@ -75,22 +109,22 @@ class SwipeCardGameProvider extends ChangeNotifier {
     Directory dir = await getApplicationDocumentsDirectory();
 
     if (selectedCategoryWords!.isNotEmpty) {
-      selectedCategoryWords.forEach((x) {
+      for (var x in selectedCategoryWords) {
         final wordImage =
             File('${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg');
         final wordSound =
             File('${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3');
 
         WordListDBInformation wordInfo = WordListDBInformation(
-          audio: wordSound,
-          imageUrl: wordImage,
-          word: x.word,
-          wordA: x.wordA,
-          wordT: x.wordT,
-        );
+            audio: wordSound,
+            imageUrl: wordImage,
+            word: x.word,
+            wordA: x.wordA,
+            wordT: x.wordT,
+            id: x.id);
 
         _wordListDbInformation!.add(wordInfo);
-      });
+      }
     }
     print(_wordListDbInformation);
   }

@@ -133,6 +133,49 @@ class DbProvider extends ChangeNotifier {
     return list;
   }
 
+  Future<bool> addToWorkHardBox(int dbId) async {
+    try {
+      var status = await reOpenDbConnection();
+      if (!status) return false;
+      await database!.insert(
+        'WordStatistics',
+        WordStatistics(
+          wordId: dbId,
+          learned: 0,
+          repeat: 0,
+          workHard: 1, // WorkHard sütununu 1 yap
+          successCount: 0,
+          errorCount: 0,
+        ).toMap(),
+        conflictAlgorithm:
+            ConflictAlgorithm.replace, // Eğer aynı WordId varsa güncelle
+      );
+      return true;
+    } catch (e) {
+      print("Hata oluştu: $e");
+      return false;
+    }
+  }
+
+  Future<bool> updateWorkHard(int dbId) async {
+    try {
+      var status = await reOpenDbConnection();
+      if (!status) return false;
+
+      await database!.update(
+        'WordStatistics',
+        {'WorkHard': 0}, // Güncellenen değerleri belirt
+        where: 'WordId = ?',
+        whereArgs: [dbId],
+      );
+
+      return true;
+    } catch (e) {
+      print("Hata oluştu: $e");
+      return false;
+    }
+  }
+
   Future<Information> getInformation() async {
     var status = await reOpenDbConnection();
     if (!status) return Information();
