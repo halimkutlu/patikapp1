@@ -1,13 +1,17 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SwipeCardGame extends StatefulWidget {
   final WordListInformation? selectedCategoryInfo;
@@ -45,7 +49,6 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
             builder: (context, provider, child) {
           return provider.wordsLoaded == true
               ? CardSwiper(
-                  numberOfCardsDisplayed: 3,
                   backCardOffset: Offset(-25, -40),
                   cardsCount: provider.wordsLoaded == true
                       ? provider.wordListDbInformation!.length
@@ -68,19 +71,66 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                         ),
                         alignment: new Alignment(0, 0),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            FutureBuilder(
-                              future: _getLocalFile(cardInfo.imageUrl!),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<File> snapshot) {
-                                return snapshot.data != null &&
-                                        snapshot.data!.existsSync()
-                                    ? Image.file(snapshot.data!)
-                                    : Container(); // Handle non-existent file
-                              },
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.volume_up_outlined,
+                                    size: 6.h,
+                                  ),
+                                )
+                              ],
                             ),
-                            Text(cardInfo.word!),
+                            Column(
+                              children: [
+                                Text(
+                                  cardInfo.word != null ? cardInfo.word! : "",
+                                  style: TextStyle(
+                                      fontSize: 2.3.h, color: Colors.black),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(2.0.h),
+                                  child: Text(
+                                    cardInfo.word != null ? cardInfo.word! : "",
+                                    style: TextStyle(
+                                        fontSize: 2.3.h, color: Colors.black54),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                SvgPicture.file(
+                                  cardInfo.imageUrl!,
+                                  height: 19.h,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(4.0.h),
+                                  child: Text(
+                                    cardInfo.word!,
+                                    style: TextStyle(
+                                        fontSize: 3.2.h, color: Colors.black54),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0.w),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)
+                                        .translate("137"),
+                                  ),
+                                  Icon(Icons.h_plus_mobiledata_outlined)
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),

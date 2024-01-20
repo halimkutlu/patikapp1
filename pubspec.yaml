@@ -58,6 +58,7 @@ dependencies:
   auto_size_text: ^3.0.0
   flutter_card_swiper: ^6.1.0
   audioplayers: ^5.2.1
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
