@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
@@ -15,7 +12,6 @@ import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:path_provider/path_provider.dart';
 
 class SwipeCardGame extends StatefulWidget {
   final WordListInformation? selectedCategoryInfo;
@@ -36,14 +32,6 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
     swipeCardProvider =
         Provider.of<SwipeCardGameProvider>(context, listen: false);
     swipeCardProvider.init(widget.selectedCategoryInfo, context);
-
-    // setState(() {
-    //   swipeCardProvider.init();
-    // });
-    // swipeCardGameProvider = SwipeCardGameProvider();
-
-    // WidgetsBinding.instance.addPostFrameCallback(
-    //     (_) => swipeCardGameProvider.init(widget.selectedCategoryInfo));
   }
 
   @override
@@ -63,9 +51,6 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                     WordListDBInformation cardInfo =
                         provider.wordListDbInformation![index];
 
-                    // File nesnesinden dosya yolunu al
-                    String imagePath = cardInfo.imageUrl!.path;
-
                     return Center(
                       child: Container(
                         height: 80.h,
@@ -74,7 +59,6 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                           borderRadius: BorderRadius.all(Radius.circular(40)),
                           border: Border.all(width: 0.2),
                         ),
-                        alignment: new Alignment(0, 0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -161,10 +145,6 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                   child: Loading(),
                 );
         }));
-  }
-
-  Future<File> _getLocalFile(File file) async {
-    return file;
   }
 
   Future<void> _playAudio(File? audio) async {
