@@ -1,13 +1,14 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_field
 
 import 'dart:async';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
+import 'package:patikmobile/pages/box_page.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/mainPageProvider.dart';
 import 'package:patikmobile/services/appTimer.dart';
+import 'package:patikmobile/widgets/box_widget.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:patikmobile/widgets/icon_list_item.dart';
 import 'package:provider/provider.dart';
@@ -220,86 +221,44 @@ class _MainPageState extends State<MainPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          box(
-            AppLocalizations.of(context).translate("101"),
-            MainColors.boxColor1,
-            mainProvider.getLernedWordCount.toString(),
-            'lib/assets/img/ilearned.png',
+          BoxWidget(
+            text: AppLocalizations.of(context).translate("101"),
+            color: MainColors.boxColor1,
+            value: mainProvider.getLernedWordCount.toString(),
+            iconUrl: 'lib/assets/img/ilearned.png',
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => BoxPage(
+                        selectedBox: 1,
+                      )));
+            },
           ),
-          box(
-            AppLocalizations.of(context).translate("102"),
-            MainColors.boxColor2,
-            mainProvider.getRepeatedWordCount.toString(),
-            'lib/assets/img/repeat.png',
+          BoxWidget(
+            text: AppLocalizations.of(context).translate("102"),
+            color: MainColors.boxColor2,
+            value: mainProvider.getRepeatedWordCount.toString(),
+            iconUrl: 'lib/assets/img/repeat.png',
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => BoxPage(
+                        selectedBox: 2,
+                      )));
+            },
           ),
-          box(
-            AppLocalizations.of(context).translate("103"),
-            MainColors.boxColor3,
-            mainProvider.getWorkHardCount.toString(),
-            'lib/assets/img/sun.png',
+          BoxWidget(
+            text: AppLocalizations.of(context).translate("103"),
+            color: MainColors.boxColor3,
+            value: mainProvider.getWorkHardCount.toString(),
+            iconUrl: 'lib/assets/img/sun.png',
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => BoxPage(
+                        selectedBox: 3,
+                      )));
+            },
           ),
         ],
       ),
-    );
-  }
-
-  Widget box(String text, Color color, String value, String iconUrl) {
-    return Column(
-      children: [
-        Container(
-          height: 3.h,
-          width: 25.w,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                  bottomLeft: Radius.circular(3),
-                  bottomRight: Radius.circular(3)),
-              color: color,
-              border: Border.all(width: 3, color: Colors.black38)),
-          child: Center(
-              child: AutoSizeText(
-            text,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          )),
-        ),
-        Container(
-          height: 8.h,
-          width: 23.w,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(0),
-                  topRight: Radius.circular(0),
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10)),
-              color: color,
-              border: Border.all(width: 3, color: Colors.black38)),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 0.1.h),
-                child: Image.asset(
-                  iconUrl,
-                  width: 6.w,
-                  height: 3.h,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 0.5.h, right: 2.w, left: 2.w),
-                child: Container(
-                  color: Colors.white,
-                  child: Center(
-                      child: AutoSizeText(
-                    value,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 

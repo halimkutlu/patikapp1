@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
 import 'package:patikmobile/pages/splashScreen.dart';
+import 'package:patikmobile/providers/boxPageProvider.dart';
 import 'package:patikmobile/providers/categoriesProvider.dart';
 import 'package:patikmobile/providers/changePasswordProvider.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
@@ -64,6 +65,7 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<SwipeCardGameProvider>(
     create: (_) => SwipeCardGameProvider(),
   ),
+  ChangeNotifierProvider<BoxPageProvider>(create: (_) => BoxPageProvider()),
 ];
 
 class MyApp extends StatefulWidget {
