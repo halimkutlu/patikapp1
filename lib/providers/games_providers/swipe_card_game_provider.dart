@@ -111,7 +111,7 @@ class SwipeCardGameProvider extends ChangeNotifier {
             (word) =>
                 word.categories == dbId && !existingWordIds.contains(word.id),
           )
-          .take(400)
+          .take(5)
           .toList();
     }
 
