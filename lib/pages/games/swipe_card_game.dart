@@ -82,14 +82,16 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                             Column(
                               children: [
                                 Text(
-                                  cardInfo.word != null ? cardInfo.word! : "",
+                                  cardInfo.wordA != null ? cardInfo.wordA! : "",
                                   style: TextStyle(
                                       fontSize: 2.3.h, color: Colors.black),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(2.0.h),
                                   child: Text(
-                                    cardInfo.word != null ? cardInfo.word! : "",
+                                    cardInfo.wordT != null
+                                        ? cardInfo.wordT!
+                                        : "",
                                     style: TextStyle(
                                         fontSize: 2.3.h, color: Colors.black54),
                                   ),
@@ -152,7 +154,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
 
     await player.play(
       UrlSource(audio!.path),
-      volume: 300,
+      volume: 500,
     );
   }
 }
