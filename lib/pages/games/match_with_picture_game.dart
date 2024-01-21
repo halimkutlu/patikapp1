@@ -2,11 +2,15 @@
 
 import 'dart:math';
 
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/models/word.dart';
+import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
+import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -30,51 +34,60 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MainColors.backgroundColor,
-      body: Consumer<MatchWithPictureGameProvide>(
-        builder: (context, provider, child) {
-          List<WordListDBInformation> imageList = [];
-          List<WordListDBInformation> wordList = [];
-          if (!provider.wordsLoaded!) {
-            // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
-            return Center(child: CircularProgressIndicator());
-          } else {
-            imageList = List.from(provider.wordListDbInformation!);
-            wordList = List.from(provider.wordListDbInformation!);
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          return;
+        }
+        await askToGoMainMenu();
+      },
+      child: Scaffold(
+        backgroundColor: MainColors.backgroundColor,
+        body: Consumer<MatchWithPictureGameProvide>(
+          builder: (context, provider, child) {
+            List<WordListDBInformation> imageList = [];
+            List<WordListDBInformation> wordList = [];
+            if (!provider.wordsLoaded!) {
+              // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
+              return Center(child: CircularProgressIndicator());
+            } else {
+              imageList = List.from(provider.wordListDbInformation!);
+              wordList = List.from(provider.wordListDbInformation!);
 
-            imageList.shuffle(Random(5));
-            wordList.shuffle(Random(9));
-          }
-          return Stack(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: _buildImageWidgets(imageList, provider),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: _buildWordWidgets(wordList, provider),
-                        ),
-                      ],
-                    ),
-                  ],
+              imageList.shuffle(Random(5));
+              wordList.shuffle(Random(9));
+            }
+            return Stack(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: _buildImageWidgets(imageList, provider),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: _buildWordWidgets(wordList, provider),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              if (provider.errorAccuried == true) ...[
-                Expanded(flex: 3, child: ErrorImage()),
-              ]
-            ],
-          );
-        },
+                if (provider.errorAccuried == true) ...[
+                  Expanded(flex: 3, child: ErrorImage()),
+                ]
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -166,5 +179,16 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
         ),
       ),
     );
+  }
+
+  Future<void> askToGoMainMenu() async {
+    await CustomAlertDialogOnlyConfirm(context, () {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Dashboard(0)));
+    },
+        "warning".tr,
+        "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
+        ArtSweetAlertType.info,
+        "ok".tr);
   }
 }
