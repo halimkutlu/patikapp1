@@ -113,6 +113,8 @@ flutter:
     - lib/assets/img/whatsapp.png
     - lib/assets/img/hat.png
     - lib/assets/img/box.png
+    - lib/assets/img/error_image.png
+
 
 
      #- lib/db/tr-TR.db

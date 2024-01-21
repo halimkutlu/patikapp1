@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable
+// ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors
 import 'dart:io';
 import 'dart:math';
 
@@ -10,6 +10,7 @@ import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
+import 'package:patikmobile/pages/games/match_with_picture_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
@@ -160,5 +161,10 @@ class SwipeCardGameProvider extends ChangeNotifier {
     }
 
     return "";
+  }
+
+  void goToNextGame(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => MatchWithPictureGame()));
   }
 }

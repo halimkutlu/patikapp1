@@ -56,6 +56,9 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
               children: [
                 if (provider.wordsLoaded == true) ...[
                   CardSwiper(
+                    onEnd: () {
+                      provider.goToNextGame(context);
+                    },
                     backCardOffset: Offset(-25, -40),
                     cardsCount: provider.wordsLoaded == true
                         ? provider.wordListDbInformation!.length

@@ -86,6 +86,12 @@ class WordListDBInformation {
   bool? isAddedToWorkHard = false;
   bool? lastCard = false;
 
+  //resim - kelime eşleştirme modeli
+  bool? isWordCorrect;
+  bool? isImageCorrect;
+  bool? isWordSelected;
+  bool? isImageSelected;
+
   WordListDBInformation(
       {this.audio,
       this.imageUrl,
