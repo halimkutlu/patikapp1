@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 class Word {
   int? id;
@@ -81,7 +82,7 @@ class WordListDBInformation {
   String? wordA;
   String? wordT;
   File? audio;
-  File? imageUrl;
+  Uint8List? imageUrl;
   int? id;
   bool? isAddedToWorkHard = false;
   bool? lastCard = false;

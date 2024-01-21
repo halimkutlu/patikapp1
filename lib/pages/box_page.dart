@@ -98,7 +98,7 @@ class _BoxPageState extends State<BoxPage> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(left: 4.w),
-                                child: SvgPicture.file(
+                                child: SvgPicture.memory(
                                   item.imageUrl!,
                                   height: 4.h,
                                 ),
