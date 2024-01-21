@@ -126,8 +126,9 @@ class SwipeCardGameProvider extends ChangeNotifier {
 
     if (selectedCategoryWords!.isNotEmpty) {
       for (var x in selectedCategoryWords) {
-        final wordImage =
-            File('${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg');
+        final wordImage = await File(
+                '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg')
+            .readAsBytes();
         final wordSound =
             File('${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3');
 

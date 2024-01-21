@@ -120,7 +120,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                               Column(
                                 children: [
                                   !cardInfo.lastCard!
-                                      ? SvgPicture.file(
+                                      ? SvgPicture.memory(
                                           cardInfo.imageUrl!,
                                           height: 19.h,
                                         )
