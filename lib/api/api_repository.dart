@@ -275,7 +275,13 @@ class APIRepository {
         }
         return httpSonucModel(
           success: false,
-          message: "İstek hatası",
+          message: e.response?.data["errors"]
+                  ?.toString()
+                  .replaceAll("{", "")
+                  .replaceAll("}", "")
+                  .replaceAll("[", "")
+                  .replaceAll("]", "") ??
+              "İstek hatası",
         );
       }
       if (DioErrorType.connectionTimeout == e.type) {

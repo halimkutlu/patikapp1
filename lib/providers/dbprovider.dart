@@ -64,7 +64,7 @@ class DbProvider extends ChangeNotifier {
   }
 
   Future<bool> reOpenDbConnection() async {
-    if (database!.isOpen) return true;
+    if (database != null && database!.isOpen) return true;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     FileDownloadStatus result = FileDownloadStatus();
 

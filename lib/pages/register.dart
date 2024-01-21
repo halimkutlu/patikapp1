@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/widgets/custom_textfield.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
+import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -19,6 +21,11 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<RegisterProvider>(context);
     return Scaffold(
+      appBar: !loginProvider.loading
+          ? AppBar(
+              backgroundColor: MainColors.backgroundColor,
+            )
+          : null,
       body: SingleChildScrollView(
         child: Column(children: [
           SizedBox(
@@ -26,7 +33,7 @@ class _RegisterState extends State<Register> {
           ),
           Center(
             child: Text(
-              'register'.tr,
+              AppLocalizations.of(context).translate("15"),
               style: TextStyle(fontSize: 3.h),
             ),
           ),
@@ -36,26 +43,37 @@ class _RegisterState extends State<Register> {
             child: CTextfield(
                 controller: loginProvider.userName,
                 icon: Icons.person_outline,
-                name: "userName".tr,
-                hintText: "userName".tr),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
-            child: CTextfield(
-              controller: loginProvider.mail,
-              name: "mail".tr,
-              hintText: "mail".tr,
-              icon: Icons.lock_outline,
-            ),
+                name: AppLocalizations.of(context).translate("9"),
+                hintText: AppLocalizations.of(context).translate("9",
+                    addRight: AppLocalizations.of(context)
+                        .translate("16", addLeft: " (", addRight: ")"))),
           ),
           Padding(
             padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
             child: CTextfield(
               controller: loginProvider.password,
               obscureText: true,
-              name: "password".tr,
-              hintText: "password".tr,
+              name: AppLocalizations.of(context).translate("10"),
+              hintText: AppLocalizations.of(context).translate("10"),
               icon: Icons.lock_outline,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
+            child: CTextfield(
+              controller: loginProvider.firstName,
+              name: "Ad",
+              hintText: "Ad",
+              icon: Icons.contact_page_outlined,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
+            child: CTextfield(
+              controller: loginProvider.lastName,
+              name: "Soyad",
+              hintText: "Soyad",
+              icon: Icons.contact_page_outlined,
             ),
           ),
           Padding(
@@ -64,7 +82,7 @@ class _RegisterState extends State<Register> {
               textColor: Colors.black,
               colors: MainColors.primaryColor,
               icons: Icon(Icons.send),
-              name: 'login'.tr,
+              name: AppLocalizations.of(context).translate("15"),
               width: 0.3.w,
               height: 2.5.h,
               onTap: () {
@@ -77,7 +95,7 @@ class _RegisterState extends State<Register> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'noAccount'.tr + " ",
+                  AppLocalizations.of(context).translate("17", addRight: " "),
                   style:
                       TextStyle(fontWeight: FontWeight.w500, fontSize: 1.4.h),
                 ),
@@ -86,7 +104,7 @@ class _RegisterState extends State<Register> {
                     loginProvider.gotoLoginPage(context);
                   },
                   child: Text(
-                    'login'.tr,
+                    AppLocalizations.of(context).translate("7"),
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 1.4.h,
@@ -96,6 +114,7 @@ class _RegisterState extends State<Register> {
               ],
             ),
           ),
+          Container(child: loginProvider.loading ? Loading() : Container())
         ]),
       ),
     );

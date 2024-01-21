@@ -82,7 +82,7 @@ class WordListDBInformation {
   String? wordA;
   String? wordT;
   File? audio;
-  Uint8List? imageUrl;
+  Uint8List? imageBytes;
   int? id;
   bool? isAddedToWorkHard = false;
   bool? lastCard = false;
@@ -95,7 +95,7 @@ class WordListDBInformation {
 
   WordListDBInformation(
       {this.audio,
-      this.imageUrl,
+      this.imageBytes,
       this.word,
       this.wordA,
       this.wordT,

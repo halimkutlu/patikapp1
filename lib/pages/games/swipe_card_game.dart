@@ -124,7 +124,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                 children: [
                                   !cardInfo.lastCard!
                                       ? SvgPicture.memory(
-                                          cardInfo.imageUrl!,
+                                          cardInfo.imageBytes!,
                                           height: 19.h,
                                         )
                                       : Container(),

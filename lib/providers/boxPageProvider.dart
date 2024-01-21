@@ -132,7 +132,7 @@ class BoxPageProvider extends ChangeNotifier {
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
-            imageUrl: wordImage,
+            imageBytes: wordImage,
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,

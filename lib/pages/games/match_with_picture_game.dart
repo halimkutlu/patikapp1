@@ -118,7 +118,7 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
                           : Colors.white,
             ),
             child: SvgPicture.memory(
-              info.imageUrl!,
+              info.imageBytes!,
               height: 19.h,
             ),
           ),

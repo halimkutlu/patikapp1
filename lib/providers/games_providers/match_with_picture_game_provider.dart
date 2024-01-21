@@ -122,14 +122,15 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
 
     if (selectedCategoryWords!.isNotEmpty) {
       for (var x in selectedCategoryWords) {
-        final wordImage =
-            File('${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg');
+        final wordImage = await File(
+                '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg')
+            .readAsBytes();
         final wordSound =
             File('${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3');
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
-            imageUrl: wordImage.readAsBytesSync(),
+            imageBytes: wordImage,
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,
