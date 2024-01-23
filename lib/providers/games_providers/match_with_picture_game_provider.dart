@@ -161,6 +161,10 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetSelectImage(WordListDBInformation info) {
+    resetSelections();
+  }
+
   void selectWord(WordListDBInformation selectedInfo) {
     if (_selectedImage != null && (selectedInfo.isWordCorrect != true)) {
       _selectedWordInfo = selectedInfo;
@@ -210,10 +214,13 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
   void resetSelections() {
     _errorCount = _errorCount! + 1;
     _selectedImage!.isImageCorrect = null;
-    _selectedWordInfo!.isWordCorrect = null;
 
-    _selectedWordInfo!.isImageSelected = false;
-    _selectedWordInfo!.isWordSelected = null;
+    if (_selectedWordInfo != null) {
+      _selectedWordInfo!.isWordCorrect = null;
+
+      _selectedWordInfo!.isImageSelected = false;
+      _selectedWordInfo!.isWordSelected = null;
+    }
 
     _wordListDbInformation?.forEach(
       (element) {

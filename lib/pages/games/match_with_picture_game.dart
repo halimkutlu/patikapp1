@@ -101,7 +101,18 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
           onTap: info.isImageCorrect == true
               ? () {}
               : () {
-                  provider.selectImage(info);
+                  if (info.isImageSelected == null || !info.isImageSelected!) {
+                    if (list
+                        .any((element) => element.isImageSelected == true)) {
+                      provider.resetSelectImage(info);
+
+                      provider.selectImage(info);
+                    } else {
+                      provider.selectImage(info);
+                    }
+                  } else {
+                    provider.resetSelectImage(info);
+                  }
                 },
           child: Container(
             width: 20.w,
