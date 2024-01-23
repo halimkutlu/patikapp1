@@ -59,6 +59,7 @@ dependencies:
   flutter_card_swiper: ^6.1.0
   audioplayers: ^5.2.1
   flutter_svg: ^2.0.9
+  google_mobile_ads: ^4.0.0
 
 dev_dependencies:
   flutter_test:
