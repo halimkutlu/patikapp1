@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, prefer_const_constructors
 
 import 'dart:io';
 
@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
+import 'package:patikmobile/pages/introductionPages/introductionPage1.dart';
 import 'package:patikmobile/pages/splashScreen.dart';
 import 'package:patikmobile/providers/boxPageProvider.dart';
 import 'package:patikmobile/providers/categoriesProvider.dart';
@@ -25,6 +26,7 @@ import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/providers/splashScreenProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/providers/trainingProvider.dart';
+import 'package:patikmobile/widgets/keyboard_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sizer/sizer.dart';
@@ -95,6 +97,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController textController = TextEditingController();
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
           debugShowCheckedModeBanner: false,
@@ -138,7 +141,19 @@ class _MyAppState extends State<MyApp> {
             Locale('tr', 'TR'),
             Locale('zh', 'CN')
           ],
-          home: const SplashScreen());
+          home: Column(
+            children: [
+              Text(textController.text,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold)),
+              NumericKeypad(
+                controller: textController,
+                word: "YediğinHurmalar",
+              )
+            ],
+          ));
     });
   }
 }
