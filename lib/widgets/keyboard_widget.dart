@@ -95,7 +95,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
             _buildButton(12),
             _buildButton(13),
             _buildButton(14),
-            _buildButton(15, text: '⌫', onPressed: _backspace),
+            _buildButton(-1, text: '⌫', onPressed: _backspace),
           ],
         ),
       ],
@@ -106,7 +106,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
   Widget _buildButton(int buttonIndex,
       {String? text, VoidCallback? onPressed}) {
     int count = 0;
-    if (text == null || text.isEmpty) {
+    if (buttonIndex >= 0) {
       KeyCharInformation keyButton =
           keyList.firstWhere((element) => element.Index == buttonIndex);
       count = keyButton.Count;
@@ -114,9 +114,9 @@ class _NumericKeypadState extends State<NumericKeypad> {
     }
     return Expanded(
       child: TextButton(
-        onPressed:
-            onPressed ?? (isDisabled(text, count) ? null : () => _input(text!)),
-        child: Text(isDisabled(text, count) ? "" : text!),
+        onPressed: onPressed ??
+            (isDisabled(buttonIndex, text, count) ? null : () => _input(text!)),
+        child: Text(isDisabled(buttonIndex, text, count) ? "" : text!),
       ),
     );
   }
@@ -137,8 +137,8 @@ class _NumericKeypadState extends State<NumericKeypad> {
     });
   }
 
-  bool isDisabled(String? text, int count) {
-    if (text == '⌫') return false;
+  bool isDisabled(int index, String? text, int count) {
+    if (index < 0) return false;
     return count == 0 ||
         text == null ||
         text!.isEmpty ||
