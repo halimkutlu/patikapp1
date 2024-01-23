@@ -141,7 +141,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
     if (index < 0) return false;
     return count == 0 ||
         text == null ||
-        text!.isEmpty ||
+        text.isEmpty ||
         text.allMatches(widget.controller.text).length == count;
   }
 }
