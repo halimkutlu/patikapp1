@@ -6,11 +6,13 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
+import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -25,6 +27,7 @@ class SwipeCardGame extends StatefulWidget {
 }
 
 class _SwipeCardGameState extends State<SwipeCardGame> {
+  BannerAd? _bannerAd;
   bool contentLoaded = false;
   late SwipeCardGameProvider swipeCardProvider;
   AudioPlayer audioPlayer = AudioPlayer();
@@ -35,6 +38,32 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
     swipeCardProvider =
         Provider.of<SwipeCardGameProvider>(context, listen: false);
     swipeCardProvider.init(widget.selectedCategoryInfo, context);
+
+    // TODO: Load a banner ad
+    BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.fullBanner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _bannerAd = ad as BannerAd;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    ).load();
+  }
+
+  @override
+  void dispose() {
+    // TODO: Dispose a BannerAd object
+    _bannerAd?.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -195,7 +224,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                                               ? Colors.green
                                                               : Colors.red,
                                                     )),
-                                              ))
+                                              )),
                                         ],
                                       )
                                     : Container(),
@@ -207,6 +236,23 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                     },
                     isLoop: false,
                   ),
+                  SafeArea(
+                    child: Stack(
+                      children: [
+                        Center(),
+                        // TODO: Display a banner when ready
+                      ],
+                    ),
+                  ),
+                  if (_bannerAd != null)
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SizedBox(
+                        width: _bannerAd!.size.width.toDouble() * 2,
+                        height: _bannerAd!.size.height.toDouble(),
+                        child: AdWidget(ad: _bannerAd!),
+                      ),
+                    ),
                 ]
               ],
             );

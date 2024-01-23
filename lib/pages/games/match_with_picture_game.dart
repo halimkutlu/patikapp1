@@ -6,10 +6,12 @@ import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
+import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -22,6 +24,8 @@ class MatchWithPictureGame extends StatefulWidget {
 }
 
 class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
+  BannerAd? _bannerAd;
+
   late MatchWithPictureGameProvide matchWithPictureGameProvide;
 
   @override
@@ -30,6 +34,31 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
     matchWithPictureGameProvide =
         Provider.of<MatchWithPictureGameProvide>(context, listen: false);
     matchWithPictureGameProvide.init(context);
+
+    BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.fullBanner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _bannerAd = ad as BannerAd;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    ).load();
+  }
+
+  @override
+  void dispose() {
+    // TODO: Dispose a BannerAd object
+    _bannerAd?.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -60,8 +89,18 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
             }
             return Stack(
               children: [
-                Expanded(
-                  flex: 1,
+                if (_bannerAd != null)
+                  Positioned(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SizedBox(
+                        width: _bannerAd!.size.width.toDouble() * 2,
+                        height: _bannerAd!.size.height.toDouble(),
+                        child: AdWidget(ad: _bannerAd!),
+                      ),
+                    ),
+                  ),
+                Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -82,8 +121,8 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
                   ),
                 ),
                 if (provider.errorAccuried == true) ...[
-                  Expanded(flex: 3, child: ErrorImage()),
-                ]
+                  Positioned(child: ErrorImage()),
+                ],
               ],
             );
           },
