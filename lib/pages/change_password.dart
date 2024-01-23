@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
@@ -91,7 +93,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               },
             ),
           ]),
-          Container(child: cpprovider.loading ? Loading() : Container())
+          Positioned(child: Loading())
         ],
       ),
     );

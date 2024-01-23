@@ -12,7 +12,6 @@ import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
-import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -208,10 +207,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                     },
                     isLoop: false,
                   ),
-                ],
-                Container(
-                    child:
-                        provider.wordsLoaded == false ? Loading() : Container())
+                ]
               ],
             );
           })),

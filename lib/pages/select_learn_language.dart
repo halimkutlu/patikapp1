@@ -255,8 +255,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
               ],
             ),
           )
-        ],
-        Container(child: loginProvider.loading ? Loading() : Container())
+        ]
       ]),
     );
   }

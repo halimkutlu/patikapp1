@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/http_response.model.dart';
-import 'package:patikmobile/models/user.model.dart';
 import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/pages/mailResponse.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';

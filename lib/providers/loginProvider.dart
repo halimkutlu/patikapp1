@@ -43,8 +43,6 @@ class LoginProvider extends ChangeNotifier {
   TextEditingController get forgotMailController => _forgotMailController;
 
   //LOADİNG
-  bool? _loading = false;
-  bool get loading => _loading!;
 
   List<dynamic>? _learnLanguage = [];
   List<dynamic> get learnLanguage => _learnLanguage!;
@@ -70,7 +68,6 @@ class LoginProvider extends ChangeNotifier {
       }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
           "ok".tr);
     } else {
-      _loading = true;
       print("login provider girdi.");
       notifyListeners();
       print("login provider girdi. : işlem başlıyor");
@@ -104,14 +101,12 @@ class LoginProvider extends ChangeNotifier {
         }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
             "ok".tr);
       }
-      _loading = false;
       notifyListeners();
     }
   }
 
   void LoginWithGoogle(BuildContext context) async {
     try {
-      _loading = true;
       notifyListeners();
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
@@ -157,7 +152,6 @@ class LoginProvider extends ChangeNotifier {
         }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
             "ok".tr);
       }
-      _loading = false;
       notifyListeners();
     } catch (error) {
       print(error);
@@ -171,7 +165,6 @@ class LoginProvider extends ChangeNotifier {
       }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
           "ok".tr);
     } else {
-      _loading = true;
       notifyListeners();
       httpSonucModel apiresult = await apirepository.post(
           controller: forgotPasswordUrl,
@@ -185,7 +178,6 @@ class LoginProvider extends ChangeNotifier {
         }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
             "ok".tr);
       }
-      _loading = false;
       notifyListeners();
     }
   }
@@ -245,8 +237,6 @@ class LoginProvider extends ChangeNotifier {
     processResult.status = false;
 
     if (lcid.Code.isNotEmpty) {
-      //yükleme ekranı açılır
-      //_loading = true;
       notifyListeners();
 
       //DOSYA İNDİRME İŞLEMİ YAPILIR.
@@ -259,7 +249,6 @@ class LoginProvider extends ChangeNotifier {
         //DOSYA İNDRİME İŞLEMİ BAŞARILI İSE DOSYAYI CACHEDEN ALARAK TELEFONA ÇIKARTMA İŞLEMİ YAPILIR
         FileDownloadStatus result = await dbProvider.runProcess(lcid.Code);
         if (result.status == false) {
-          _loading = false;
           notifyListeners();
           processResult.status = false;
           return processResult;
@@ -272,14 +261,12 @@ class LoginProvider extends ChangeNotifier {
           } else {
             processResult.status = false;
           }
-          //_loading = false;
           notifyListeners();
           return processResult;
         }
       } else {
         processResult.status = false;
         processResult.message = resultDownloadFile.message;
-        //_loading = false;
         notifyListeners();
         return processResult;
       }

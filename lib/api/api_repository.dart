@@ -1,14 +1,11 @@
 // ignore_for_file: non_constant_identifier_names, unused_local_variable, avoid_print, depend_on_referenced_packages, deprecated_member_use
 
-import 'dart:ffi';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
-import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/models/user.model.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
@@ -19,15 +16,11 @@ import '../models/user.dart';
 class APIRepository {
   var dio = Dio();
   final String _baseUrl = BASE_URL;
-
 //Servisten gelen cevap için bekleme süresi
 //İleride değiştirilebilir.
   final int timeout = 120000;
 
-//Uygulama içerisinde kullanılan token 30 dakika içerisinde yenileniyor, sayfa içerisinde gezen kulanıcı 30 dakika boyunca işlem yapmaz
-//ise tekrar token alarak işlemlerine devam etmesi sağlanır.
-//RefreshToken
-  ReloadApiBase(String tokenValue) async {
+  APIRepository() {
     dio = Dio(BaseOptions(baseUrl: _baseUrl, followRedirects: true, headers: {
       "Accept": "application/json",
       "content-type": "application/json; charset=utf-8",
@@ -39,37 +32,40 @@ class APIRepository {
           ((X509Certificate cert, String host, int port) => true);
       return dioClient;
     };
-    initializeInterceptors(tokenValue);
-  }
 
-  initializeInterceptors(String tokenValue) {
+    initializeInterceptors();
+  }
+//Uygulama içerisinde kullanılan token 30 dakika içerisinde yenileniyor, sayfa içerisinde gezen kulanıcı 30 dakika boyunca işlem yapmaz
+//ise tekrar token alarak işlemlerine devam etmesi sağlanır.
+//RefreshToken
+
+  initializeInterceptors() {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, requestInterceptorHandler) {
+        StaticVariables.loading = true;
+        //_startLoadingCallback!();
         options.headers['PhoneID'] = DeviceProvider.getPhoneId();
-        String token = tokenValue;
-        if (token != "") {
-          print("Token:$token");
-          options.headers["Authorization"] =
-              token; //Sending token with every request accept login
+
+        if (StaticVariables.token != "") {
+          print("Token:${StaticVariables.token}");
+          options.headers["Authorization"] = StaticVariables.token;
           options.followRedirects = false;
           return requestInterceptorHandler.next(options);
         } else {
-          // ignore: void_checks
           return requestInterceptorHandler.next(options);
         }
       },
       onResponse: (response, responseInterceptorHandler) {
+        StaticVariables.loading = false;
         var map = Map<String, dynamic>.from(response.data);
         if (response.statusCode == 401) {
-/*           _dio!.interceptors.requestLock.lock();
-          _dio!.interceptors.responseLock.lock(); */
           print(response.statusCode);
         }
         print('onResponse:${response.statusCode}');
-        // ${response.statusCode} ${response.data}');
         return responseInterceptorHandler.next(response);
       },
       onError: (error, errorInterceptorHandler) {
+        StaticVariables.loading = false;
         if (error.response != null) {
           print("StatusCode:${error.response!.statusCode}");
         }
@@ -88,9 +84,6 @@ class APIRepository {
       String? Name}) async {
     try {
       var result = UserResult(message: "Başarili", success: true);
-
-      await ReloadApiBase("");
-
       Future.delayed(const Duration(seconds: 2)).whenComplete(() {});
       //Kullanılacak servisin içeriğine göre içerik değiştirilebilir.
       print("login olunuyor.");
@@ -115,18 +108,11 @@ class APIRepository {
         if (response.data!['Token'] != null) {
           result.data = User.fromJson(response.data);
           if (result.data != null) {
-            ReloadApiBase(result.data!.token!);
-            // String userString = json.encode(response);
-            // print(userString);
-
-            // getFirstTimeLogin();
-
+            StaticVariables.token = result.data!.token!;
             StaticVariables.Name = result.data!.firstName ?? "";
             StaticVariables.Surname = result.data!.lastName ?? "";
-
             StaticVariables.Roles = result.data!.roles!;
             StaticVariables.UserName = result.data!.username!;
-
             saveToken(
                 password!,
                 result.data!.token!,
@@ -254,7 +240,6 @@ class APIRepository {
       @required dynamic data,
       bool redirectLogin = false}) async {
     try {
-      ReloadApiBase(StaticVariables.token);
       final response = await dio.post(controller!, data: data);
       httpSonucModel result = httpSonucModel.fromJsonData(response.data);
 
