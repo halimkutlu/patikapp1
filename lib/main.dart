@@ -141,19 +141,22 @@ class _MyAppState extends State<MyApp> {
             Locale('tr', 'TR'),
             Locale('zh', 'CN')
           ],
-          home: Column(
-            children: [
-              Text(textController.text,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold)),
-              NumericKeypad(
-                controller: textController,
-                word: "YediğinHurmalar",
-              )
-            ],
-          ));
+          home: const SplashScreen()
+          // home: Column(
+          //   children: [
+          //     Text(textController.text,
+          //         style: TextStyle(
+          //             color: Colors.white,
+          //             fontSize: 20,
+          //             fontWeight: FontWeight.bold)),
+          //     NumericKeypad(
+          //       controller: textController,
+          //       word: "YediğinHurmalar",
+          //     )
+          //   ],
+          // )
+
+          );
     });
   }
 }
