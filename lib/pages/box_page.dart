@@ -115,7 +115,7 @@ class _BoxPageState extends State<BoxPage> {
                                   : Text(item.word!),
                               InkWell(
                                 onTap: () {
-                                  _playAudio(item.audio);
+                                  _playAudio(item.audio!);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -139,11 +139,11 @@ class _BoxPageState extends State<BoxPage> {
     );
   }
 
-  Future<void> _playAudio(File? audio) async {
+  Future<void> _playAudio(String audio) async {
     final player = AudioPlayer();
 
     await player.play(
-      UrlSource(audio!.path),
+      UrlSource(audio),
       volume: 500,
     );
   }

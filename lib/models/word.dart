@@ -12,16 +12,18 @@ class Word {
   String? activities;
   int? orderId;
 
-  Word({
-    this.id,
-    this.word,
-    this.wordA,
-    this.wordT,
-    this.isCategoryName,
-    this.categories,
-    this.activities,
-    this.orderId,
-  });
+  int? errorCount = 0;
+
+  Word(
+      {this.id,
+      this.word,
+      this.wordA,
+      this.wordT,
+      this.isCategoryName,
+      this.categories,
+      this.activities,
+      this.orderId,
+      this.errorCount = 0});
 
   factory Word.fromMap(Map<String, dynamic> json) => Word(
         id: json["Id"],
@@ -81,7 +83,7 @@ class WordListDBInformation {
   String? word;
   String? wordA;
   String? wordT;
-  File? audio;
+  String? audio;
   Uint8List? imageBytes;
   int? id;
   bool? isAddedToWorkHard = false;

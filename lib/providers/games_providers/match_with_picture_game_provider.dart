@@ -2,18 +2,26 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/games/match_with_picture_game.dart';
+import 'package:patikmobile/pages/games/math_with_sound_game.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
+import 'package:patikmobile/services/ad_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MatchWithPictureGameProvide extends ChangeNotifier {
   final apirepository = APIRepository();
   final database = Database;
+
+  InterstitialAd? _interstitialAd;
+  InterstitialAd get interstitialAd => _interstitialAd!;
+
+  List<Word> comingWordListFromStorage = [];
 
   bool? _wordsLoaded = false;
   bool? get wordsLoaded => _wordsLoaded;
@@ -47,52 +55,53 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
   init([BuildContext? context]) async {
     _isShuffled = false;
     _errorCount = 0;
+    loadAd();
     await startMatchWithImageGame();
-    // if (selectedCategoryInfo != null && selectedCategoryInfo.dbId != null) {
-    //   await startSwipeCardGame(selectedCategoryInfo.dbId, context!);
-    //   notifyListeners();
-    // }
-    // getCountInformation();
+  }
+
+  Future<void> loadAd() async {
+    InterstitialAd.load(
+        adUnitId: AdHelper.interstitialAdUnitId,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          // Called when an ad is successfully received.
+          onAdLoaded: (ad) {
+            ad.fullScreenContentCallback = FullScreenContentCallback(
+                // Called when the ad showed the full screen content.
+                onAdShowedFullScreenContent: (ad) {},
+                // Called when an impression occurs on the ad.
+                onAdImpression: (ad) {},
+                // Called when the ad failed to show full screen content.
+                onAdFailedToShowFullScreenContent: (ad, err) {
+                  // Dispose the ad here to free resources.
+                },
+                // Called when the ad dismissed full screen content.
+                onAdDismissedFullScreenContent: (ad) {
+                  // Dispose the ad here to free resources.
+                },
+                // Called when a click is recorded for an ad.
+                onAdClicked: (ad) {});
+
+            debugPrint('$ad loaded.');
+            // Keep a reference to the ad so you can show it later.
+            _interstitialAd = ad;
+          },
+          // Called when an ad request failed.
+          onAdFailedToLoad: (LoadAdError error) {
+            debugPrint('InterstitialAd failed to load: $error');
+          },
+        ));
   }
 
   Future<void> startMatchWithImageGame() async {
     //1. ADIM ==> Öncelikle bir önceki aşamada seçilen 5 kart local storage üzerinden getirilir.
-    List<Word> words = await getSavedWords();
+    comingWordListFromStorage = await getSavedWords();
     //2. ADIM ==> Seçilen kartların db verileri çekilir.
-    await getWordsFileInformationFromStorage(words);
+    await getWordsFileInformationFromStorage(comingWordListFromStorage);
     // _selectedWordInfo = _wordListDbInformation![0]; // İlk öğeyi seçelim.
     _wordsLoaded = true;
     notifyListeners();
   }
-
-  // Future<void> startSwipeCardGame(String? dbId, BuildContext context) async {
-  //   //KAYIT EDİLEN 5 KELİMEYİ EN BAŞTA TEMİZLİYORUM. ÇÜNKÜ EĞER OYUNUN ORTASINDA ÇIKAR İSE EN BAŞTAN BAŞLAMALI.
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.setStringList('selectedWords', []);
-
-  //   _wordsLoaded = false;
-  //   DbProvider dbProvider = DbProvider();
-  //   //ADIM 1 ==> Seçilen dbId si ile öncelikle o kategoriye ait liste getirilir.
-  //   // _selectedCategoryWords = await getCategoriesWordsFromDB(dbId, dbProvider);
-  //   //ADIM 2 ==> Seçilen kelimelere ait Veritabanından resimleri ve sesleri getirilir.
-  //   await getWordsFileInformationFromStorage(_selectedCategoryWords);
-  //   if (_selectedCategoryWords != null && _selectedCategoryWords!.isNotEmpty) {
-  //     _wordsLoaded = true;
-  //     notifyListeners();
-  //   }
-  //   if (_selectedCategoryWords!.isEmpty) {
-  //     CustomAlertDialogOnlyConfirm(context, () {
-  //       Navigator.pop(context);
-  //       Navigator.pop(context);
-  //     }, "warning".tr, "Kategoriye ait kelime bulunamadı",
-  //         ArtSweetAlertType.info, "ok".tr);
-  //   } else {
-  //     //ADIM 3 ==> Seçilen 5 kelimeyi kayıt altında tut! (Diğer oyunlar için kullanacağız)
-  //     await saveSelectedWords(_selectedCategoryWords!);
-  //     var words = await getSavedWords();
-  //   }
-  //   print(_selectedCategoryWords);
-  // }
 
   Future<void> saveSelectedWords(List<Word> selectedWords) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -114,6 +123,13 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
     }
   }
 
+  void resetData() {
+    _wordsLoaded = false;
+    _wordListDbInformation = [];
+    _selectedImage = null;
+    _selectedWordInfo = null;
+  }
+
   getWordsFileInformationFromStorage(List<Word>? selectedCategoryWords) async {
     _wordListDbInformation = [];
     String currentLanguage = await getCurrentLanguageAsString();
@@ -126,7 +142,7 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
                 '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg')
             .readAsBytes();
         final wordSound =
-            File('${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3');
+            '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3';
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
@@ -165,7 +181,7 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
     resetSelections();
   }
 
-  void selectWord(WordListDBInformation selectedInfo) {
+  void selectWord(WordListDBInformation selectedInfo, BuildContext context) {
     if (_selectedImage != null && (selectedInfo.isWordCorrect != true)) {
       _selectedWordInfo = selectedInfo;
       print(_selectedWordInfo);
@@ -173,7 +189,22 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
       notifyListeners();
 
       checkMatch();
+      print(_wordListDbInformation);
+      if (!_wordListDbInformation!.any((element) =>
+          element.isWordCorrect == null || element.isWordCorrect == false)) {
+        goToNextGame(context);
+      }
     }
+  }
+
+  void goToNextGame(BuildContext context) {
+    resetData();
+
+    Timer(Duration(milliseconds: 100), () {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MatchWithSoundGame()),
+          (Route<dynamic> route) => false);
+    });
   }
 
   bool checkMatch() {
@@ -211,7 +242,11 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
     return false;
   }
 
-  void resetSelections() {
+  void resetSelections() async {
+    var word = comingWordListFromStorage
+        .firstWhere((element) => element.id == _selectedImage!.id);
+    word.errorCount = word.errorCount! + 1;
+
     _errorCount = _errorCount! + 1;
     _selectedImage!.isImageCorrect = null;
 
@@ -237,7 +272,13 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
     notifyListeners();
 
     if (_errorCount! > 3) {
-      //REKLAM GÖSTER
+      if (_interstitialAd != null) {
+        await loadAd();
+        _errorCount = 0;
+        _interstitialAd?.show();
+
+        //REKLAM GÖSTER6
+      }
     }
   }
 }

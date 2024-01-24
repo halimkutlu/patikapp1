@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:async';
 import 'dart:io';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -10,6 +11,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/word.dart';
+import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
@@ -62,7 +64,6 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
   void dispose() {
     // TODO: Dispose a BannerAd object
     _bannerAd?.dispose();
-
     super.dispose();
   }
 
@@ -74,12 +75,20 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
         if (didPop) {
           return;
         }
-        await askToGoMainMenu();
+        await askToGoMainMenu(func: () {
+          setState(() {
+            swipeCardProvider.resetData();
+          });
+        });
       },
       child: Scaffold(
           backgroundColor: MainColors.backgroundColor,
           body: Consumer<SwipeCardGameProvider>(
               builder: (context, provider, child) {
+            if (!provider.wordsLoaded!) {
+              // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
+              return Center(child: CircularProgressIndicator());
+            }
             return Stack(
               children: [
                 if (provider.wordsLoaded == true) ...[
@@ -93,9 +102,6 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                         : 1,
                     cardBuilder:
                         (context, index, percentThresholdX, percentThresholdY) {
-                      WordListDBInformation cardInfo =
-                          provider.wordListDbInformation![index];
-
                       return Center(
                         child: Container(
                           height: 80.h,
@@ -107,13 +113,15 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              !cardInfo.lastCard!
+                              !provider.wordListDbInformation![index].lastCard!
                                   ? Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            _playAudio(cardInfo.audio);
+                                            _playAudio(provider
+                                                .wordListDbInformation![index]
+                                                .audio);
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -129,8 +137,11 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                               Column(
                                 children: [
                                   Text(
-                                    cardInfo.wordA != null
-                                        ? cardInfo.wordA!
+                                    provider.wordListDbInformation![index]
+                                                .wordA !=
+                                            null
+                                        ? provider.wordListDbInformation![index]
+                                            .wordA!
                                         : "",
                                     style: TextStyle(
                                         fontSize: 2.3.h, color: Colors.black),
@@ -138,8 +149,12 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                   Padding(
                                     padding: EdgeInsets.all(2.0.h),
                                     child: Text(
-                                      cardInfo.wordT != null
-                                          ? cardInfo.wordT!
+                                      provider.wordListDbInformation![index]
+                                                  .wordT !=
+                                              null
+                                          ? provider
+                                              .wordListDbInformation![index]
+                                              .wordT!
                                           : "",
                                       style: TextStyle(
                                           fontSize: 2.3.h,
@@ -150,16 +165,19 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                               ),
                               Column(
                                 children: [
-                                  !cardInfo.lastCard!
+                                  !provider.wordListDbInformation![index]
+                                          .lastCard!
                                       ? SvgPicture.memory(
-                                          cardInfo.imageBytes!,
+                                          provider.wordListDbInformation![index]
+                                              .imageBytes!,
                                           height: 19.h,
                                         )
                                       : Container(),
                                   Padding(
                                     padding: EdgeInsets.all(4.0.h),
                                     child: Text(
-                                      cardInfo.word!,
+                                      provider
+                                          .wordListDbInformation![index].word!,
                                       style: TextStyle(
                                           fontSize: 3.2.h,
                                           color: Colors.black54),
@@ -169,7 +187,8 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                               ),
                               Padding(
                                 padding: EdgeInsets.all(8.0.w),
-                                child: !cardInfo.lastCard!
+                                child: !provider
+                                        .wordListDbInformation![index].lastCard!
                                     ? Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
@@ -183,27 +202,37 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                               child: InkWell(
                                                 onTap: () async {
                                                   DbProvider db = DbProvider();
-                                                  if (cardInfo
+                                                  if (provider
+                                                          .wordListDbInformation![
+                                                              index]
                                                           .isAddedToWorkHard !=
                                                       true) {
                                                     var status = await db
-                                                        .addToWorkHardBox(
-                                                            cardInfo.id!);
+                                                        .addToWorkHardBox(provider
+                                                            .wordListDbInformation![
+                                                                index]
+                                                            .id!);
                                                     if (status == true) {
                                                       setState(() {
-                                                        cardInfo.isAddedToWorkHard =
-                                                            true;
+                                                        provider
+                                                            .wordListDbInformation![
+                                                                index]
+                                                            .isAddedToWorkHard = true;
                                                       });
                                                     }
                                                   } else {
                                                     //remove
-                                                    var status =
-                                                        await db.updateWorkHard(
-                                                            cardInfo.id!);
+                                                    var status = await db
+                                                        .updateWorkHard(provider
+                                                            .wordListDbInformation![
+                                                                index]
+                                                            .id!);
                                                     if (status == true) {
                                                       setState(() {
-                                                        cardInfo.isAddedToWorkHard =
-                                                            false;
+                                                        provider
+                                                            .wordListDbInformation![
+                                                                index]
+                                                            .isAddedToWorkHard = false;
                                                       });
                                                     }
                                                   }
@@ -212,17 +241,22 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                                     padding: EdgeInsets.only(
                                                         left: 8.0),
                                                     child: Icon(
-                                                      cardInfo.isAddedToWorkHard ==
+                                                      provider
+                                                                  .wordListDbInformation![
+                                                                      index]
+                                                                  .isAddedToWorkHard ==
                                                               true
                                                           ? Icons
                                                               .check_circle_outline
                                                           : Icons
                                                               .add_circle_outline_outlined,
-                                                      color:
-                                                          cardInfo.isAddedToWorkHard ==
-                                                                  true
-                                                              ? Colors.green
-                                                              : Colors.red,
+                                                      color: provider
+                                                                  .wordListDbInformation![
+                                                                      index]
+                                                                  .isAddedToWorkHard ==
+                                                              true
+                                                          ? Colors.green
+                                                          : Colors.red,
                                                     )),
                                               )),
                                         ],
@@ -260,19 +294,25 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
     );
   }
 
-  Future<void> _playAudio(File? audio) async {
+  Future<void> _playAudio(String? audio) async {
     final player = AudioPlayer();
 
     await player.play(
-      UrlSource(audio!.path),
+      UrlSource(audio!),
       volume: 500,
     );
   }
 
-  Future<void> askToGoMainMenu() async {
+  Future<void> askToGoMainMenu({VoidCallback? func}) async {
     await CustomAlertDialogOnlyConfirm(context, () {
-      Navigator.pop(context);
-      Navigator.pop(context);
+      if (func != null) {
+        func();
+      }
+      Timer(Duration(milliseconds: 100), () {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => Dashboard(0)),
+            (Route<dynamic> route) => false);
+      });
     },
         "warning".tr,
         "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",

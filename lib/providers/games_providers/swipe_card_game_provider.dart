@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -38,6 +39,13 @@ class SwipeCardGameProvider extends ChangeNotifier {
       notifyListeners();
     }
     // getCountInformation();
+  }
+
+  void resetData() {
+    _wordsLoaded = false;
+    _wordListDbInformation = [];
+    _selectedCategoryWords = [];
+    notifyListeners();
   }
 
   Future<void> startSwipeCardGame(String? dbId, BuildContext context) async {
@@ -131,7 +139,7 @@ class SwipeCardGameProvider extends ChangeNotifier {
                 '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg')
             .readAsBytes();
         final wordSound =
-            File('${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3');
+            '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3';
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
@@ -165,7 +173,12 @@ class SwipeCardGameProvider extends ChangeNotifier {
   }
 
   void goToNextGame(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => MatchWithPictureGame()));
+    resetData();
+
+    Timer(Duration(milliseconds: 100), () {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MatchWithPictureGame()),
+          (Route<dynamic> route) => false);
+    });
   }
 }

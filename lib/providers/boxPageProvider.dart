@@ -128,7 +128,7 @@ class BoxPageProvider extends ChangeNotifier {
                 '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg')
             .readAsBytes();
         final wordSound =
-            File('${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3');
+            '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3';
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,

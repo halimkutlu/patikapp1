@@ -27,7 +27,8 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
   BannerAd? _bannerAd;
 
   late MatchWithPictureGameProvide matchWithPictureGameProvide;
-
+  List<WordListDBInformation> imageList = [];
+  List<WordListDBInformation> wordList = [];
   @override
   void initState() {
     super.initState();
@@ -57,7 +58,8 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
   void dispose() {
     // TODO: Dispose a BannerAd object
     _bannerAd?.dispose();
-
+    // TODO: Dispose an InterstitialAd object
+    matchWithPictureGameProvide.interstitialAd.dispose();
     super.dispose();
   }
 
@@ -69,14 +71,18 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
         if (didPop) {
           return;
         }
-        await askToGoMainMenu();
+        await askToGoMainMenu(func: () {
+          setState(() {
+            matchWithPictureGameProvide.resetData();
+            imageList = [];
+            wordList = [];
+          });
+        });
       },
       child: Scaffold(
         backgroundColor: MainColors.backgroundColor,
         body: Consumer<MatchWithPictureGameProvide>(
           builder: (context, provider, child) {
-            List<WordListDBInformation> imageList = [];
-            List<WordListDBInformation> wordList = [];
             if (!provider.wordsLoaded!) {
               // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
               return Center(child: CircularProgressIndicator());
@@ -186,7 +192,7 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
           onTap: info.isWordCorrect == true
               ? () {}
               : () {
-                  provider.selectWord(info);
+                  provider.selectWord(info, context);
                 },
           child: Container(
             width: 50.w,
@@ -231,10 +237,14 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
     );
   }
 
-  Future<void> askToGoMainMenu() async {
+  Future<void> askToGoMainMenu({VoidCallback? func}) async {
     await CustomAlertDialogOnlyConfirm(context, () {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => Dashboard(0)));
+      if (func != null) {
+        func();
+      }
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Dashboard(0)),
+          (Route<dynamic> route) => false);
     },
         "warning".tr,
         "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
