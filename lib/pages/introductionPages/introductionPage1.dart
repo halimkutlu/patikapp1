@@ -1,9 +1,9 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, use_key_in_widget_constructors, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:leblebiapp/assets/mainColors.dart';
-import 'package:leblebiapp/providers/introductionPageProvider.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
+import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -45,8 +45,8 @@ class _MyWidgetState extends State<IntroductionPage1> {
               height: 150,
               child: Image.asset(
                 !introProvider.secondPage
-                    ? 'lib/assets/intro_image_1.png'
-                    : 'lib/assets/intro_image_2.png',
+                    ? 'lib/assets/img/intro_image_1.png'
+                    : 'lib/assets/img/intro_image_2.png',
                 width: 600.0,
                 height: 240.0,
                 fit: BoxFit.cover,
@@ -54,13 +54,13 @@ class _MyWidgetState extends State<IntroductionPage1> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: introductionText(
-                  !introProvider.secondPage ? "introText1" : "introText3", 2.5),
+              child:
+                  introductionText(!introProvider.secondPage ? "1" : "5", 2.5),
             ),
             Padding(
               padding: const EdgeInsets.all(18.0),
-              child: introductionText(
-                  !introProvider.secondPage ? "introText2" : "introText4", 2.0),
+              child:
+                  introductionText(!introProvider.secondPage ? "2" : "6", 2.0),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -84,7 +84,7 @@ class _MyWidgetState extends State<IntroductionPage1> {
             width: 90,
             height: 90,
             child: Image.asset(
-              'lib/assets/logo.png',
+              'lib/assets/img/logo.png',
               width: 600.0,
               height: 240.0,
               fit: BoxFit.cover,
@@ -93,14 +93,14 @@ class _MyWidgetState extends State<IntroductionPage1> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Button('skip', false, () {
+              Button("3", false, () {
                 introProvider.skip(context);
               }),
               introProvider.secondPage
-                  ? Button('login', true, () {
+                  ? Button("7", true, () {
                       introProvider.goToLoginPage(context);
                     })
-                  : Button('next', true, () {
+                  : Button("4", true, () {
                       introProvider.nextPage();
                     })
             ],
@@ -128,8 +128,8 @@ class _MyWidgetState extends State<IntroductionPage1> {
                   height: 20,
                   child: Image.asset(
                     empty
-                        ? 'lib/assets/dots_active.png'
-                        : 'lib/assets/dots_passive.png',
+                        ? 'lib/assets/img/dots_active.png'
+                        : 'lib/assets/img/dots_passive.png',
                     width: 600.0,
                     height: 240.0,
                     fit: BoxFit.cover,
@@ -146,7 +146,7 @@ class _MyWidgetState extends State<IntroductionPage1> {
   Widget introductionText(String text, double fontSize) {
     return Container(
       child: Text(
-        text.tr,
+        AppLocalizations.of(context).translate(text),
         textAlign: TextAlign.center,
         maxLines: 10,
         style: TextStyle(
@@ -160,6 +160,7 @@ class _MyWidgetState extends State<IntroductionPage1> {
   }
 
   Widget Button(String text, bool border, Function()? func) {
+    text = AppLocalizations.of(context).translate(text);
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: border
@@ -178,7 +179,7 @@ class _MyWidgetState extends State<IntroductionPage1> {
                   ),
               onPressed: func,
               child: Text(
-                text.tr,
+                text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF0F1011),
@@ -191,7 +192,7 @@ class _MyWidgetState extends State<IntroductionPage1> {
           : InkWell(
               onTap: func,
               child: Text(
-                text.tr,
+                text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF0F1011),

@@ -2,9 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:leblebiapp/assets/mainColors.dart';
-import 'package:leblebiapp/providers/registerProvider.dart';
-import 'package:leblebiapp/widgets/icon_button.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
+import 'package:patikmobile/providers/registerProvider.dart';
+import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -39,26 +40,20 @@ class _MailResponseState extends State<MailResponse> {
                 padding: EdgeInsets.only(top: 4.0.h),
                 child: Center(
                   child: Text(
-                    "Mail kutunuzu kontrol ediniz",
+                    AppLocalizations.of(context).translate("18"),
                     style: TextStyle(fontSize: 2.5.h),
                   ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 2.0.h),
+                padding: EdgeInsets.all(2.0.h),
                 child: Center(
                   child: Text(
-                    "Size bir e-mail gönderdik. Lütfen e-mail adresinizi girin.",
+                    AppLocalizations.of(context).translate("19"),
+                    textAlign: TextAlign.center,
                     style:
                         TextStyle(fontSize: 1.5.h, fontWeight: FontWeight.bold),
                   ),
-                ),
-              ),
-              Center(
-                child: Text(
-                  "Gelen maildeki linke tıklayarak işleminizi tamamlayabilirsiniz.",
-                  style:
-                      TextStyle(fontSize: 1.5.h, fontWeight: FontWeight.bold),
                 ),
               ),
               Padding(
@@ -67,7 +62,7 @@ class _MailResponseState extends State<MailResponse> {
                   textColor: Colors.black,
                   colors: MainColors.primaryColor,
                   icons: Icon(Icons.arrow_back_ios_new),
-                  name: 'backToLogin'.tr,
+                  name: AppLocalizations.of(context).translate("7"),
                   width: 0.3.w,
                   height: 2.5.h,
                   onTap: () {
@@ -82,7 +77,7 @@ class _MailResponseState extends State<MailResponse> {
                     width: 90,
                     height: 90,
                     child: Image.asset(
-                      'lib/assets/logo.png',
+                      'lib/assets/img/logo.png',
                       width: 600.0,
                       height: 240.0,
                       fit: BoxFit.cover,

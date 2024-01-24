@@ -1,4 +1,4 @@
-name: leblebiapp
+name: patikmobile
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -31,6 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -42,6 +44,22 @@ dependencies:
   dio: ^5.4.0
   art_sweetalert: ^0.0.5
   sqflite: ^2.3.0
+  path_provider: ^2.1.1
+  http: ^1.1.2
+  archive: ^3.4.9
+  permission_handler: ^11.1.0
+  device_info_plus: ^9.1.1
+  loading_indicator: ^3.1.1
+  flutter_bcrypt: ^1.0.8
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.16.0
+  google_sign_in: ^6.2.1
+  percent_indicator: ^4.2.3
+  auto_size_text: ^3.0.0
+  flutter_card_swiper: ^6.1.0
+  audioplayers: ^5.2.1
+  flutter_svg: ^2.0.9
+  google_mobile_ads: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -67,11 +85,40 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - lib/assets/logo.png
-     - lib/assets/dots_active.png
-     - lib/assets/dots_passive.png
-     - lib/assets/intro_image_1.png
-     - lib/assets/intro_image_2.png
+    - lib/assets/locales/
+    - lib/assets/img/logo.png
+    - lib/assets/img/dots_active.png
+    - lib/assets/img/dots_passive.png
+    - lib/assets/img/intro_image_1.png
+    - lib/assets/img/intro_image_2.png
+    - lib/assets/img/user_language.png
+    - lib/assets/img/learn_language.png
+    - lib/assets/img/avatar.png
+    - lib/assets/img/edit.png
+    - lib/assets/img/internet.png
+    - lib/assets/img/key.png
+    - lib/assets/img/mail.png
+    - lib/assets/img/privacy.png
+    - lib/assets/img/star_.png
+    - lib/assets/img/aboutapp_image.png
+    - lib/assets/img/bicyle.png
+    - lib/assets/img/chat.png
+    - lib/assets/img/facebook.png
+    - lib/assets/img/graduate.png
+    - lib/assets/img/ilearned.png
+    - lib/assets/img/instagram.png
+    - lib/assets/img/muscle.png
+    - lib/assets/img/repeat.png
+    - lib/assets/img/sun.png
+    - lib/assets/img/twitter.png
+    - lib/assets/img/whatsapp.png
+    - lib/assets/img/hat.png
+    - lib/assets/img/box.png
+    - lib/assets/img/error_image.png
+
+
+
+     #- lib/db/tr-TR.db
 
 
   #   - images/a_dot_ham.jpeg

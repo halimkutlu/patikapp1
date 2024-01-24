@@ -1,12 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomIconButton extends StatelessWidget {
   final VoidCallback? onTap;
   final String name;
   final Color? colors;
-  final num outSpace;
   final num height;
   final Widget? icons;
   final num width;
@@ -17,20 +17,19 @@ class CustomIconButton extends StatelessWidget {
   final num textInlinePadding;
   final num textOutSpace_right;
   final Color? textColor;
-  final num textSize;
+  final double textSize;
   CustomIconButton({
     Key? key,
     this.onTap,
     this.name = "İsim",
-    this.outSpace = 40,
     this.textOutSpace_top = 70,
     this.textOutSpace_bottom = 100,
-    this.textOutSpace_left = 45,
-    this.textOutSpace_right = 45,
+    this.textOutSpace_left = 100,
+    this.textOutSpace_right = 100,
     this.textColor,
-    this.textSize = 50,
+    this.textSize = 30,
     this.colors,
-    this.height = 15,
+    this.height = 20,
     this.width = 4,
     this.icons,
     this.textInlinePadding = 200,
@@ -72,20 +71,20 @@ class CustomIconButton extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              AutoSizeText(
                                 name,
-                                maxLines: 3,
+                                maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: textColor ?? Colors.white,
-                                    fontSize:
-                                        MediaQuery.of(context).size.height /
-                                            textSize),
+                                    fontSize: textSize),
                               ),
-                              Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: icons),
+                              icons == null
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: icons)
+                                  : Container(),
                             ],
                           ),
                         ),

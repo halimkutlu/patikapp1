@@ -1,20 +1,60 @@
+// ignore_for_file: unused_local_variable, prefer_const_constructors
+
+import 'dart:io';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:leblebiapp/assets/mainColors.dart';
-import 'package:leblebiapp/locale/Messages.dart';
-import 'package:leblebiapp/pages/splashScreen.dart';
-import 'package:leblebiapp/providers/introductionPageProvider.dart';
-import 'package:leblebiapp/providers/loginProvider.dart';
-import 'package:leblebiapp/providers/registerProvider.dart';
-import 'package:leblebiapp/providers/splashScreenProvider.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localization_delegate.dart';
+import 'package:patikmobile/pages/introductionPages/introductionPage1.dart';
+import 'package:patikmobile/pages/splashScreen.dart';
+import 'package:patikmobile/providers/boxPageProvider.dart';
+import 'package:patikmobile/providers/categoriesProvider.dart';
+import 'package:patikmobile/providers/changePasswordProvider.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
+import 'package:patikmobile/providers/deviceProvider.dart';
+import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
+import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
+import 'package:patikmobile/providers/introductionPageProvider.dart';
+import 'package:patikmobile/providers/loginProvider.dart';
+import 'package:patikmobile/providers/mainPageProvider.dart';
+import 'package:patikmobile/providers/dashboardProvider.dart';
+import 'package:patikmobile/providers/registerProvider.dart';
+import 'package:patikmobile/providers/splashScreenProvider.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
+import 'package:patikmobile/providers/trainingProvider.dart';
+import 'package:patikmobile/widgets/keyboard_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sizer/sizer.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 
-void main() {
+//indirilen dilin kayıt edilmesi (tekrar uygulama açıldığında o dilden devam edicek)
+//progress indicator
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _initGoogleMobileAds();
+  if (Platform.isAndroid) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyBFDNgEQpj6uQg_cIGYzUIBM3p7cEijcog',
+        appId: '1:587524623446:android:4673d988efc27735a57ff7',
+        messagingSenderId: '',
+        projectId: 'patikmobile',
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   runApp(MultiProvider(providers: providers, child: const MyApp()));
+}
+
+Future<InitializationStatus> _initGoogleMobileAds() {
+  // TODO: Initialize Google Mobile Ads SDK
+  return MobileAds.instance.initialize();
 }
 
 List<SingleChildWidget> providers = [
@@ -24,6 +64,20 @@ List<SingleChildWidget> providers = [
       create: (_) => IntroductionPageProvider()),
   ChangeNotifierProvider<LoginProvider>(create: (_) => LoginProvider()),
   ChangeNotifierProvider<RegisterProvider>(create: (_) => RegisterProvider()),
+  ChangeNotifierProvider<DbProvider>(create: (_) => DbProvider()),
+  ChangeNotifierProvider<DashboardProvider>(create: (_) => DashboardProvider()),
+  ChangeNotifierProvider<ChangePasswordProvider>(
+      create: (_) => ChangePasswordProvider()),
+  ChangeNotifierProvider<MainPageProvider>(create: (_) => MainPageProvider()),
+  ChangeNotifierProvider<CategoriesProvider>(
+      create: (_) => CategoriesProvider()),
+  ChangeNotifierProvider<TrainingProvider>(create: (_) => TrainingProvider()),
+  ChangeNotifierProvider<SwipeCardGameProvider>(
+    create: (_) => SwipeCardGameProvider(),
+  ),
+  ChangeNotifierProvider<BoxPageProvider>(create: (_) => BoxPageProvider()),
+  ChangeNotifierProvider<MatchWithPictureGameProvide>(
+      create: (_) => MatchWithPictureGameProvide()),
 ];
 
 class MyApp extends StatefulWidget {
@@ -34,61 +88,75 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Database _database;
-
   @override
   void initState() {
+    StorageProvider.load();
+    DeviceProvider.getPhoneId();
     super.initState();
-    _initDatabase();
-  }
-
-  Future<void> _initDatabase() async {
-    // Veritabanının yolunu al
-    String databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'my_database.db');
-    print(path);
-
-    // Veritabanını kontrol et ve oluştur veya aç
-    _database = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        print("db oluşturuldu");
-        // Veritabanı oluşturma işlemleri
-        await db.execute('''
-          CREATE TABLE my_table (
-            id INTEGER PRIMARY KEY,
-            name TEXT,
-            age INTEGER
-          )
-        ''');
-        // Örnek bir kayıt ekle
-        await db.rawInsert(
-            "INSERT INTO my_table (name, age) VALUES (?, ?)", ['test', 12]);
-      },
-      onOpen: (Database db) async {
-        // Veritabanı açıldığında yapılacak işlemler
-        print('Database opened');
-        var result = await db.query("my_table");
-        print(await db.rawQuery("Select count(*) from my_table"));
-        print(result);
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController textController = TextEditingController();
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          translations: LocaleString(),
-          locale: Locale('de', 'DE'),
+          //translations: LocaleString(),
+          //locale: const Locale('hy', 'HW'), //Get.locale,
           title: 'Flutter Demo',
           theme: ThemeData(
             scaffoldBackgroundColor: MainColors.backgroundColor,
             primarySwatch: Colors.blue,
           ),
-          home: SplashScreen());
+          // Localization delegates
+          localizationsDelegates: const [
+            AppLocalizationsDelegate(),
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          // Supported locales for this app
+          supportedLocales: const [
+            Locale('ar', 'EG'),
+            Locale('bg', 'BG'),
+            Locale('bs-Latn', 'BA'),
+            Locale('de', 'DE'),
+            Locale('el', 'GR'),
+            Locale('en', 'US'),
+            Locale('es', 'ES'),
+            Locale('fa', 'IR'),
+            Locale('fr', 'FR'),
+            Locale('hy', 'AM'),
+            Locale('hy', 'AW'),
+            Locale('it', 'IT'),
+            Locale('ja', 'JP'),
+            Locale('ka', 'GE'),
+            Locale('kb', 'KR'),
+            Locale('mk', 'MK'),
+            Locale('nl', 'NL'),
+            Locale('pl', 'PL'),
+            Locale('pt', 'BR'),
+            Locale('pt', 'PT'),
+            Locale('ru', 'RU'),
+            Locale('tr', 'TR'),
+            Locale('zh', 'CN')
+          ],
+          home: const SplashScreen()
+          // home: Column(
+          //   children: [
+          //     Text(textController.text,
+          //         style: TextStyle(
+          //             color: Colors.white,
+          //             fontSize: 20,
+          //             fontWeight: FontWeight.bold)),
+          //     NumericKeypad(
+          //       controller: textController,
+          //       word: "YediğinHurmalar",
+          //     )
+          //   ],
+          // )
+
+          );
     });
   }
 }

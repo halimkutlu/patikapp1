@@ -1,7 +1,6 @@
-const BASE_URL = "";
-//----
-const updateNotication = "v1/Notification/UpdateNotification";
-const addNotification = "v1/Notification/AddNotification";
-const getNotificationsWithPagingFilter =
-    "v1/Notification/GetNotificationsPagingFilter";
-const loginUrl = "v1/Auth/Login";
+const BASE_URL = "https://lingobetik.com.tr/api";
+//----const BASE_URL = "http://10.100.152.33:7178/api";
+const loginUrl = "/Users/Authenticate";
+const learnLanguageUrl = "/Parameters/GetLngList";
+const forgotPasswordUrl = "/Users/ForgotPassword";
+const registerUrl = "/Users/Register";

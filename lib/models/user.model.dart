@@ -1,5 +1,7 @@
 // ignore_for_file: camel_case_types
 
+import 'package:patikmobile/models/user.dart';
+
 class userData {
   String? token;
   String? expration;
@@ -12,7 +14,7 @@ class userData {
 }
 
 class UserResult {
-  userData? data;
+  User? data;
   int? statusCode;
   bool? success;
   String? message;
