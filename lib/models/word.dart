@@ -89,11 +89,15 @@ class WordListDBInformation {
   bool? isAddedToWorkHard = false;
   bool? lastCard = false;
 
-  //resim - kelime eşleştirme modeli
+  //kelime eşleştirme modeli
   bool? isWordCorrect;
-  bool? isImageCorrect;
   bool? isWordSelected;
+  //resim
+  bool? isImageCorrect;
   bool? isImageSelected;
+  //ses
+  bool? isSoundCorrect;
+  bool? isSoundListened;
 
   WordListDBInformation(
       {this.audio,

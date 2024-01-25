@@ -17,6 +17,7 @@ import 'package:patikmobile/providers/changePasswordProvider.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
+import 'package:patikmobile/providers/games_providers/match_with_sound_game_provider.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
@@ -78,6 +79,8 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<BoxPageProvider>(create: (_) => BoxPageProvider()),
   ChangeNotifierProvider<MatchWithPictureGameProvide>(
       create: (_) => MatchWithPictureGameProvide()),
+  ChangeNotifierProvider<MatchWithSoundGameProvide>(
+      create: (_) => MatchWithSoundGameProvide()),
 ];
 
 class MyApp extends StatefulWidget {

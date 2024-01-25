@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/boxPageProvider.dart';
+import 'package:patikmobile/services/sound_helper.dart';
 import 'package:patikmobile/widgets/box_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -115,7 +116,7 @@ class _BoxPageState extends State<BoxPage> {
                                   : Text(item.word!),
                               InkWell(
                                 onTap: () {
-                                  _playAudio(item.audio!);
+                                  PlayAudio(item.audio!);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -136,15 +137,6 @@ class _BoxPageState extends State<BoxPage> {
           ),
         );
       }),
-    );
-  }
-
-  Future<void> _playAudio(String audio) async {
-    final player = AudioPlayer();
-
-    await player.play(
-      UrlSource(audio),
-      volume: 500,
     );
   }
 }

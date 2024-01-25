@@ -99,30 +99,33 @@ class SwipeCardGameProvider extends ChangeNotifier {
 
   Future<List<Word>> getCategoriesWordsFromDB(
       String? dbId, DbProvider dbProvider) async {
-    List<Word> allWords =
-        await dbProvider.getWordList(withoutCategoryName: true);
+    _selectedCategoryWords =
+        await dbProvider.getRandomWordList(withoutCategoryName: true);
 
-    List<WordStatistics> allWordStatistics =
-        await dbProvider.getWordStatisticsList();
+    // List<Word> allWords =
+    //     await dbProvider.getWordList(withoutCategoryName: true);
 
-    if (allWords.isNotEmpty) {
-      // Rastgele sıralama işlemi
-      Random random = Random();
-      allWords.shuffle(random);
+    // List<WordStatistics> allWordStatistics =
+    //     await dbProvider.getWordStatisticsList();
 
-      // allWordStatistics içindeki WordId'leri al
-      Set<int> existingWordIds =
-          allWordStatistics.map((statistics) => statistics.wordId!).toSet();
+    // if (allWords.isNotEmpty) {
+    //   // Rastgele sıralama işlemi
+    //   Random random = Random();
+    //   allWords.shuffle(random);
 
-      // allWords içinde allWordStatistics'te bulunmayan WordId'lere sahip kelimeleri filtrele
-      _selectedCategoryWords = allWords
-          .where(
-            (word) =>
-                word.categories == dbId && !existingWordIds.contains(word.id),
-          )
-          .take(5)
-          .toList();
-    }
+    //   // allWordStatistics içindeki WordId'leri al
+    //   Set<int> existingWordIds =
+    //       allWordStatistics.map((statistics) => statistics.wordId!).toSet();
+
+    //   // allWords içinde allWordStatistics'te bulunmayan WordId'lere sahip kelimeleri filtrele
+    //   _selectedCategoryWords = allWords
+    //       .where(
+    //         (word) =>
+    //             word.categories == dbId && !existingWordIds.contains(word.id),
+    //       )
+    //       .take(5)
+    //       .toList();
+    // }
 
     return _selectedCategoryWords!;
   }

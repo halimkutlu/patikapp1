@@ -15,6 +15,7 @@ import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/services/sound_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -119,7 +120,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            _playAudio(provider
+                                            PlayAudio(provider
                                                 .wordListDbInformation![index]
                                                 .audio);
                                           },
@@ -291,15 +292,6 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
               ],
             );
           })),
-    );
-  }
-
-  Future<void> _playAudio(String? audio) async {
-    final player = AudioPlayer();
-
-    await player.play(
-      UrlSource(audio!),
-      volume: 500,
     );
   }
 

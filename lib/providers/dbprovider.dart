@@ -211,6 +211,29 @@ class DbProvider extends ChangeNotifier {
     return list;
   }
 
+  Future<List<Word>> getRandomWordList(
+      {bool withoutCategoryName = false,
+      bool notInWordStatistics = true,
+      int limit = 5}) async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
+    String sqlQuery = """
+SELECT w.* FROM Words w
+${notInWordStatistics ? "LEFT JOIN WordStatistics ws " : ""} 
+where 
+${withoutCategoryName ? "w.IsCategoryName != 1" : "1=1"} 
+${notInWordStatistics ? "and ws.WordId IS NULL" : ""} 
+ORDER BY RANDOM()
+${limit > 0 ? "LIMIT $limit" : ""} 
+""";
+
+    var res = await database!.rawQuery(sqlQuery);
+
+    List<Word> list = res.map((c) => Word.fromMap(c)).toList();
+    return list;
+  }
+
   checkLanguage(int lcid) async {
     Lcid language = Languages.GetLngFromLCID(lcid);
     SharedPreferences prefs = await SharedPreferences.getInstance();

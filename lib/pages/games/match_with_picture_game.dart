@@ -86,12 +86,11 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
             if (!provider.wordsLoaded!) {
               // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
               return Center(child: CircularProgressIndicator());
-            } else {
+            } else if (imageList.isEmpty || wordList.isEmpty) {
               imageList = List.from(provider.wordListDbInformation!);
               wordList = List.from(provider.wordListDbInformation!);
-
-              imageList.shuffle(Random(5));
-              wordList.shuffle(Random(9));
+              imageList.shuffle();
+              wordList.shuffle();
             }
             return Stack(
               children: [
