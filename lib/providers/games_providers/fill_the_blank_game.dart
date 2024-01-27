@@ -5,17 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
-import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
-import 'package:patikmobile/pages/games/fill_the_blank_game.dart';
-import 'package:patikmobile/pages/games/match_with_picture_game.dart';
 import 'package:patikmobile/pages/games/math_with_sound_game.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
-class MatchWithPictureGameProvide extends ChangeNotifier {
+class FillTheBlankGameProvider extends ChangeNotifier {
   final apirepository = APIRepository();
   final database = Database;
 
@@ -27,37 +24,31 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
   bool? _wordsLoaded = false;
   bool? get wordsLoaded => _wordsLoaded;
 
-  bool? _isShuffled = false;
-  bool? get isShuffled => _isShuffled;
-
-  set shuffled(bool isShuffled) {
-    _isShuffled = isShuffled;
-  }
-
-  List<Word>? _selectedCategoryWords;
-  List<Word>? get selectedCategoryWords => _selectedCategoryWords;
-
   List<WordListDBInformation>? _wordListDbInformation;
   List<WordListDBInformation>? get wordListDbInformation =>
       _wordListDbInformation;
 
-  WordListDBInformation? _selectedWordInfo;
-  WordListDBInformation? get selectedWordInfo => _selectedWordInfo;
-
-  WordListDBInformation? _selectedImage;
-  WordListDBInformation? get selectedImage => _selectedImage;
-
   bool? _errorAccuried = false;
   bool? get errorAccuried => _errorAccuried;
+
+  WordListDBInformation? _selectedWord;
+  WordListDBInformation? get selectedWord => _selectedWord;
+
+  TextEditingController? _selectedWordTextEditingController =
+      TextEditingController();
+  TextEditingController? get selectedWordTextEditingController =>
+      _selectedWordTextEditingController;
 
   int? _errorCount = 0;
   int? get errorCount => _errorCount;
 
   init([BuildContext? context]) async {
-    _isShuffled = false;
+    _selectedWord = null;
+    _selectedWordTextEditingController = TextEditingController();
     _errorCount = 0;
+    _wordsLoaded = false;
     loadAd();
-    await startMatchWithImageGame();
+    await startFillTheBlankGame();
   }
 
   Future<void> loadAd() async {
@@ -94,20 +85,42 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
         ));
   }
 
-  Future<void> startMatchWithImageGame() async {
+  Future<void> startFillTheBlankGame() async {
     //1. ADIM ==> Öncelikle bir önceki aşamada seçilen 5 kart local storage üzerinden getirilir.
     comingWordListFromStorage = await getSavedWords();
     //2. ADIM ==> Seçilen kartların db verileri çekilir.
     await getWordsFileInformationFromStorage(comingWordListFromStorage);
     // _selectedWordInfo = _wordListDbInformation![0]; // İlk öğeyi seçelim.
-    _wordsLoaded = true;
+
+    await takeWord();
     notifyListeners();
   }
 
-  Future<void> saveSelectedWords() async {
+  List<WordListDBInformation> usedWords = [];
+  Future<void> takeWord() async {
+    _selectedWord = null;
+    _selectedWordTextEditingController = TextEditingController();
+    _errorCount = 0;
+    _wordsLoaded = false;
+    WordListDBInformation? takenWord;
+    WordListDBInformation word = WordListDBInformation();
+    if (_wordListDbInformation!.isNotEmpty) {
+      print(_selectedWord);
+      _selectedWord = _wordListDbInformation!.removeAt(0);
+      // _selectedWordTextEditingController!.text = _selectedWord!.word!;
+      print(_selectedWord);
+      _wordsLoaded = true;
+    }
+    {
+      print("TEBRİKLER");
+      //oyun bitmiştir
+    }
+  }
+
+  Future<void> saveSelectedWords(List<Word> selectedWords) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> serializedWords =
-        comingWordListFromStorage.map((word) => word.toJson()).toList();
+        selectedWords.map((word) => word.toJson()).toList();
     prefs.setStringList('selectedWords', serializedWords);
     print('Selected words saved to SharedPreferences');
   }
@@ -125,15 +138,15 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
   }
 
   void resetData() {
-    _wordsLoaded = false;
-    _wordListDbInformation = [];
-    _selectedImage = null;
-    _selectedWordInfo = null;
+    // _wordsLoaded = false;
+    // _wordListDbInformation = [];
+    // _listenedSound = null;
+    // _selectedWordInfo = null;
   }
 
   getWordsFileInformationFromStorage(List<Word>? selectedCategoryWords) async {
     _wordListDbInformation = [];
-    String currentLanguage = await getCurrentLanguageAsString();
+    String currentLanguage = StorageProvider.learnLanguge!.Code;
 
     Directory dir = await getApplicationDocumentsDirectory();
 
@@ -142,11 +155,7 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
         final wordImage = await File(
                 '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg')
             .readAsBytes();
-        final wordSound =
-            '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3';
-
         WordListDBInformation wordInfo = WordListDBInformation(
-            audio: wordSound,
             imageBytes: wordImage,
             word: x.word,
             wordA: x.wordA,
@@ -159,127 +168,78 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
     print(_wordListDbInformation);
   }
 
-  Future<String> getCurrentLanguageAsString() async {
-    int? language;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    language = prefs.getInt(StorageProvider.learnLcidKey);
-    if (language != null) {
-      Lcid lcid = Languages.GetLngFromLCID(language);
-      return lcid.Code;
-    }
-
-    return "";
-  }
-
-  void selectImage(WordListDBInformation selectedInfo) {
-    _selectedImage = selectedInfo;
-    print(_selectedImage);
-    selectedInfo.isImageSelected = true;
-    notifyListeners();
-  }
-
-  void resetSelectImage(WordListDBInformation info) {
-    resetSelections();
-  }
-
-  void selectWord(WordListDBInformation selectedInfo, BuildContext context) {
-    if (_selectedImage != null && (selectedInfo.isWordCorrect != true)) {
-      _selectedWordInfo = selectedInfo;
-      print(_selectedWordInfo);
-      selectedInfo.isWordSelected = true;
-      notifyListeners();
-
-      checkMatch();
-      print(_wordListDbInformation);
-      if (!_wordListDbInformation!.any((element) =>
-          element.isWordCorrect == null || element.isWordCorrect == false)) {
-        goToNextGame(context);
-      }
-    }
-  }
-
   void goToNextGame(BuildContext context) {
     resetData();
-    saveSelectedWords();
+
     Timer(Duration(milliseconds: 100), () {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => FillTheBlankGame()),
+          MaterialPageRoute(builder: (context) => MatchWithSoundGame()),
           (Route<dynamic> route) => false);
     });
   }
 
-  bool checkMatch() {
-    if (_selectedImage != null && _selectedWordInfo != null) {
-      if (_selectedImage!.word == _selectedWordInfo!.word) {
-        _selectedWordInfo!.isWordCorrect = true;
-        _selectedImage!.isImageCorrect = true;
+  void resetSelections() async {
+    // var word = comingWordListFromStorage
+    //     .firstWhere((element) => element.id == _listenedSound!.id);
+    // word.errorCount = word.errorCount! + 1;
 
-        _selectedWordInfo!.isImageSelected = false;
-        _selectedWordInfo!.isWordSelected = false;
+    // _errorCount = _errorCount! + 1;
+    // _listenedSound!.isSoundCorrect = null;
 
-        //seçimler temizlenir
-        _selectedImage = null;
-        _selectedWordInfo = null;
-        //----
-        notifyListeners();
+    // if (_selectedWordInfo != null) {
+    //   _selectedWordInfo!.isWordCorrect = null;
 
-        return true;
-      } else {
-        _selectedImage!.isImageCorrect = false;
-        _selectedWordInfo!.isWordCorrect = false;
+    //   _selectedWordInfo!.isSoundListened = false;
+    //   _selectedWordInfo!.isWordSelected = null;
+    // }
 
-        _selectedWordInfo!.isImageSelected = false;
-        _selectedWordInfo!.isWordSelected = false;
+    // _wordListDbInformation?.forEach(
+    //   (element) {
+    //     element.isWordSelected = false;
+    //     element.isSoundListened = false;
+    //   },
+    // );
 
-        _errorAccuried = true;
-        notifyListeners();
+    // //seçimler temizlenir
+    // _listenedSound = null;
+    // _selectedWordInfo = null;
+    // _errorAccuried = false;
+    // //----
+    // notifyListeners();
 
-        Timer(Duration(seconds: 2), () {
-          resetSelections();
-        });
-        return false;
-      }
-    }
-    return false;
+    // if (_errorCount! > 3) {
+    //   if (_interstitialAd != null) {
+    //     await loadAd();
+    //     _errorCount = 0;
+    //     _interstitialAd?.show();
+
+    //     //REKLAM GÖSTER6
+    //   }
+    // }
   }
 
-  void resetSelections() async {
-    var word = comingWordListFromStorage
-        .firstWhere((element) => element.id == _selectedImage!.id);
-    word.errorCount = word.errorCount! + 1;
-
-    _errorCount = _errorCount! + 1;
-    _selectedImage!.isImageCorrect = null;
-
-    if (_selectedWordInfo != null) {
-      _selectedWordInfo!.isWordCorrect = null;
-
-      _selectedWordInfo!.isImageSelected = false;
-      _selectedWordInfo!.isWordSelected = null;
-    }
-
-    _wordListDbInformation?.forEach(
-      (element) {
-        element.isWordSelected = false;
-        element.isImageSelected = false;
-      },
-    );
-
-    //seçimler temizlenir
-    _selectedImage = null;
-    _selectedWordInfo = null;
-    _errorAccuried = false;
-    //----
+  Future<void> wrongCharacter() async {
+    _errorAccuried = true;
     notifyListeners();
 
-    if (_errorCount! > 3) {
-      if (_interstitialAd != null) {
-        await loadAd();
-        _errorCount = 0;
-        _interstitialAd?.show();
+    Timer(Duration(seconds: 2), () async {
+      var word = comingWordListFromStorage
+          .firstWhere((element) => element.id == _selectedWord!.id);
+      word.errorCount = word.errorCount! + 1;
 
-        //REKLAM GÖSTER6
+      _errorCount = _errorCount! + 1;
+
+      if (_errorCount! > 3) {
+        if (_interstitialAd != null) {
+          await loadAd();
+          _errorCount = 0;
+          _interstitialAd?.show();
+
+          //REKLAM GÖSTER6
+        }
       }
-    }
+      _errorAccuried = false;
+      notifyListeners();
+    });
   }
 }

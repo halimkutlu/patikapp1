@@ -34,6 +34,7 @@ class Word {
         categories: json["Categories"],
         activities: json["Activities"],
         orderId: json["OrderId"],
+        errorCount: json["errorCount"] ?? 0,
       );
 
   Map<String, dynamic> toMap() => {
@@ -45,6 +46,7 @@ class Word {
         "Categories": categories,
         "Activities": activities,
         "OrderId": orderId,
+        "errorCount": errorCount ?? 0
       };
 
   String toJson() {

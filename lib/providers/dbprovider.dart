@@ -220,16 +220,16 @@ class DbProvider extends ChangeNotifier {
     if (!status) return [];
 
     String sqlQuery = """
-SELECT w.* FROM Words w
-${notInWordStatistics ? "LEFT JOIN WordStatistics ws " : ""} 
-where 
-${withoutCategoryName ? "w.IsCategoryName != 1" : "1=1"} 
-${dbId!.isNotEmpty ? "and Categories='$dbId'" : ""}
-${notInWordStatistics ? "and ws.WordId IS NULL" : ""} 
-ORDER BY RANDOM()
-${limit > 0 ? "LIMIT $limit" : ""} 
-""";
-
+    SELECT w.* FROM Words w
+    ${notInWordStatistics ? "LEFT JOIN WordStatistics ws on w.Id = ws.WordId " : ""} 
+    where 
+    ${withoutCategoryName ? "w.IsCategoryName != 1" : "1=1"} 
+    ${dbId!.isNotEmpty ? "and Categories='$dbId'" : ""}
+    ${notInWordStatistics ? "and ws.WordId IS NULL" : ""} 
+    ORDER BY RANDOM()
+    ${limit > 0 ? "LIMIT $limit" : ""} 
+    """;
+    print(sqlQuery);
     var res = await database!.rawQuery(sqlQuery);
 
     List<Word> list = res.map((c) => Word.fromMap(c)).toList();
