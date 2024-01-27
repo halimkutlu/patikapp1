@@ -212,7 +212,8 @@ class DbProvider extends ChangeNotifier {
   }
 
   Future<List<Word>> getRandomWordList(
-      {bool withoutCategoryName = false,
+      {String? dbId = "",
+      bool withoutCategoryName = false,
       bool notInWordStatistics = true,
       int limit = 5}) async {
     var status = await reOpenDbConnection();
@@ -223,6 +224,7 @@ SELECT w.* FROM Words w
 ${notInWordStatistics ? "LEFT JOIN WordStatistics ws " : ""} 
 where 
 ${withoutCategoryName ? "w.IsCategoryName != 1" : "1=1"} 
+${dbId!.isNotEmpty ? "and Categories='$dbId'" : ""}
 ${notInWordStatistics ? "and ws.WordId IS NULL" : ""} 
 ORDER BY RANDOM()
 ${limit > 0 ? "LIMIT $limit" : ""} 

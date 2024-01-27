@@ -99,8 +99,8 @@ class SwipeCardGameProvider extends ChangeNotifier {
 
   Future<List<Word>> getCategoriesWordsFromDB(
       String? dbId, DbProvider dbProvider) async {
-    _selectedCategoryWords =
-        await dbProvider.getRandomWordList(withoutCategoryName: true);
+    _selectedCategoryWords = await dbProvider.getRandomWordList(
+        dbId: dbId, withoutCategoryName: true);
 
     // List<Word> allWords =
     //     await dbProvider.getWordList(withoutCategoryName: true);
