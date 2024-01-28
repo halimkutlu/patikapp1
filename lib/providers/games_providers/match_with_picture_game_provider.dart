@@ -8,7 +8,6 @@ import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/games/fill_the_blank_game.dart';
-import 'package:patikmobile/pages/games/match_with_picture_game.dart';
 import 'package:patikmobile/pages/games/math_with_sound_game.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
@@ -203,7 +202,7 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
     saveSelectedWords();
     Timer(Duration(milliseconds: 100), () {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => FillTheBlankGame()),
+          MaterialPageRoute(builder: (context) => MatchWithSoundGame()),
           (Route<dynamic> route) => false);
     });
   }

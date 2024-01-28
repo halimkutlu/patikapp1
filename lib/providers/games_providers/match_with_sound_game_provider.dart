@@ -6,7 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/word.dart';
-import 'package:patikmobile/pages/games/math_with_sound_game.dart';
+import 'package:patikmobile/pages/games/fill_the_blank_game.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -184,7 +184,7 @@ class MatchWithSoundGameProvide extends ChangeNotifier {
 
     Timer(Duration(milliseconds: 100), () {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MatchWithSoundGame()),
+          MaterialPageRoute(builder: (context) => FillTheBlankGame()),
           (Route<dynamic> route) => false);
     });
   }
