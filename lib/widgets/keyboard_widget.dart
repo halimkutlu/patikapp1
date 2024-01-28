@@ -57,11 +57,14 @@ class _NumericKeypadState extends State<NumericKeypad> {
         if (processDone)
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              color: Color(0xffe8eaed),
-              child: Column(
-                children: [
-                  Padding(
+            child: Column(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xffe8eaed),
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  ),
+                  child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -90,7 +93,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
                           child: Column(
                             children: [
                               Center(
-                                child: Text(word!),
+                                child: Text(word! + "(kalkacak)"),
                               ),
                               Center(child: Text(controller!.text)),
                             ],
@@ -99,92 +102,109 @@ class _NumericKeypadState extends State<NumericKeypad> {
                       ],
                     ),
                   ),
-                  _verticalPadding,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _horizontalPadding,
-                      _buildButton(0, wideRow: true),
-                      _horizontalPadding,
-                      _buildButton(1, wideRow: true),
-                      _horizontalPadding,
-                      _buildButton(2, wideRow: true),
-                      _horizontalPadding,
-                      _buildButton(3, wideRow: true),
-                      _horizontalPadding,
-                      _buildButton(4, wideRow: true),
-                      _horizontalPadding,
-                      _buildButton(5, wideRow: true),
-                      _horizontalPadding,
-                      _buildButton(6, wideRow: true),
-                      _horizontalPadding,
-                      _buildButton(7, wideRow: true),
-                      _horizontalPadding,
-                      _buildButton(8, wideRow: true),
-                      _horizontalPadding,
-                    ],
+                ),
+                _verticalPadding,
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xffe8eaed),
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
-                  _verticalPadding,
-                  Row(
-                    children: [
-                      _horizontalPadding,
-                      _buildButton(9, wideRow: true),
-                      _horizontalPadding,
-                      _buildButton(10),
-                      _horizontalPadding,
-                      _buildButton(11),
-                      _horizontalPadding,
-                      _buildButton(12),
-                      _horizontalPadding,
-                      _buildButton(13),
-                      _horizontalPadding,
-                      _buildButton(14),
-                      _horizontalPadding,
-                      _buildButton(15),
-                      _horizontalPadding,
-                      _buildButton(16),
-                      _horizontalPadding,
-                      _buildButton(17),
-                      _horizontalPadding,
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _horizontalPadding,
+                            _buildButton(0),
+                            _horizontalPadding,
+                            _buildButton(1),
+                            _horizontalPadding,
+                            _buildButton(2),
+                            _horizontalPadding,
+                            _buildButton(3),
+                            _horizontalPadding,
+                            _buildButton(4),
+                            _horizontalPadding,
+                            _buildButton(5),
+                            _horizontalPadding,
+                            _buildButton(6),
+                            _horizontalPadding,
+                            _buildButton(7),
+                            _horizontalPadding,
+                            _buildButton(8),
+                            _horizontalPadding,
+                          ],
+                        ),
+                        _verticalPadding,
+                        Row(
+                          children: [
+                            _horizontalPadding,
+                            _buildButton(9),
+                            _horizontalPadding,
+                            _buildButton(10),
+                            _horizontalPadding,
+                            _buildButton(11),
+                            _horizontalPadding,
+                            _buildButton(12),
+                            _horizontalPadding,
+                            _buildButton(13),
+                            _horizontalPadding,
+                            _buildButton(14),
+                            _horizontalPadding,
+                            _buildButton(15),
+                            _horizontalPadding,
+                            _buildButton(16),
+                            _horizontalPadding,
+                            _buildButton(17),
+                            _horizontalPadding,
+                          ],
+                        ),
+                        _verticalPadding,
+                        Row(
+                          children: [
+                            _horizontalPadding,
+                            _buildButton(18),
+                            _horizontalPadding,
+                            _buildButton(19),
+                            _horizontalPadding,
+                            _buildButton(20),
+                            _horizontalPadding,
+                            _buildButton(21),
+                            _horizontalPadding,
+                            _buildButton(22),
+                            _horizontalPadding,
+                            _buildButton(23),
+                            _horizontalPadding,
+                            _buildButton(24),
+                            _horizontalPadding,
+                            _buildButton(-1,
+                                text: '⌫',
+                                onPressed: _backspace,
+                                wideRow: true),
+                            _horizontalPadding,
+                          ],
+                        ),
+                        _verticalPadding,
+                      ],
+                    ),
                   ),
-                  _verticalPadding,
-                  Row(
-                    children: [
-                      _horizontalPadding,
-                      _buildButton(18),
-                      _horizontalPadding,
-                      _buildButton(19),
-                      _horizontalPadding,
-                      _buildButton(20),
-                      _horizontalPadding,
-                      _buildButton(21),
-                      _horizontalPadding,
-                      _buildButton(22),
-                      _horizontalPadding,
-                      _buildButton(23),
-                      _horizontalPadding,
-                      _buildButton(24),
-                      _horizontalPadding,
-                      _buildButton(-1, text: '⌫', onPressed: _backspace),
-                      _horizontalPadding,
-                    ],
-                  ),
-                  _verticalPadding,
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     _horizontalPadding,
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: Container(
-                  //           width: 12.w,
-                  //           child: _buildButton(-1, text: '⌫', onPressed: _enter)),
-                  //     )
-                  //   ],
-                  // )
-                ],
-              ),
+                ),
+
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     _horizontalPadding,
+                //     Padding(
+                //       padding: const EdgeInsets.all(8.0),
+                //       child: Container(
+                //           width: 12.w,
+                //           child: _buildButton(-1, text: '⌫', onPressed: _enter)),
+                //     )
+                //   ],
+                // )
+              ],
             ),
           ),
       ],
@@ -203,42 +223,100 @@ class _NumericKeypadState extends State<NumericKeypad> {
     }
     return Expanded(
       child: Container(
-        height: 6.5.h,
-        width: 5.w,
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(222, 255, 255, 255),
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        width: 29.56,
+        height: 40,
+        padding: const EdgeInsets.only(top: 4, left: 0, right: 3, bottom: 5),
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          shadows: [
+            BoxShadow(
+              color: Color(0x44000000),
+              blurRadius: 0,
+              offset: Offset(0, 1),
+              spreadRadius: 0,
+            )
+          ],
         ),
-        child: TextButton(
-          onPressed: onPressed ??
-              (isDisabled(buttonIndex, text, count)
-                  ? null
-                  : () => _input(text!)),
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                count > 1
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            count > 1 ? count.toString() : "",
-                            style:
-                                TextStyle(fontSize: 1.4.h, color: Colors.red),
-                          ),
-                        ],
-                      )
-                    : Container(),
-                Text(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: onPressed ??
+                    (isDisabled(buttonIndex, text, count)
+                        ? null
+                        : () => _input(text!)),
+                child: Text(
                   isDisabled(buttonIndex, text, count) ? "" : text!,
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 2.3.h,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w500,
+                    height: 0.02,
+                  ),
                 ),
-              ],
+                // textAlign: TextAlign.center,
+              ),
             ),
-          ),
+            SizedBox(
+              width: 5.96,
+              height: 30.h,
+              child: Text(
+                count > 1 ? count.toString() : "",
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: Color(0xFFE8233D),
+                  fontSize: 10,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w700,
+                  height: 0,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
+      // child: Container(
+      //   height: 6.5.h,
+      //   width: 5.w,
+      //   decoration: const BoxDecoration(
+      //     color: Color.fromARGB(222, 255, 255, 255),
+      //     borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      //   ),
+      //   child: TextButton(
+      //     onPressed: onPressed ??
+      //         (isDisabled(buttonIndex, text, count)
+      //             ? null
+      //             : () => _input(text!)),
+      //     child: Center(
+      //       child: Column(
+      //         mainAxisSize: MainAxisSize.min,
+      //         children: [
+      //           count > 1
+      //               ? Row(
+      //                   mainAxisAlignment: MainAxisAlignment.end,
+      //                   children: [
+      //                     Text(
+      //                       count > 1 ? count.toString() : "",
+      //                       style:
+      //                           TextStyle(fontSize: 1.4.h, color: Colors.red),
+      //                     ),
+      //                   ],
+      //                 )
+      //               : Container(),
+      //           Text(
+      //             isDisabled(buttonIndex, text, count) ? "" : text!,
+      //             style: TextStyle(color: Colors.black),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
 
@@ -308,6 +386,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
     controller = TextEditingController();
     wordCharList = <String, int>{};
     keyList = [];
+    processDone = false;
 
     await widget.provider.takeWord();
     if (provider.selectedWord != null) {

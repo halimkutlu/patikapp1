@@ -110,10 +110,10 @@ class FillTheBlankGameProvider extends ChangeNotifier {
       // _selectedWordTextEditingController!.text = _selectedWord!.word!;
       print(_selectedWord);
       _wordsLoaded = true;
-    }
-    {
-      print("TEBRİKLER");
+    } else {
       //oyun bitmiştir
+
+      print("TEBRİKLER");
     }
   }
 
