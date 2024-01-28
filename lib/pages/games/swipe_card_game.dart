@@ -139,24 +139,28 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                 children: [
                                   Text(
                                     provider.wordListDbInformation![index]
-                                                .wordA !=
-                                            null
-                                        ? provider.wordListDbInformation![index]
-                                            .wordA!
-                                        : "",
+                                            .word ??
+                                        "",
                                     style: TextStyle(
-                                        fontSize: 2.3.h, color: Colors.black),
+                                        fontSize: 3.2.h, color: Colors.black),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.all(2.0.h),
+                                    padding: EdgeInsets.all(1.0.h),
                                     child: Text(
                                       provider.wordListDbInformation![index]
-                                                  .wordT !=
-                                              null
-                                          ? provider
-                                              .wordListDbInformation![index]
-                                              .wordT!
-                                          : "",
+                                              .wordA ??
+                                          "",
+                                      style: TextStyle(
+                                          fontSize: 2.3.h,
+                                          color: Colors.black54),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(0.h),
+                                    child: Text(
+                                      provider.wordListDbInformation![index]
+                                              .wordT ??
+                                          "",
                                       style: TextStyle(
                                           fontSize: 2.3.h,
                                           color: Colors.black54),
@@ -177,8 +181,9 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                   Padding(
                                     padding: EdgeInsets.all(4.0.h),
                                     child: Text(
-                                      provider
-                                          .wordListDbInformation![index].word!,
+                                      provider.wordListDbInformation![index]
+                                              .wordAppLng ??
+                                          "",
                                       style: TextStyle(
                                           fontSize: 3.2.h,
                                           color: Colors.black54),

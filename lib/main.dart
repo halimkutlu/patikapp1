@@ -84,6 +84,7 @@ List<SingleChildWidget> providers = [
       create: (_) => MatchWithSoundGameProvide()),
   ChangeNotifierProvider<FillTheBlankGameProvider>(
       create: (_) => FillTheBlankGameProvider()),
+  ChangeNotifierProvider<AppDbProvider>(create: (_) => AppDbProvider()),
 ];
 
 class MyApp extends StatefulWidget {

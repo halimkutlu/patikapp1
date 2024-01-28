@@ -65,9 +65,6 @@ class DbProvider extends ChangeNotifier {
 
   Future<bool> reOpenDbConnection() async {
     if (database != null && database!.isOpen) return true;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    FileDownloadStatus result = FileDownloadStatus();
-
     if (StorageProvider.learnLanguge!.Code.isNotEmpty) {
       String dbPath = await getDbPath();
       if (database == null || !database!.isOpen) {
@@ -104,8 +101,10 @@ class DbProvider extends ChangeNotifier {
   }
 
   getDbPath({String lngName = ""}) async {
-    Lcid language = await StorageProvider.getLearnLanguage();
-    if (lngName.isEmpty) lngName = language.Code;
+    if (lngName.isEmpty) {
+      StorageProvider.learnLanguge ??= await StorageProvider.getLearnLanguage();
+      lngName = StorageProvider.learnLanguge!.Code;
+    }
 
     Directory dir = await getApplicationDocumentsDirectory();
     final patikAppDir = Directory('${dir.path}/$lngName').path;
@@ -130,6 +129,7 @@ class DbProvider extends ChangeNotifier {
         (withoutCategoryName ? ' where IsCategoryName != 1' : ''));
 
     List<Word> list = res.map((c) => Word.fromMap(c)).toList();
+    //list = await AppDbProvider().setWordAppLng(list);
     return list;
   }
 
@@ -233,6 +233,7 @@ class DbProvider extends ChangeNotifier {
     var res = await database!.rawQuery(sqlQuery);
 
     List<Word> list = res.map((c) => Word.fromMap(c)).toList();
+    list = await AppDbProvider().setWordAppLng(list);
     return list;
   }
 
@@ -242,6 +243,111 @@ class DbProvider extends ChangeNotifier {
     await prefs.setInt(StorageProvider.learnLcidKey, lcid);
     await prefs.setString("CurrentLanguageName", language.Name!);
     StorageProvider.learnLanguge = Languages.GetLngFromLCID(lcid);
+
+    var path = await getDbPath(lngName: language.Code);
+
+    return await File(path).exists();
+  }
+}
+
+class AppDbProvider extends ChangeNotifier {
+  static Database? database;
+  bool? checkInformation;
+
+  Future<bool> reOpenDbConnection() async {
+    if (database != null && database!.isOpen) return true;
+    if (StorageProvider.appLanguge!.Code.isNotEmpty) {
+      String dbPath = await getDbPath();
+      if (database == null || !database!.isOpen) {
+        database = await openDatabase(dbPath);
+        return database!.isOpen;
+      }
+    }
+    return false;
+  }
+
+  Future<FileDownloadStatus> openDbConnection(Lcid lcid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    FileDownloadStatus result = FileDownloadStatus();
+    if (lcid.Code.isNotEmpty) {
+      String dbPath = await getDbPath();
+      if (database == null || !database!.isOpen) {
+        database = await openDatabase(dbPath);
+        checkInformation = true;
+      }
+      if (database!.isOpen) {
+        if (checkInformation == true) {
+          Information infrm = await getInformation();
+          String hash = infrm.lngHash!;
+          String phoneId = DeviceProvider.getPhoneId();
+          result.status =
+              await FlutterBcrypt.verify(password: phoneId, hash: hash);
+          if (result.status)
+            prefs.setInt(StorageProvider.appLcidKey, lcid.LCID);
+        } else
+          result.status = true;
+      }
+    }
+    return result;
+  }
+
+  getDbPath({String lngName = ""}) async {
+    if (lngName.isEmpty) {
+      StorageProvider.appLanguge ??= await StorageProvider.getAppLanguage();
+      lngName = StorageProvider.appLanguge!.Code;
+    }
+
+    Directory dir = await getApplicationDocumentsDirectory();
+    final patikAppDir = Directory('${dir.path}/$lngName').path;
+    String dbPath = File('$patikAppDir/$lngName.db').path;
+
+    return dbPath;
+  }
+
+  ifConnectionAlive() {
+    return database != null ? database!.isOpen : false;
+  }
+
+  Future<void> closeDbConnection() async {
+    if (database != null && database!.isOpen) await database!.close();
+  }
+
+  Future<List<Word>> setWordAppLng(List<Word> liste) async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
+    String idList = liste.map((e) => e.id).toList().join(",");
+    var res =
+        await database!.rawQuery("Select * from Words where Id In ($idList)");
+
+    res.forEach((c) => liste.firstWhere((r) => r.id == c["Id"]).wordAppLng =
+        c["Word"] as String?);
+    return liste;
+  }
+
+  Future<Information> getInformation() async {
+    var status = await reOpenDbConnection();
+    if (!status) return Information();
+
+    var res = await database!.query("Information", columns: [
+      'LCID',
+      'Code',
+      'Version',
+      'Directory',
+      'LngPlanType',
+      'LngHash',
+    ]);
+
+    List<Information> list = res.map((c) => Information.fromMap(c)).toList();
+    return list.first;
+  }
+
+  checkLanguage(int lcid) async {
+    Lcid language = Languages.GetLngFromLCID(lcid);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(StorageProvider.appLcidKey, lcid);
+    await prefs.setString("language_name", language.Name!);
+    StorageProvider.appLanguge = Languages.GetLngFromLCID(lcid);
 
     var path = await getDbPath(lngName: language.Code);
 

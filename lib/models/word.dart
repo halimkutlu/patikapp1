@@ -11,6 +11,7 @@ class Word {
   String? categories;
   String? activities;
   int? orderId;
+  String? wordAppLng;
 
   int? errorCount = 0;
 
@@ -23,19 +24,20 @@ class Word {
       this.categories,
       this.activities,
       this.orderId,
-      this.errorCount = 0});
+      this.errorCount = 0,
+      this.wordAppLng = ""});
 
   factory Word.fromMap(Map<String, dynamic> json) => Word(
-        id: json["Id"],
-        word: json["Word"],
-        wordA: json["WordA"],
-        wordT: json["WordT"],
-        isCategoryName: json["IsCategoryName"] == 1,
-        categories: json["Categories"],
-        activities: json["Activities"],
-        orderId: json["OrderId"],
-        errorCount: json["errorCount"] ?? 0,
-      );
+      id: json["Id"],
+      word: json["Word"],
+      wordA: json["WordA"],
+      wordT: json["WordT"],
+      isCategoryName: json["IsCategoryName"] == 1,
+      categories: json["Categories"],
+      activities: json["Activities"],
+      orderId: json["OrderId"],
+      errorCount: json["errorCount"] ?? 0,
+      wordAppLng: json["wordAppLng"]);
 
   Map<String, dynamic> toMap() => {
         "Id": id,
@@ -46,7 +48,8 @@ class Word {
         "Categories": categories,
         "Activities": activities,
         "OrderId": orderId,
-        "errorCount": errorCount ?? 0
+        "errorCount": errorCount ?? 0,
+        "wordAppLng": wordAppLng
       };
 
   String toJson() {
@@ -69,6 +72,7 @@ class WordListInformation {
   int? order;
   int? orderColor;
   String? dbId;
+  String? categoryAppLngName;
 
   WordListInformation(
       {this.categoryImage,
@@ -78,7 +82,8 @@ class WordListInformation {
       this.categoryOrderName,
       this.orderColor,
       this.totalCount,
-      this.dbId});
+      this.dbId,
+      this.categoryAppLngName = ""});
 }
 
 class WordListDBInformation {
@@ -88,6 +93,7 @@ class WordListDBInformation {
   String? audio;
   Uint8List? imageBytes;
   int? id;
+  String? wordAppLng;
   bool? isAddedToWorkHard = false;
   bool? lastCard = false;
 
@@ -109,5 +115,6 @@ class WordListDBInformation {
       this.wordT,
       this.id,
       this.isAddedToWorkHard,
-      this.lastCard = false});
+      this.lastCard = false,
+      this.wordAppLng = ""});
 }

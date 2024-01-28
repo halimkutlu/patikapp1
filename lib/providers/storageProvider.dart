@@ -48,6 +48,7 @@ class StorageProvider {
   }
 
   static updateLanguage(BuildContext context, Lcid locale) async {
+    print(locale);
     SharedPreferences shrdp = await SharedPreferences.getInstance();
     await shrdp.setInt(appLcidKey, locale.LCID);
     await shrdp.setString("language_name", locale.Name!);

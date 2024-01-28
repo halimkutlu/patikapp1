@@ -150,7 +150,8 @@ class SwipeCardGameProvider extends ChangeNotifier {
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,
-            id: x.id);
+            id: x.id,
+            wordAppLng: x.wordAppLng);
 
         _wordListDbInformation!.add(wordInfo);
       }
@@ -164,6 +165,10 @@ class SwipeCardGameProvider extends ChangeNotifier {
   }
 
   Future<String> getCurrentLanguageAsString() async {
+    if (StorageProvider.learnLanguge != null) {
+      return StorageProvider.learnLanguge!.Code;
+    }
+
     int? language;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     language = prefs.getInt(StorageProvider.learnLcidKey);

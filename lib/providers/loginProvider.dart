@@ -202,14 +202,10 @@ class LoginProvider extends ChangeNotifier {
   }
 
   setUseLanguage(Lcid language, BuildContext context, bool dashboard) {
-    CustomAlertDialog(context, () {
-      changeLanguage(language, context, dashboard);
-    },
-        "areYouSure".tr,
-        "${"applicationLanguage".tr} ${language.Name!} ${"applicationLanguage2".tr}",
-        ArtSweetAlertType.question,
-        "yes".tr,
-        "no".tr);
+    changeLanguage(language, context, dashboard);
+    // CustomAlertDialog(context, () {
+    // }, "areYouSure".tr, "${language.Name!}", ArtSweetAlertType.question,
+    //     "yes".tr, "no".tr);
   }
 
   changeLanguage(Lcid locale, BuildContext context, bool dashboard) {
