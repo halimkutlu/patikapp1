@@ -6,7 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/word.dart';
-import 'package:patikmobile/pages/games/math_with_sound_game.dart';
+import 'package:patikmobile/pages/games/multiple_choice_game.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,7 +38,7 @@ class FillTheBlankGameProvider extends ChangeNotifier {
       TextEditingController();
   TextEditingController? get selectedWordTextEditingController =>
       _selectedWordTextEditingController;
-
+  BuildContext? buildContext;
   int? _errorCount = 0;
   int? get errorCount => _errorCount;
 
@@ -47,6 +47,7 @@ class FillTheBlankGameProvider extends ChangeNotifier {
     _selectedWordTextEditingController = TextEditingController();
     _errorCount = 0;
     _wordsLoaded = false;
+    buildContext = context;
     loadAd();
     await startFillTheBlankGame();
   }
@@ -112,15 +113,15 @@ class FillTheBlankGameProvider extends ChangeNotifier {
       _wordsLoaded = true;
     } else {
       //oyun bitmiştir
-
+      goToNextGame(buildContext!);
       print("TEBRİKLER");
     }
   }
 
-  Future<void> saveSelectedWords(List<Word> selectedWords) async {
+  Future<void> saveSelectedWords() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> serializedWords =
-        selectedWords.map((word) => word.toJson()).toList();
+        comingWordListFromStorage.map((word) => word.toJson()).toList();
     prefs.setStringList('selectedWords', serializedWords);
     print('Selected words saved to SharedPreferences');
   }
@@ -138,10 +139,10 @@ class FillTheBlankGameProvider extends ChangeNotifier {
   }
 
   void resetData() {
-    // _wordsLoaded = false;
-    // _wordListDbInformation = [];
-    // _listenedSound = null;
-    // _selectedWordInfo = null;
+    _wordsLoaded = false;
+    _wordListDbInformation = [];
+    _selectedWordTextEditingController = TextEditingController();
+    _selectedWord = null;
   }
 
   getWordsFileInformationFromStorage(List<Word>? selectedCategoryWords) async {
@@ -171,51 +172,12 @@ class FillTheBlankGameProvider extends ChangeNotifier {
   void goToNextGame(BuildContext context) {
     resetData();
 
+    saveSelectedWords();
     Timer(Duration(milliseconds: 100), () {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MatchWithSoundGame()),
+          MaterialPageRoute(builder: (context) => MultipleChoiceGame()),
           (Route<dynamic> route) => false);
     });
-  }
-
-  void resetSelections() async {
-    // var word = comingWordListFromStorage
-    //     .firstWhere((element) => element.id == _listenedSound!.id);
-    // word.errorCount = word.errorCount! + 1;
-
-    // _errorCount = _errorCount! + 1;
-    // _listenedSound!.isSoundCorrect = null;
-
-    // if (_selectedWordInfo != null) {
-    //   _selectedWordInfo!.isWordCorrect = null;
-
-    //   _selectedWordInfo!.isSoundListened = false;
-    //   _selectedWordInfo!.isWordSelected = null;
-    // }
-
-    // _wordListDbInformation?.forEach(
-    //   (element) {
-    //     element.isWordSelected = false;
-    //     element.isSoundListened = false;
-    //   },
-    // );
-
-    // //seçimler temizlenir
-    // _listenedSound = null;
-    // _selectedWordInfo = null;
-    // _errorAccuried = false;
-    // //----
-    // notifyListeners();
-
-    // if (_errorCount! > 3) {
-    //   if (_interstitialAd != null) {
-    //     await loadAd();
-    //     _errorCount = 0;
-    //     _interstitialAd?.show();
-
-    //     //REKLAM GÖSTER6
-    //   }
-    // }
   }
 
   Future<void> wrongCharacter() async {
