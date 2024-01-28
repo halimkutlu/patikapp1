@@ -170,19 +170,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
                       _horizontalPadding,
                     ],
                   ),
-                  _verticalPadding,
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     _horizontalPadding,
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: Container(
-                  //           width: 12.w,
-                  //           child: _buildButton(-1, text: '⌫', onPressed: _enter)),
-                  //     )
-                  //   ],
-                  // )
+                  _verticalPadding
                 ],
               ),
             ),
@@ -198,8 +186,15 @@ class _NumericKeypadState extends State<NumericKeypad> {
     if (buttonIndex >= 0) {
       KeyCharInformation keyButton =
           keyList.firstWhere((element) => element.Index == buttonIndex);
-      count = keyButton.Count;
       text = keyButton.Char;
+      count = keyButton.Count;
+      if (text != null && text.isNotEmpty) {
+        count = keyButton.Count - text.allMatches(controller!.text).length;
+        print("${keyButton.Char} keyButton.Count: ${keyButton.Count}");
+        print("${keyButton.Char} Count: $count");
+        print(
+            "${keyButton.Char} text.allMatches(controller!.text).length: ${text.allMatches(controller!.text).length}");
+      }
     }
     return Expanded(
       child: Container(
@@ -248,6 +243,10 @@ class _NumericKeypadState extends State<NumericKeypad> {
       setState(() {
         final value = controller!.text + text;
         controller!.text = value;
+        final firstSpace = word?.replaceAll(controller!.text, "");
+        if (firstSpace!.startsWith(" ")) {
+          controller!.text = "${controller!.text} ";
+        }
       });
     } else if (isMatch == 2) {
       setState(() {
@@ -298,10 +297,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
 
   bool isDisabled(int index, String? text, int count) {
     if (index < 0) return false;
-    return count == 0 ||
-        text == null ||
-        text.isEmpty ||
-        text.allMatches(controller!.text).length == count;
+    return count == 0 || text == null || text.isEmpty;
   }
 
   void startProcedures(FillTheBlankGameProvider provider) async {
@@ -313,10 +309,10 @@ class _NumericKeypadState extends State<NumericKeypad> {
     if (provider.selectedWord != null) {
       image = provider.selectedWord!.imageBytes;
       word = provider.selectedWord!.word;
-
+      final clearWord = word?.replaceAll(" ", "");
       setState(() {
-        List<String>.generate(word!.length, (index) => word![index]).forEach(
-            (x) => wordCharList[x] =
+        List<String>.generate(clearWord!.length, (index) => clearWord[index])
+            .forEach((x) => wordCharList[x] =
                 !wordCharList.containsKey(x) ? 1 : (wordCharList[x]! + 1));
 
         keyList = Iterable<int>.generate(buttonCount)
