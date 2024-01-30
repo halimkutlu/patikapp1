@@ -1,19 +1,20 @@
 // ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
-import 'package:patikmobile/pages/games/multiple_choice_game.dart';
+import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
-class MatchWithPictureGameProvide extends ChangeNotifier {
+class MultipleChoiceGameProvider extends ChangeNotifier {
   final apirepository = APIRepository();
   final database = Database;
 
@@ -32,30 +33,37 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
     _isShuffled = isShuffled;
   }
 
-  List<Word>? _selectedCategoryWords;
-  List<Word>? get selectedCategoryWords => _selectedCategoryWords;
-
   List<WordListDBInformation>? _wordListDbInformation;
   List<WordListDBInformation>? get wordListDbInformation =>
       _wordListDbInformation;
 
-  WordListDBInformation? _selectedWordInfo;
-  WordListDBInformation? get selectedWordInfo => _selectedWordInfo;
-
-  WordListDBInformation? _selectedImage;
-  WordListDBInformation? get selectedImage => _selectedImage;
+  List<WordListDBInformation>? _wordListPool;
+  List<WordListDBInformation>? get wordListPool => _wordListPool;
 
   bool? _errorAccuried = false;
   bool? get errorAccuried => _errorAccuried;
 
+  bool? _successAccuried = false;
+  bool? get successAccuried => _successAccuried;
+
   int? _errorCount = 0;
   int? get errorCount => _errorCount;
 
+  WordListDBInformation? _selectedWord;
+  WordListDBInformation? get selectedWord => _selectedWord;
+
+  List<GameAnswerModel>? _selectedAnswerList = [];
+  List<GameAnswerModel>? get selectedAnswerList => _selectedAnswerList;
+
+  BuildContext? buildContext;
+
   init([BuildContext? context]) async {
-    _isShuffled = false;
     _errorCount = 0;
+    buildContext = context;
     loadAd();
-    await startMatchWithImageGame();
+    await startMultipleChoiceGame();
+    await takeWord();
+    notifyListeners();
   }
 
   Future<void> loadAd() async {
@@ -92,7 +100,7 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
         ));
   }
 
-  Future<void> startMatchWithImageGame() async {
+  Future<void> startMultipleChoiceGame() async {
     //1. ADIM ==> Öncelikle bir önceki aşamada seçilen 5 kart local storage üzerinden getirilir.
     comingWordListFromStorage = await getSavedWords();
     //2. ADIM ==> Seçilen kartların db verileri çekilir.
@@ -125,12 +133,16 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
   void resetData() {
     _wordsLoaded = false;
     _wordListDbInformation = [];
-    _selectedImage = null;
-    _selectedWordInfo = null;
+    _selectedAnswerList = [];
+    _selectedWord = null;
+    _successAccuried = false;
+    _errorAccuried = false;
+    _wordListPool = [];
   }
 
   getWordsFileInformationFromStorage(List<Word>? selectedCategoryWords) async {
     _wordListDbInformation = [];
+    _wordListPool = [];
     String currentLanguage = await getCurrentLanguageAsString();
 
     Directory dir = await getApplicationDocumentsDirectory();
@@ -149,9 +161,11 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,
-            id: x.id);
+            id: x.id,
+            wordAppLng: x.wordAppLng);
 
         _wordListDbInformation!.add(wordInfo);
+        _wordListPool!.add(wordInfo);
       }
     }
     print(_wordListDbInformation);
@@ -169,115 +183,90 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
     return "";
   }
 
-  void selectImage(WordListDBInformation selectedInfo) {
-    _selectedImage = selectedInfo;
-    print(_selectedImage);
-    selectedInfo.isImageSelected = true;
-    notifyListeners();
-  }
-
-  void resetSelectImage(WordListDBInformation info) {
-    resetSelections();
-  }
-
-  void selectWord(WordListDBInformation selectedInfo, BuildContext context) {
-    if (_selectedImage != null && (selectedInfo.isWordCorrect != true)) {
-      _selectedWordInfo = selectedInfo;
-      print(_selectedWordInfo);
-      selectedInfo.isWordSelected = true;
-      notifyListeners();
-
-      checkMatch();
-      print(_wordListDbInformation);
-      if (!_wordListDbInformation!.any((element) =>
-          element.isWordCorrect == null || element.isWordCorrect == false)) {
-        goToNextGame(context);
-      }
-    }
-  }
-
   void goToNextGame(BuildContext context) {
     resetData();
     saveSelectedWords();
     Timer(Duration(milliseconds: 100), () {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MultipleChoiceGame()),
+          MaterialPageRoute(builder: (context) => Dashboard(0)),
           (Route<dynamic> route) => false);
     });
   }
 
-  bool checkMatch() {
-    if (_selectedImage != null && _selectedWordInfo != null) {
-      if (_selectedImage!.word == _selectedWordInfo!.word) {
-        _selectedWordInfo!.isWordCorrect = true;
-        _selectedImage!.isImageCorrect = true;
+  Future<void> takeWord() async {
+    _selectedWord = null;
+    _selectedAnswerList = [];
+    _errorCount = 0;
+    _wordsLoaded = false;
 
-        _selectedWordInfo!.isImageSelected = false;
-        _selectedWordInfo!.isWordSelected = false;
-
-        //seçimler temizlenir
-        _selectedImage = null;
-        _selectedWordInfo = null;
-        //----
-        notifyListeners();
-
-        return true;
-      } else {
-        _selectedImage!.isImageCorrect = false;
-        _selectedWordInfo!.isWordCorrect = false;
-
-        _selectedWordInfo!.isImageSelected = false;
-        _selectedWordInfo!.isWordSelected = false;
-
-        _errorAccuried = true;
-        notifyListeners();
-
-        Timer(Duration(seconds: 2), () {
-          resetSelections();
-        });
-        return false;
-      }
-    }
-    return false;
-  }
-
-  void resetSelections() async {
-    var word = comingWordListFromStorage
-        .firstWhere((element) => element.id == _selectedImage!.id);
-    word.errorCount = word.errorCount! + 1;
-
-    _errorCount = _errorCount! + 1;
-    _selectedImage!.isImageCorrect = null;
-
-    if (_selectedWordInfo != null) {
-      _selectedWordInfo!.isWordCorrect = null;
-
-      _selectedWordInfo!.isImageSelected = false;
-      _selectedWordInfo!.isWordSelected = null;
-    }
-
-    _wordListDbInformation?.forEach(
-      (element) {
-        element.isWordSelected = false;
-        element.isImageSelected = false;
-      },
-    );
-
-    //seçimler temizlenir
-    _selectedImage = null;
-    _selectedWordInfo = null;
-    _errorAccuried = false;
-    //----
-    notifyListeners();
-
-    if (_errorCount! > 3) {
-      if (_interstitialAd != null) {
-        await loadAd();
-        _errorCount = 0;
-        _interstitialAd?.show();
-
-        //REKLAM GÖSTER6
-      }
+    WordListDBInformation? takenWord;
+    WordListDBInformation word = WordListDBInformation();
+    if (_wordListDbInformation!.isNotEmpty) {
+      print(_selectedWord);
+      _selectedWord = _wordListDbInformation!.removeAt(0);
+      // _selectedWordTextEditingController!.text = _selectedWord!.word!;
+      print(_selectedWord);
+      _wordsLoaded = true;
+      await takeAnswers(_selectedWord);
+    } else {
+      //oyun bitmiştir
+      goToNextGame(buildContext!);
+      print("TEBRİKLER");
     }
   }
+
+  Future<void> takeAnswers(WordListDBInformation? selectedWord) async {
+    _selectedAnswerList = [];
+    List<WordListDBInformation> wordPool = _wordListPool!;
+
+    // Rastgele 5 cevap seçme işlemi
+    wordPool.shuffle();
+    for (int i = 0; i < min(5, wordPool.length); i++) {
+      String answer = wordPool[i].word!;
+      bool isCorrect = (answer == selectedWord?.word);
+      _selectedAnswerList!.add(GameAnswerModel(answer, isCorrect));
+    }
+  }
+
+  Future<void> checkAnswer(GameAnswerModel selectedAnswer) async {
+    if (selectedAnswer.isCorrect) {
+      // Diğer işlemler
+      _successAccuried = true;
+      notifyListeners();
+      await Future.delayed(Duration(seconds: 2));
+      await takeWord();
+      _successAccuried = false;
+      notifyListeners();
+    } else {
+      _errorAccuried = true;
+      notifyListeners();
+
+      Timer(Duration(seconds: 2), () async {
+        var word = comingWordListFromStorage
+            .firstWhere((element) => element.id == _selectedWord!.id);
+        word.errorCount = word.errorCount! + 1;
+
+        _errorCount = _errorCount! + 1;
+
+        if (_errorCount! > 3) {
+          if (_interstitialAd != null) {
+            await loadAd();
+            _errorCount = 0;
+            _interstitialAd?.show();
+
+            //REKLAM GÖSTER6
+          }
+        }
+        _errorAccuried = false;
+        notifyListeners();
+      });
+    }
+  }
+}
+
+class GameAnswerModel {
+  String answer;
+  bool isCorrect;
+
+  GameAnswerModel(this.answer, this.isCorrect);
 }

@@ -115,6 +115,7 @@ flutter:
     - lib/assets/img/hat.png
     - lib/assets/img/box.png
     - lib/assets/img/error_image.png
+    - lib/assets/img/success_image.png
 
 
 
