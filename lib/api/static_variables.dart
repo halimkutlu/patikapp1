@@ -1,4 +1,6 @@
 //uygulama içerisinde kullanılacak bilgiler için model oluşturulması.
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:ui';
 
 class StaticVariables {
@@ -41,4 +43,11 @@ class StaticVariables {
   static _notifyChange() {
     _changeHandler?.call();
   }
+
+  static List<int> ColorList = [
+    0xFF1A57FF,
+    0xFF22AA00,
+    0xFFC70000,
+    0xFFFF761A,
+  ];
 }

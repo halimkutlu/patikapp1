@@ -53,7 +53,7 @@ class _LearnPageState extends State<LearnPage> {
                     if (index < categoriesWithoutOrder.length) {
                       var category = categoriesWithoutOrder[index];
                       return ListTile(
-                        title: AutoSizeText(category.categoryName!),
+                        title: AutoSizeText(category.categoryAppLngName!),
                         subtitle:
                             AutoSizeText('Total Count: ${category.totalCount}'),
                       );
@@ -81,7 +81,7 @@ class _LearnPageState extends State<LearnPage> {
                             ),
                             Divider(),
                             SizedBox(
-                              height: 13.h,
+                              height: 15.h,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: provider.categoryList.length,
@@ -92,7 +92,7 @@ class _LearnPageState extends State<LearnPage> {
                                       category.order) {
                                     return categoryBox(
                                         "",
-                                        horizontalCategory.categoryName!,
+                                        horizontalCategory.categoryAppLngName!,
                                         horizontalCategory.categoryWordCount!,
                                         horizontalCategory.totalCount!,
                                         horizontalCategory.orderColor!,
@@ -133,6 +133,7 @@ class _LearnPageState extends State<LearnPage> {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           width: 30.w,
+          height: 15.h,
           margin: EdgeInsets.symmetric(horizontal: 5.0),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -159,9 +160,10 @@ class _LearnPageState extends State<LearnPage> {
               ),
               Center(
                 child: AutoSizeText(
+                  textAlign: TextAlign.center,
                   name,
                   style: TextStyle(
-                    fontSize: 1.3.h,
+                    fontSize: 1.h,
                     fontWeight: FontWeight.bold,
                     color: Color(color),
                   ),

@@ -79,7 +79,7 @@ class DbProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     FileDownloadStatus result = FileDownloadStatus();
     if (lcid.Code.isNotEmpty) {
-      String dbPath = await getDbPath();
+      String dbPath = await getDbPath(lngName: lcid.Code);
       if (database == null || !database!.isOpen) {
         database = await openDatabase(dbPath);
         checkInformation = true;
@@ -131,6 +131,18 @@ class DbProvider extends ChangeNotifier {
     List<Word> list = res.map((c) => Word.fromMap(c)).toList();
     //list = await AppDbProvider().setWordAppLng(list);
     return list;
+  }
+
+  Future<List<WordListInformation>> getCategories(BuildContext context) async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
+    String sql = """
+Select w.*, (Select Count(*) from Words w1 where w1.Categories LIKE '%|' || w.Id || '|%') as CategoryWordCount,
+(Select count(*) from Words w2 where w2.IsCategoryName != 1) as TotalWordCount
+from Words w where w.IsCategoryName = 1 """;
+    var res = await database!.rawQuery(sql);
+    return res.map((e) => WordListInformation.fromMap(e, context)).toList();
   }
 
   Future<bool> addToWorkHardBox(int dbId) async {
@@ -224,7 +236,7 @@ class DbProvider extends ChangeNotifier {
     ${notInWordStatistics ? "LEFT JOIN WordStatistics ws on w.Id = ws.WordId " : ""} 
     where 
     ${withoutCategoryName ? "w.IsCategoryName != 1" : "1=1"} 
-    ${dbId!.isNotEmpty ? "and Categories='$dbId'" : ""}
+    ${dbId!.isNotEmpty ? "and Categories LIKE '%|$dbId|%'" : ""}
     ${notInWordStatistics ? "and ws.WordId IS NULL" : ""} 
     ORDER BY RANDOM()
     ${limit > 0 ? "LIMIT $limit" : ""} 
@@ -322,6 +334,21 @@ class AppDbProvider extends ChangeNotifier {
 
     res.forEach((c) => liste.firstWhere((r) => r.id == c["Id"]).wordAppLng =
         c["Word"] as String?);
+    return liste;
+  }
+
+  Future<List<WordListInformation>> setCategoryAppLng(
+      List<WordListInformation> liste) async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
+    String idList = liste.map((e) => e.dbId).toList().join(",");
+    var res =
+        await database!.rawQuery("Select * from Words where Id In ($idList)");
+
+    res.forEach((c) => liste
+        .firstWhere((r) => r.dbId == c["Id"].toString())
+        .categoryAppLngName = c["Word"] as String?);
     return liste;
   }
 

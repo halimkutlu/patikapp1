@@ -1,6 +1,12 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:patikmobile/api/static_variables.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 
 class Word {
   int? id;
@@ -84,6 +90,34 @@ class WordListInformation {
       this.totalCount,
       this.dbId,
       this.categoryAppLngName = ""});
+
+  factory WordListInformation.fromMap(
+          Map<String, dynamic> json, BuildContext context) =>
+      WordListInformation(
+          dbId: json["Id"].toString(),
+          categoryName: json["Word"],
+          categoryImage: "",
+          categoryWordCount: json["CategoryWordCount"],
+          categoryOrderName: WordListInformation.getCategoryOrderName(
+              context, json["Activities"]),
+          orderColor: StaticVariables
+              .ColorList[(int.tryParse(json["Activities"]) ?? 0) - 1],
+          totalCount: json["TotalWordCount"],
+          order: json["IsCategory"] != 1
+              ? int.tryParse(json["Activities"]) ?? json["OrderId"]
+              : null,
+          categoryAppLngName: "");
+
+  static getCategoryOrderName(BuildContext context, String activities) {
+    var key = "107";
+    if (activities == "2")
+      key = "115";
+    else if (activities == "3")
+      key = "123";
+    else if (activities == "4") key = "133";
+
+    return AppLocalizations.of(context).translate(key);
+  }
 }
 
 class WordListDBInformation {

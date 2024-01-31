@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/pages/dashboard.dart';
+import 'package:patikmobile/pages/learn_page.dart';
+import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
@@ -24,6 +26,7 @@ class SelectLanguage extends StatefulWidget {
 }
 
 class _SelectLanguageState extends State<SelectLanguage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late LoginProvider loginProvider;
   late double received = 0;
   late bool isDownloading = false;
@@ -49,6 +52,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
     final appDbProvider = Provider.of<AppDbProvider>(context);
     //late NavigatorState _navigator;
     return Scaffold(
+      key: _scaffoldKey,
       body: Stack(children: [
         if (isDownloading) ...[
           Center(
@@ -131,47 +135,31 @@ class _SelectLanguageState extends State<SelectLanguage> {
                               await appDbProvider.checkLanguage(language.LCID);
                           if (lngCheck) {
                             loginProvider.setUseLanguage(
-                                language, context, widget.dashboard ?? false);
-
-                            await appDbProvider.closeDbConnection();
-                            await appDbProvider.openDbConnection(language);
-                            if (widget.dashboard == true) {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                      builder: (context) => Dashboard(0)),
-                                  (Route<dynamic> route) => false);
-                            } else {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => Dashboard(0)));
-                            }
+                                language,
+                                _scaffoldKey.currentContext!,
+                                widget.dashboard ?? false);
                           } else {
-                            CustomAlertDialog(context, () async {
-                              Navigator.pop(context);
+                            CustomAlertDialog(_scaffoldKey.currentContext!,
+                                () async {
+                              Navigator.pop(_scaffoldKey.currentContext!);
                               isDownloading = true;
 
                               FileDownloadStatus status = await loginProvider
                                   .startProcessOfDownloadLearnLanguage(
-                                      language, onReceiveProgress);
+                                      language, true, onReceiveProgress);
+                              isDownloading = false;
                               if (status.status) {
-                                if (widget.dashboard == true) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) => Dashboard(0)),
-                                      (Route<dynamic> route) => false);
-                                } else {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => Dashboard(0)));
-                                }
+                                loginProvider.setUseLanguage(
+                                    language,
+                                    _scaffoldKey.currentContext!,
+                                    widget.dashboard ?? false);
                               } else {
-                                CustomAlertDialogOnlyConfirm(context, () {
-                                  Navigator.pop(context);
+                                CustomAlertDialogOnlyConfirm(
+                                    _scaffoldKey.currentContext!, () {
+                                  Navigator.pop(_scaffoldKey.currentContext!);
                                 }, "error".tr, status.message,
                                     ArtSweetAlertType.danger, "ok".tr);
                               }
-
-                              isDownloading = false;
                             },
                                 "areYouSure".tr,
                                 "${AppLocalizations.of(context).translateLngName(language)} ${"choosenLearnLanguage".tr}",
@@ -196,7 +184,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context!)
                                     .translateLngName(language),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(

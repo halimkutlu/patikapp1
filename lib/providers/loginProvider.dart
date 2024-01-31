@@ -23,6 +23,7 @@ import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginProvider extends ChangeNotifier {
   final apirepository = APIRepository();
@@ -211,7 +212,7 @@ class LoginProvider extends ChangeNotifier {
   changeLanguage(Lcid locale, BuildContext context, bool dashboard) {
     StorageProvider.updateLanguage(context, locale);
     notifyListeners();
-    Navigator.pop(context);
+    //Navigator.pop(context);
     CustomAlertDialogOnlyConfirm(context, () {
       if (dashboard) {
         Navigator.pop(context);
@@ -226,8 +227,8 @@ class LoginProvider extends ChangeNotifier {
     }, "success".tr, "langSuccess".tr, ArtSweetAlertType.success, "ok".tr);
   }
 
-  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
-      Lcid lcid, void Function(int, int)? onReceiveProgress) async {
+  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(Lcid lcid,
+      bool lernLng, void Function(int, int)? onReceiveProgress) async {
     DbProvider dbProvider = DbProvider();
     FileDownloadStatus processResult = FileDownloadStatus();
     processResult.status = false;
@@ -250,6 +251,11 @@ class LoginProvider extends ChangeNotifier {
           return processResult;
         } else {
           //EĞER DOSYA ÇIKARTMA İŞLEMİ BAŞARILI İSE
+          if (lernLng) {
+            StorageProvider.appLanguge = lcid;
+            SharedPreferences shrdp = await SharedPreferences.getInstance();
+            await shrdp.setInt(StorageProvider.appLcidKey, lcid.LCID);
+          }
           if (dbProvider.ifConnectionAlive()) dbProvider.closeDbConnection();
           FileDownloadStatus dbresult = await dbProvider.openDbConnection(lcid);
           if (dbresult.status) {

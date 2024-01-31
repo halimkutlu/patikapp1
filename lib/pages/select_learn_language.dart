@@ -172,7 +172,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
 
                               FileDownloadStatus status = await loginProvider
                                   .startProcessOfDownloadLearnLanguage(
-                                      language, onReceiveProgress);
+                                      language, false, onReceiveProgress);
                               if (status.status) {
                                 if (widget.noReturn == true) {
                                   Navigator.of(_scaffoldKey.currentContext!)
