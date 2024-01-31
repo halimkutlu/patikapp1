@@ -19,6 +19,7 @@ import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:patikmobile/providers/games_providers/fill_the_blank_game.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
 import 'package:patikmobile/providers/games_providers/match_with_sound_game_provider.dart';
+import 'package:patikmobile/providers/games_providers/multiple_choice_game_provider.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
@@ -85,6 +86,8 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<FillTheBlankGameProvider>(
       create: (_) => FillTheBlankGameProvider()),
   ChangeNotifierProvider<AppDbProvider>(create: (_) => AppDbProvider()),
+  ChangeNotifierProvider<MultipleChoiceGameProvider>(
+      create: (_) => MultipleChoiceGameProvider()),
 ];
 
 class MyApp extends StatefulWidget {
