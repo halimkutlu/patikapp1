@@ -126,6 +126,10 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
         onAdLoaded: (ad) {
           setState(() {
             _bannerAd = ad as BannerAd;
+            if (_bannerAd?.size != null && _bannerAd!.size.height > 0) {
+              GameSizeClass.bottomMargin =
+                  GameSizeClass.Height - _bannerAd!.size.height;
+            }
           });
         },
         onAdFailedToLoad: (ad, err) {
@@ -176,6 +180,37 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
     super.dispose();
   }
 
+  void gestureOnTapDown(TapDownDetails details) {
+    Offset leftSquarePosition = squareOffsets[siradaki][0];
+    Offset rightSquarePosition = squareOffsets[siradaki][1];
+
+    if (leftSquarePosition.dy >= GameSizeClass.boxEndPosition) return;
+
+    Offset position = details.localPosition;
+
+    if (leftSquarePosition.dx <= position.dx &&
+        leftSquarePosition.dx + GameSizeClass.boxSize >= position.dx &&
+        leftSquarePosition.dy <= position.dy &&
+        leftSquarePosition.dy + GameSizeClass.boxSize >= position.dy) {
+      squareOffsets[siradaki][0] =
+          Offset(squareOffsets[siradaki][0].dx, GameSizeClass.boxEndPosition);
+      squareOffsets[siradaki][1] =
+          Offset(squareOffsets[siradaki][1].dx, GameSizeClass.boxEndPosition);
+      print("Birinciye tıklandı");
+    }
+
+    if (rightSquarePosition.dx <= position.dx &&
+        rightSquarePosition.dx + GameSizeClass.boxSize >= position.dx &&
+        rightSquarePosition.dy <= position.dy &&
+        rightSquarePosition.dy + GameSizeClass.boxSize >= position.dy) {
+      squareOffsets[siradaki][0] =
+          Offset(squareOffsets[siradaki][0].dx, GameSizeClass.boxEndPosition);
+      squareOffsets[siradaki][1] =
+          Offset(squareOffsets[siradaki][1].dx, GameSizeClass.boxEndPosition);
+      print("İkinciye tıklandı");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -204,21 +239,12 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
                       ),
                     ),
                   ),
-                Container(
-                  height: 40,
-                  width: 30,
-                  color: Colors.red,
-                ),
                 GestureDetector(
                   child: CustomPaint(
                     painter: SquarePainter(squareOffsets, context),
                     size: Size.infinite,
                   ),
-                  onTapDown: (details) {
-                    print("globalPosition.dx: ${details.localPosition.dx}");
-                    print("globalPosition.dy: ${details.localPosition.dy}");
-                    checkIfBoxTrue(details.localPosition);
-                  },
+                  onTapDown: (details) => gestureOnTapDown(details),
                 ),
                 Positioned(
                     left: 0,
@@ -238,10 +264,6 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
             },
           ),
         ));
-  }
-
-  void checkIfBoxTrue(Offset globalPosition) {
-    squareOffsets[siradaki][0].dx;
   }
 
   Widget SuccessImage() {
