@@ -3,11 +3,12 @@
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_moving_square_game_provider.dart';
-import 'package:patikmobile/providers/games_providers/match_with_sound_game_provider.dart';
+import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -16,13 +17,14 @@ class GameSizeClass {
   static double Height = StaticVariables.AppSize.height;
   static double Width = StaticVariables.AppSize.width;
   static double boxSize = 0;
+  static double boxEndPosition = 0;
   static double bottomMargin = 0;
   static double firstBoxOffset = 0;
   static double secondBoxOffset = 0;
   static double perMargin = 0;
   void Init() {
     // Aşağıda duracakları konum
-    bottomMargin = Height - 7.h;
+    bottomMargin = Height - 3.h;
     // Kutu boyutu
     boxSize = (Height - 22.h) / 5;
 
@@ -43,7 +45,9 @@ class MovingSquaresGame extends StatefulWidget {
 
 class _MovingSquaresGame extends State<MovingSquaresGame>
     with TickerProviderStateMixin {
-  late MatchWithSoundGameProvide matchWithSoundGameProvide;
+  BannerAd? _bannerAd;
+
+  late MovingSquaresGameProvide movingSquaresGameProvide;
   late List<AnimationController> _controllers;
   late List<List<Offset>> squareOffsets;
   // animasyon hızı
@@ -51,6 +55,11 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
   @override
   void initState() {
     super.initState();
+
+    movingSquaresGameProvide =
+        Provider.of<MovingSquaresGameProvide>(context, listen: false);
+    movingSquaresGameProvide.init(context);
+
     GameSizeClass().Init();
     // Karelerin başlangıç konumları
     squareOffsets = [
@@ -76,8 +85,8 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
       ]
     ];
 
-    matchWithSoundGameProvide =
-        Provider.of<MatchWithSoundGameProvide>(context, listen: false);
+    movingSquaresGameProvide =
+        Provider.of<MovingSquaresGameProvide>(context, listen: false);
     _controllers = [
       AnimationController(
         vsync: this,
@@ -108,21 +117,39 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       _controllers[siradaki].forward();
     });
+
+    BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.fullBanner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _bannerAd = ad as BannerAd;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    ).load();
   }
 
   int siradaki = 0;
+
   void moveSquares() {
+    GameSizeClass.boxEndPosition = (GameSizeClass.bottomMargin -
+        ((GameSizeClass.boxSize * (siradaki + 1)) + (siradaki * 2.h)));
     //siradaki kutuların konumu değiştiriliyor
     for (int i = 0; i < squareOffsets[siradaki].length; i++) {
       squareOffsets[siradaki][i] = Offset(
           squareOffsets[siradaki][i].dx, squareOffsets[siradaki][i].dy + 2);
     }
     //siradaki kutular belirlenen konuma geldiğinde bağlı animasyon dispose edilip varsa sıradaki çalıştırılıyor
-    if (squareOffsets[siradaki][0].dy >=
-        (GameSizeClass.bottomMargin -
-            ((GameSizeClass.boxSize * (siradaki + 1)) + (siradaki * 2.h)))) {
+    if (squareOffsets[siradaki][0].dy >= GameSizeClass.boxEndPosition) {
       _controllers[siradaki].stop();
-      _controllers[siradaki].dispose();
+      // _controllers[siradaki].dispose();
       // sonraki animasyona geçiliyor
       siradaki++;
       // sonuncu animasyondan sonra tekrar girmiyor
@@ -141,45 +168,93 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
 
   @override
   void dispose() {
-    matchWithSoundGameProvide.dispose();
+    _bannerAd?.dispose();
+    for (var element in _controllers) {
+      element.dispose();
+    }
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (didPop) {
-          return;
-        }
-        await askToGoMainMenu(func: () {
-          setState(() {});
-        });
-      },
-      child: Scaffold(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) {
+            return;
+          }
+          await askToGoMainMenu(func: () {
+            setState(() {});
+          });
+        },
+        child: Scaffold(
           backgroundColor: MainColors.backgroundColor,
-          body: Stack(children: [
-            Consumer<MovingSquaresGameProvide>(
-              builder: (context, provider, child) {
-                if (provider.loading!) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                return CustomPaint(
-                  painter: SquarePainter(squareOffsets, context),
-                  size: Size.infinite,
-                );
-              },
-            ),
-            Positioned(
-                left: 0,
-                top: 0,
-                child: Container(
-                    width: StaticVariables.AppSize.width,
-                    height: GameSizeClass.boxSize - 100,
-                    decoration:
-                        BoxDecoration(color: MainColors.backgroundColor)))
-          ])),
+          body: Consumer<MovingSquaresGameProvide>(
+            builder: (context, provider, child) {
+              return Stack(children: [
+                if (_bannerAd != null)
+                  Positioned(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SizedBox(
+                        width: _bannerAd!.size.width.toDouble() * 2,
+                        height: _bannerAd!.size.height.toDouble(),
+                        child: AdWidget(ad: _bannerAd!),
+                      ),
+                    ),
+                  ),
+                Container(
+                  height: 40,
+                  width: 30,
+                  color: Colors.red,
+                ),
+                GestureDetector(
+                  child: CustomPaint(
+                    painter: SquarePainter(squareOffsets, context),
+                    size: Size.infinite,
+                  ),
+                  onTapDown: (details) {
+                    print("globalPosition.dx: ${details.localPosition.dx}");
+                    print("globalPosition.dy: ${details.localPosition.dy}");
+                    checkIfBoxTrue(details.localPosition);
+                  },
+                ),
+                Positioned(
+                    left: 0,
+                    top: 0,
+                    child: Container(
+                        width: StaticVariables.AppSize.width,
+                        height: GameSizeClass.boxSize - 100,
+                        decoration:
+                            BoxDecoration(color: MainColors.backgroundColor))),
+                if (provider.errorAccuried == true) ...[
+                  Positioned(child: ErrorImage()),
+                ],
+                if (provider.successAccuried == true) ...[
+                  Positioned(child: SuccessImage()),
+                ],
+              ]);
+            },
+          ),
+        ));
+  }
+
+  void checkIfBoxTrue(Offset globalPosition) {
+    squareOffsets[siradaki][0].dx;
+  }
+
+  Widget SuccessImage() {
+    return Container(
+      color: const Color.fromARGB(42, 255, 255, 255),
+      child: Center(
+        child: Image.asset(
+          'lib/assets/img/success_image.png',
+          width: 42.w,
+          height: 20.h,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 

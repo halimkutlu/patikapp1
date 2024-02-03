@@ -11,8 +11,10 @@ import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
+import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/pages/games/match_with_picture_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
+import 'package:patikmobile/providers/games_providers/match_moving_square_game_provider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -185,7 +187,7 @@ class SwipeCardGameProvider extends ChangeNotifier {
 
     Timer(Duration(milliseconds: 100), () {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MatchWithPictureGame()),
+          MaterialPageRoute(builder: (context) => MovingSquaresGame()),
           (Route<dynamic> route) => false);
     });
   }

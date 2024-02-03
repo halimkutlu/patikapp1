@@ -125,8 +125,10 @@ class _LearnPageState extends State<LearnPage> {
       int color, WordListInformation horizontalCategory) {
     return InkWell(
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => MovingSquaresGame()));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => SwipeCardGame(
+                  selectedCategoryInfo: horizontalCategory,
+                )));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
