@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
-import 'package:patikmobile/pages/introductionPages/introductionPage1.dart';
 import 'package:patikmobile/pages/splashScreen.dart';
 import 'package:patikmobile/providers/boxPageProvider.dart';
 import 'package:patikmobile/providers/categoriesProvider.dart';
@@ -17,6 +16,7 @@ import 'package:patikmobile/providers/changePasswordProvider.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:patikmobile/providers/games_providers/fill_the_blank_game.dart';
+import 'package:patikmobile/providers/games_providers/match_moving_square_game_provider.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
 import 'package:patikmobile/providers/games_providers/match_with_sound_game_provider.dart';
 import 'package:patikmobile/providers/games_providers/multiple_choice_game_provider.dart';
@@ -29,7 +29,6 @@ import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/providers/splashScreenProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/providers/trainingProvider.dart';
-import 'package:patikmobile/widgets/keyboard_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sizer/sizer.dart';
@@ -88,6 +87,8 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<AppDbProvider>(create: (_) => AppDbProvider()),
   ChangeNotifierProvider<MultipleChoiceGameProvider>(
       create: (_) => MultipleChoiceGameProvider()),
+  ChangeNotifierProvider<MovingSquaresGameProvide>(
+      create: (_) => MovingSquaresGameProvide()),
 ];
 
 class MyApp extends StatefulWidget {
@@ -107,6 +108,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    DeviceProvider.Init(context);
     TextEditingController textController = TextEditingController();
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(

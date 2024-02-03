@@ -6,6 +6,7 @@ import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/box_page.dart';
+import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/pages/games/swipe_card_game.dart';
 import 'package:patikmobile/providers/categoriesProvider.dart';
 import 'package:patikmobile/widgets/box_widget.dart';
@@ -124,10 +125,8 @@ class _LearnPageState extends State<LearnPage> {
       int color, WordListInformation horizontalCategory) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => SwipeCardGame(
-                  selectedCategoryInfo: horizontalCategory,
-                )));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => MovingSquaresGame()));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),

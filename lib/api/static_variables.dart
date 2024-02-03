@@ -1,5 +1,5 @@
 //uygulama içerisinde kullanılacak bilgiler için model oluşturulması.
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors
 
 import 'dart:ui';
 
@@ -50,4 +50,6 @@ class StaticVariables {
     0xFFC70000,
     0xFFFF761A,
   ];
+
+  static Size AppSize = Size(0, 0);
 }
