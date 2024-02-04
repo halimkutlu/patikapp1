@@ -328,6 +328,27 @@ class SquarePainter extends CustomPainter {
             Radius.circular(10)));
 
         canvas.drawPath(path, paint);
+
+        final textPainter = TextPainter(
+            text: TextSpan(
+              text: 'Bıldır\nYediğin\nHurmalar',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
+            ),
+            textDirection: TextDirection.ltr,
+            textAlign: TextAlign.center);
+        textPainter.layout();
+        textPainter.paint(
+            canvas,
+            Offset(
+                offset.dx +
+                    (GameSizeClass.boxSize / 2) -
+                    (textPainter.width / 2),
+                offset.dy +
+                    (GameSizeClass.boxSize / 2) -
+                    (textPainter.height / 2)));
       }
     }
   }
