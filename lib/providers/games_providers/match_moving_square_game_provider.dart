@@ -1,16 +1,20 @@
 // ignore_for_file: prefer_final_fields
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
+import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MovingSquaresGameProvide extends ChangeNotifier {
@@ -51,17 +55,28 @@ class MovingSquaresGameProvide extends ChangeNotifier {
   int? _errorCount = 0;
   int? get errorCount => _errorCount;
 
+  int? _siradaki = 0;
+  int? get siradaki => _siradaki;
+
   WordListDBInformation? _selectedWord;
   WordListDBInformation? get selectedWord => _selectedWord;
 
+  List<GameItem>? _currentGameItems = [];
+  List<GameItem>? get currentGameItems => _currentGameItems;
+
   BuildContext? buildContext;
 
-  init([BuildContext? context]) async {
+  init([BuildContext? context, VoidCallback? callback]) async {
+    GameSizeClass().Init();
+
+    _siradaki = 0;
     _errorCount = 0;
     buildContext = context;
     loadAd();
     await startMatchMovingSquareGame();
     notifyListeners();
+    await getWords();
+    callback!();
   }
 
   startMatchMovingSquareGame() async {
@@ -170,4 +185,82 @@ class MovingSquaresGameProvide extends ChangeNotifier {
           },
         ));
   }
+
+  GameItem fillGameItem(String trueWord, String wrongWord, String? audio) {
+    GameItem? item = GameItem();
+    item.words = [];
+    item.Wordoffsets = [];
+
+    List<String> random = [trueWord, wrongWord];
+    var word = random[Random().nextInt(2)];
+
+    item.Wordoffsets = [
+      Offset(GameSizeClass.firstBoxOffset, -13.h),
+      Offset(GameSizeClass.secondBoxOffset, -13.h),
+    ];
+    item.words!.add(word);
+
+    item.sound = audio!;
+    item.words!.add(word == trueWord ? wrongWord : trueWord);
+    item.trueIndex = item.words!
+        .indexOf(random.firstWhere((element) => trueWord == element));
+    return item;
+  }
+
+  getWords() {
+    if (_wordListDbInformation != null && _wordListPool != null) {
+      _currentGameItems = [];
+
+      for (int i = 0; i < _wordListDbInformation!.length; i++) {
+        var differentWord = _wordListPool!.firstWhere(
+          (element) => element.word != _wordListDbInformation![i].word,
+          orElse: () => _wordListPool!.first,
+        );
+
+        _currentGameItems!.add(fillGameItem(_wordListDbInformation![i].word!,
+            differentWord.word!, _wordListDbInformation![i].audio));
+      }
+      notifyListeners();
+    }
+  }
+
+  void moveSquares([List<AnimationController>? _controllers]) {
+    GameSizeClass.boxEndPosition = (GameSizeClass.bottomMargin -
+        ((GameSizeClass.boxSize * (_siradaki! + 1)) + (_siradaki! * 2.h)));
+    //siradaki kutuların konumu değiştiriliyor
+    for (int i = 0;
+        i < _currentGameItems![_siradaki!].Wordoffsets!.length;
+        i++) {
+      _currentGameItems![_siradaki!].Wordoffsets![i] = Offset(
+          _currentGameItems![_siradaki!].Wordoffsets![i].dx,
+          _currentGameItems![_siradaki!].Wordoffsets![i].dy + 2);
+    }
+    //siradaki kutular belirlenen konuma geldiğinde bağlı animasyon dispose edilip varsa sıradaki çalıştırılıyor
+    if (_currentGameItems![_siradaki!].Wordoffsets![0].dy >=
+        GameSizeClass.boxEndPosition) {
+      _controllers![_siradaki!].stop();
+      // _controllers[siradaki].dispose();
+      // sonraki animasyona geçiliyor
+      _siradaki = _siradaki! + 1;
+      // sonuncu animasyondan sonra tekrar girmiyor
+      if (_siradaki! < 5) {
+        _controllers![_siradaki!].addListener(() {
+          moveSquares(_controllers);
+          notifyListeners();
+        });
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _controllers[_siradaki!].forward();
+        });
+      }
+    }
+  }
+}
+
+class GameItem {
+  late int? trueIndex;
+  late List<Offset>? Wordoffsets = [];
+  late List<String>? words = [];
+  late String? sound;
+
+  GameItem({this.trueIndex, this.Wordoffsets, this.words, this.sound});
 }

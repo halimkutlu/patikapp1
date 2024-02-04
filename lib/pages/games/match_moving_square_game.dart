@@ -49,7 +49,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
 
   late MovingSquaresGameProvide movingSquaresGameProvide;
   late List<AnimationController> _controllers;
-  late List<List<Offset>> squareOffsets;
+  // late List<List<Offset>> squareOffsets;
   // animasyon hızı
   int durationSec = 15;
   @override
@@ -58,35 +58,33 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
 
     movingSquaresGameProvide =
         Provider.of<MovingSquaresGameProvide>(context, listen: false);
-    movingSquaresGameProvide.init(context);
+    movingSquaresGameProvide.init(context, methodCallBack);
 
-    GameSizeClass().Init();
+    // GameSizeClass().Init();
     // Karelerin başlangıç konumları
-    squareOffsets = [
-      [
-        Offset(GameSizeClass.firstBoxOffset, -13.h),
-        Offset(GameSizeClass.secondBoxOffset, -13.h)
-      ],
-      [
-        Offset(GameSizeClass.firstBoxOffset, -13.h),
-        Offset(GameSizeClass.secondBoxOffset, -13.h)
-      ],
-      [
-        Offset(GameSizeClass.firstBoxOffset, -13.h),
-        Offset(GameSizeClass.secondBoxOffset, -13.h)
-      ],
-      [
-        Offset(GameSizeClass.firstBoxOffset, -13.h),
-        Offset(GameSizeClass.secondBoxOffset, -13.h)
-      ],
-      [
-        Offset(GameSizeClass.firstBoxOffset, -13.h),
-        Offset(GameSizeClass.secondBoxOffset, -13.h)
-      ]
-    ];
+    // squareOffsets = [
+    //   [
+    //     Offset(GameSizeClass.firstBoxOffset, -13.h),
+    //     Offset(GameSizeClass.secondBoxOffset, -13.h)
+    //   ],
+    //   [
+    //     Offset(GameSizeClass.firstBoxOffset, -13.h),
+    //     Offset(GameSizeClass.secondBoxOffset, -13.h)
+    //   ],
+    //   [
+    //     Offset(GameSizeClass.firstBoxOffset, -13.h),
+    //     Offset(GameSizeClass.secondBoxOffset, -13.h)
+    //   ],
+    //   [
+    //     Offset(GameSizeClass.firstBoxOffset, -13.h),
+    //     Offset(GameSizeClass.secondBoxOffset, -13.h)
+    //   ],
+    //   [
+    //     Offset(GameSizeClass.firstBoxOffset, -13.h),
+    //     Offset(GameSizeClass.secondBoxOffset, -13.h)
+    //   ]
+    // ];
 
-    movingSquaresGameProvide =
-        Provider.of<MovingSquaresGameProvide>(context, listen: false);
     _controllers = [
       AnimationController(
         vsync: this,
@@ -109,14 +107,6 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
         duration: Duration(seconds: durationSec),
       )
     ];
-    _controllers[siradaki].addListener(() {
-      setState(() {
-        moveSquares();
-      });
-    });
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _controllers[siradaki].forward();
-    });
 
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
@@ -140,36 +130,6 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
     ).load();
   }
 
-  int siradaki = 0;
-
-  void moveSquares() {
-    GameSizeClass.boxEndPosition = (GameSizeClass.bottomMargin -
-        ((GameSizeClass.boxSize * (siradaki + 1)) + (siradaki * 2.h)));
-    //siradaki kutuların konumu değiştiriliyor
-    for (int i = 0; i < squareOffsets[siradaki].length; i++) {
-      squareOffsets[siradaki][i] = Offset(
-          squareOffsets[siradaki][i].dx, squareOffsets[siradaki][i].dy + 2);
-    }
-    //siradaki kutular belirlenen konuma geldiğinde bağlı animasyon dispose edilip varsa sıradaki çalıştırılıyor
-    if (squareOffsets[siradaki][0].dy >= GameSizeClass.boxEndPosition) {
-      _controllers[siradaki].stop();
-      // _controllers[siradaki].dispose();
-      // sonraki animasyona geçiliyor
-      siradaki++;
-      // sonuncu animasyondan sonra tekrar girmiyor
-      if (siradaki < 5) {
-        _controllers[siradaki].addListener(() {
-          setState(() {
-            moveSquares();
-          });
-        });
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
-          _controllers[siradaki].forward();
-        });
-      }
-    }
-  }
-
   @override
   void dispose() {
     _bannerAd?.dispose();
@@ -180,9 +140,24 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
     super.dispose();
   }
 
-  void gestureOnTapDown(TapDownDetails details) {
-    Offset leftSquarePosition = squareOffsets[siradaki][0];
-    Offset rightSquarePosition = squareOffsets[siradaki][1];
+  void methodCallBack() {
+    _controllers[movingSquaresGameProvide.siradaki!].addListener(() {
+      setState(() {
+        movingSquaresGameProvide.moveSquares(_controllers);
+      });
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controllers[movingSquaresGameProvide.siradaki!].forward();
+    });
+  }
+
+  void gestureOnTapDown(
+      TapDownDetails details, MovingSquaresGameProvide provider) {
+    if (provider.siradaki! > 4) return;
+    Offset leftSquarePosition =
+        provider.currentGameItems![provider.siradaki!].Wordoffsets![0];
+    Offset rightSquarePosition =
+        provider.currentGameItems![provider.siradaki!].Wordoffsets![1];
 
     if (leftSquarePosition.dy >= GameSizeClass.boxEndPosition) return;
 
@@ -192,22 +167,38 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
         leftSquarePosition.dx + GameSizeClass.boxSize >= position.dx &&
         leftSquarePosition.dy <= position.dy &&
         leftSquarePosition.dy + GameSizeClass.boxSize >= position.dy) {
-      squareOffsets[siradaki][0] =
-          Offset(squareOffsets[siradaki][0].dx, GameSizeClass.boxEndPosition);
-      squareOffsets[siradaki][1] =
-          Offset(squareOffsets[siradaki][1].dx, GameSizeClass.boxEndPosition);
+      provider.currentGameItems![provider.siradaki!].Wordoffsets![0] = Offset(
+          provider.currentGameItems![provider.siradaki!].Wordoffsets![0].dx,
+          GameSizeClass.boxEndPosition);
+      provider.currentGameItems![provider.siradaki!].Wordoffsets![1] = Offset(
+          provider.currentGameItems![provider.siradaki!].Wordoffsets![1].dx,
+          GameSizeClass.boxEndPosition);
       print("Birinciye tıklandı");
+
+      if (provider.currentGameItems![provider.siradaki!].trueIndex == 0) {
+        print("doğru");
+      } else {
+        print("yanlış");
+      }
     }
 
     if (rightSquarePosition.dx <= position.dx &&
         rightSquarePosition.dx + GameSizeClass.boxSize >= position.dx &&
         rightSquarePosition.dy <= position.dy &&
         rightSquarePosition.dy + GameSizeClass.boxSize >= position.dy) {
-      squareOffsets[siradaki][0] =
-          Offset(squareOffsets[siradaki][0].dx, GameSizeClass.boxEndPosition);
-      squareOffsets[siradaki][1] =
-          Offset(squareOffsets[siradaki][1].dx, GameSizeClass.boxEndPosition);
+      provider.currentGameItems![provider.siradaki!].Wordoffsets![0] = Offset(
+          provider.currentGameItems![provider.siradaki!].Wordoffsets![0].dx,
+          GameSizeClass.boxEndPosition);
+      provider.currentGameItems![provider.siradaki!].Wordoffsets![1] = Offset(
+          provider.currentGameItems![provider.siradaki!].Wordoffsets![1].dx,
+          GameSizeClass.boxEndPosition);
       print("İkinciye tıklandı");
+
+      if (provider.currentGameItems![provider.siradaki!].trueIndex == 1) {
+        print("doğru");
+      } else {
+        print("yanlış");
+      }
     }
   }
 
@@ -241,10 +232,10 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
                   ),
                 GestureDetector(
                   child: CustomPaint(
-                    painter: SquarePainter(squareOffsets, context),
+                    painter: SquarePainter(provider.currentGameItems!, context),
                     size: Size.infinite,
                   ),
-                  onTapDown: (details) => gestureOnTapDown(details),
+                  onTapDown: (details) => gestureOnTapDown(details, provider),
                 ),
                 Positioned(
                     left: 0,
@@ -311,44 +302,62 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
 }
 
 class SquarePainter extends CustomPainter {
-  final List<List<Offset>> squareOffsets;
+  final List<GameItem> gameItem;
   final BuildContext context;
 
-  SquarePainter(this.squareOffsets, this.context);
+  SquarePainter(this.gameItem, this.context);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()..color = Colors.blue;
-    for (var offsetList in squareOffsets) {
-      for (var offset in offsetList) {
+    Paint paint = Paint()
+      ..shader = LinearGradient(
+        colors: [Color(0xffE5381E), Color(0xffF77440), Color(0xffFB7E3F)],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+    Paint paint2 = Paint()
+      ..shader = LinearGradient(
+        colors: [
+          Color(0xff388C87),
+          Color(0xff68E1FD),
+        ],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    for (var offsetList in gameItem) {
+      for (var offset in offsetList.Wordoffsets!) {
+        var index = offsetList.Wordoffsets!.indexOf(offset);
+
         Path path = Path();
         path.addRRect(RRect.fromRectAndRadius(
             Rect.fromLTWH(offset.dx, offset.dy, GameSizeClass.boxSize,
                 GameSizeClass.boxSize),
             Radius.circular(10)));
 
-        canvas.drawPath(path, paint);
-
+        canvas.drawPath(path, index == 0 ? paint : paint2);
+        List<String> wordList = [];
+        wordList = offsetList.words![index]
+            .split(" ")
+            .where((element) => element != "")
+            .toList();
+        var wordString = wordList.join("\n");
+        // Metni karenin tam ortasına yerleştirme
         final textPainter = TextPainter(
             text: TextSpan(
-              text: 'Bıldır\nYediğin\nHurmalar',
+              text: wordString,
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-              ),
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
             textDirection: TextDirection.ltr,
             textAlign: TextAlign.center);
         textPainter.layout();
         textPainter.paint(
             canvas,
-            Offset(
-                offset.dx +
-                    (GameSizeClass.boxSize / 2) -
-                    (textPainter.width / 2),
-                offset.dy +
-                    (GameSizeClass.boxSize / 2) -
-                    (textPainter.height / 2)));
+            Offset(offset.dx + (GameSizeClass.boxSize - textPainter.width) / 2,
+                offset.dy + (GameSizeClass.boxSize - textPainter.height) / 2));
       }
     }
   }
