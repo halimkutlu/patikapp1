@@ -1,5 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +11,7 @@ import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_moving_square_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/services/sound_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -51,39 +54,14 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
   late List<AnimationController> _controllers;
   // late List<List<Offset>> squareOffsets;
   // animasyon hızı
-  int durationSec = 15;
+  int durationSec = 30;
   @override
   void initState() {
     super.initState();
 
     movingSquaresGameProvide =
         Provider.of<MovingSquaresGameProvide>(context, listen: false);
-    movingSquaresGameProvide.init(context, methodCallBack);
-
-    // GameSizeClass().Init();
-    // Karelerin başlangıç konumları
-    // squareOffsets = [
-    //   [
-    //     Offset(GameSizeClass.firstBoxOffset, -13.h),
-    //     Offset(GameSizeClass.secondBoxOffset, -13.h)
-    //   ],
-    //   [
-    //     Offset(GameSizeClass.firstBoxOffset, -13.h),
-    //     Offset(GameSizeClass.secondBoxOffset, -13.h)
-    //   ],
-    //   [
-    //     Offset(GameSizeClass.firstBoxOffset, -13.h),
-    //     Offset(GameSizeClass.secondBoxOffset, -13.h)
-    //   ],
-    //   [
-    //     Offset(GameSizeClass.firstBoxOffset, -13.h),
-    //     Offset(GameSizeClass.secondBoxOffset, -13.h)
-    //   ],
-    //   [
-    //     Offset(GameSizeClass.firstBoxOffset, -13.h),
-    //     Offset(GameSizeClass.secondBoxOffset, -13.h)
-    //   ]
-    // ];
+    movingSquaresGameProvide.init(context, methodCallBack, methodCallBack2);
 
     _controllers = [
       AnimationController(
@@ -140,6 +118,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
     super.dispose();
   }
 
+  bool firstWordListened = false;
   void methodCallBack() {
     _controllers[movingSquaresGameProvide.siradaki!].addListener(() {
       setState(() {
@@ -147,12 +126,45 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
       });
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!firstWordListened) {
+        PlayAudio(movingSquaresGameProvide
+            .currentGameItems![movingSquaresGameProvide.siradaki!].sound);
+      }
+
       _controllers[movingSquaresGameProvide.siradaki!].forward();
+      firstWordListened = true;
     });
   }
 
+  void methodCallBack2() {
+    _controllers = [
+      AnimationController(
+        vsync: this,
+        duration: Duration(seconds: durationSec),
+      ),
+      AnimationController(
+        vsync: this,
+        duration: Duration(seconds: durationSec),
+      ),
+      AnimationController(
+        vsync: this,
+        duration: Duration(seconds: durationSec),
+      ),
+      AnimationController(
+        vsync: this,
+        duration: Duration(seconds: durationSec),
+      ),
+      AnimationController(
+        vsync: this,
+        duration: Duration(seconds: durationSec),
+      )
+    ];
+    firstWordListened = false;
+    methodCallBack();
+  }
+
   void gestureOnTapDown(
-      TapDownDetails details, MovingSquaresGameProvide provider) {
+      TapDownDetails details, MovingSquaresGameProvide provider) async {
     if (provider.siradaki! > 4) return;
     Offset leftSquarePosition =
         provider.currentGameItems![provider.siradaki!].Wordoffsets![0];
@@ -167,17 +179,28 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
         leftSquarePosition.dx + GameSizeClass.boxSize >= position.dx &&
         leftSquarePosition.dy <= position.dy &&
         leftSquarePosition.dy + GameSizeClass.boxSize >= position.dy) {
-      provider.currentGameItems![provider.siradaki!].Wordoffsets![0] = Offset(
-          provider.currentGameItems![provider.siradaki!].Wordoffsets![0].dx,
-          GameSizeClass.boxEndPosition);
-      provider.currentGameItems![provider.siradaki!].Wordoffsets![1] = Offset(
-          provider.currentGameItems![provider.siradaki!].Wordoffsets![1].dx,
-          GameSizeClass.boxEndPosition);
-      print("Birinciye tıklandı");
-
+      setState(() {
+        provider.setIsClicked = true;
+      });
       if (provider.currentGameItems![provider.siradaki!].trueIndex == 0) {
-        print("doğru");
+        //doğru
+        _controllers[provider.siradaki!].stop();
+        provider.successAnswer(provider.currentGameItems![provider.siradaki!],
+            () {
+          provider.setSuccessAccuried = false;
+          provider.boxDown();
+          methodCallBack();
+        });
       } else {
+        _controllers[provider.siradaki!].stop();
+        provider.wrongAnswer(provider.currentGameItems![provider.siradaki!],
+            () {
+          provider.countError(provider.currentGameItems![provider.siradaki!]);
+          provider.setErrorAccuried = false;
+          provider.boxDown();
+          methodCallBack();
+        });
+
         print("yanlış");
       }
     }
@@ -186,17 +209,30 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
         rightSquarePosition.dx + GameSizeClass.boxSize >= position.dx &&
         rightSquarePosition.dy <= position.dy &&
         rightSquarePosition.dy + GameSizeClass.boxSize >= position.dy) {
-      provider.currentGameItems![provider.siradaki!].Wordoffsets![0] = Offset(
-          provider.currentGameItems![provider.siradaki!].Wordoffsets![0].dx,
-          GameSizeClass.boxEndPosition);
-      provider.currentGameItems![provider.siradaki!].Wordoffsets![1] = Offset(
-          provider.currentGameItems![provider.siradaki!].Wordoffsets![1].dx,
-          GameSizeClass.boxEndPosition);
       print("İkinciye tıklandı");
-
+      setState(() {
+        provider.setIsClicked = true;
+      });
       if (provider.currentGameItems![provider.siradaki!].trueIndex == 1) {
-        print("doğru");
+        //doğru
+        _controllers[provider.siradaki!].stop();
+        await provider
+            .successAnswer(provider.currentGameItems![provider.siradaki!], () {
+          provider.setSuccessAccuried = false;
+          provider.boxDown();
+          methodCallBack();
+        });
       } else {
+        _controllers[provider.siradaki!].stop();
+        await provider
+            .wrongAnswer(provider.currentGameItems![provider.siradaki!], () {
+          provider.countError(provider.currentGameItems![provider.siradaki!]);
+
+          provider.setErrorAccuried = false;
+          provider.boxDown();
+          methodCallBack();
+        });
+
         print("yanlış");
       }
     }
@@ -266,6 +302,19 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
           width: 42.w,
           height: 20.h,
           fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Widget RoundText() {
+    return Container(
+      color: const Color.fromARGB(42, 255, 255, 255),
+      child: Center(
+        child: Container(
+          width: 42.w,
+          height: 20.h,
+          child: Text(movingSquaresGameProvide.roundName.toString() ?? "0"),
         ),
       ),
     );

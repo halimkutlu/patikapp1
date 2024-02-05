@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_final_fields
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -13,6 +14,7 @@ import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/services/sound_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sqflite/sqflite.dart';
@@ -34,6 +36,9 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
   bool? _isShuffled = false;
   bool? get isShuffled => _isShuffled;
+
+  int? _roundName = 1;
+  int? get roundName => _roundName;
 
   set shuffled(bool isShuffled) {
     _isShuffled = isShuffled;
@@ -58,6 +63,21 @@ class MovingSquaresGameProvide extends ChangeNotifier {
   int? _siradaki = 0;
   int? get siradaki => _siradaki;
 
+  bool? _isClicked = false;
+  bool? get isClicked => _isClicked;
+
+  set setIsClicked(bool clicked) {
+    _isClicked = clicked;
+  }
+
+  set setErrorAccuried(bool error) {
+    _errorAccuried = error;
+  }
+
+  set setSuccessAccuried(bool success) {
+    _successAccuried = success;
+  }
+
   WordListDBInformation? _selectedWord;
   WordListDBInformation? get selectedWord => _selectedWord;
 
@@ -66,17 +86,23 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
   BuildContext? buildContext;
 
-  init([BuildContext? context, VoidCallback? callback]) async {
+  VoidCallback? callback2;
+
+  init(
+      [BuildContext? context,
+      VoidCallback? callback,
+      VoidCallback? _callback]) async {
     GameSizeClass().Init();
 
     _siradaki = 0;
     _errorCount = 0;
     buildContext = context;
-    loadAd();
+    loadAd(closeAd);
     await startMatchMovingSquareGame();
     notifyListeners();
     await getWords();
     callback!();
+    callback2 = _callback;
   }
 
   startMatchMovingSquareGame() async {
@@ -152,7 +178,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     print(_wordListDbInformation);
   }
 
-  Future<void> loadAd() async {
+  Future<void> loadAd(VoidCallback onAdDismissed) async {
     InterstitialAd.load(
         adUnitId: AdHelper.interstitialAdUnitId,
         request: const AdRequest(),
@@ -161,19 +187,28 @@ class MovingSquaresGameProvide extends ChangeNotifier {
           onAdLoaded: (ad) {
             ad.fullScreenContentCallback = FullScreenContentCallback(
                 // Called when the ad showed the full screen content.
-                onAdShowedFullScreenContent: (ad) {},
+                onAdShowedFullScreenContent: (ad) {
+              print("object");
+            },
                 // Called when an impression occurs on the ad.
-                onAdImpression: (ad) {},
+                onAdImpression: (ad) {
+              print("object");
+            },
                 // Called when the ad failed to show full screen content.
                 onAdFailedToShowFullScreenContent: (ad, err) {
-                  // Dispose the ad here to free resources.
-                },
+              print("object");
+              // Dispose the ad here to free resources.
+            },
                 // Called when the ad dismissed full screen content.
                 onAdDismissedFullScreenContent: (ad) {
-                  // Dispose the ad here to free resources.
-                },
+              if (onAdDismissed != null) {
+                onAdDismissed();
+              }
+            },
                 // Called when a click is recorded for an ad.
-                onAdClicked: (ad) {});
+                onAdClicked: (ad) {
+              print("object");
+            });
 
             debugPrint('$ad loaded.');
             // Keep a reference to the ad so you can show it later.
@@ -186,11 +221,12 @@ class MovingSquaresGameProvide extends ChangeNotifier {
         ));
   }
 
-  GameItem fillGameItem(String trueWord, String wrongWord, String? audio) {
+  GameItem fillGameItem(
+      String trueWord, String wrongWord, String? audio, int? wordId) {
     GameItem? item = GameItem();
     item.words = [];
     item.Wordoffsets = [];
-
+    item.wordId = wordId;
     List<String> random = [trueWord, wrongWord];
     var word = random[Random().nextInt(2)];
 
@@ -217,14 +253,20 @@ class MovingSquaresGameProvide extends ChangeNotifier {
           orElse: () => _wordListPool!.first,
         );
 
-        _currentGameItems!.add(fillGameItem(_wordListDbInformation![i].word!,
-            differentWord.word!, _wordListDbInformation![i].audio));
+        _currentGameItems!.add(fillGameItem(
+            _wordListDbInformation![i].word!,
+            differentWord.word!,
+            _wordListDbInformation![i].audio,
+            _wordListDbInformation![i].id));
       }
       notifyListeners();
     }
   }
 
   void moveSquares([List<AnimationController>? _controllers]) {
+    // PlayAudio(_currentGameItems![_siradaki!].sound);
+
+    if (_siradaki! > 4) return;
     GameSizeClass.boxEndPosition = (GameSizeClass.bottomMargin -
         ((GameSizeClass.boxSize * (_siradaki! + 1)) + (_siradaki! * 2.h)));
     //siradaki kutuların konumu değiştiriliyor
@@ -238,6 +280,9 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     //siradaki kutular belirlenen konuma geldiğinde bağlı animasyon dispose edilip varsa sıradaki çalıştırılıyor
     if (_currentGameItems![_siradaki!].Wordoffsets![0].dy >=
         GameSizeClass.boxEndPosition) {
+      if (_isClicked == false) {
+        _errorCount = _errorCount! + 1;
+      }
       _controllers![_siradaki!].stop();
       // _controllers[siradaki].dispose();
       // sonraki animasyona geçiliyor
@@ -249,10 +294,71 @@ class MovingSquaresGameProvide extends ChangeNotifier {
           notifyListeners();
         });
         WidgetsBinding.instance.addPostFrameCallback((_) {
+          PlayAudio(_currentGameItems![_siradaki!].sound);
           _controllers[_siradaki!].forward();
         });
+      } else {
+        //yeni oyun başlar.
+
+        if (_errorCount! > 3) {
+          if (_interstitialAd != null) {
+            _interstitialAd?.show();
+            _errorCount = 0;
+          } else {
+            closeAd();
+          }
+        } else {
+          closeAd();
+        }
       }
+
+      _isClicked = false;
+      notifyListeners();
     }
+  }
+
+  void closeAd() {
+    loadAd(closeAd);
+    getWords();
+    _siradaki = 0;
+    callback2!();
+    notifyListeners();
+  }
+
+  void countError(GameItem gameItem) {
+    var word = comingWordListFromStorage
+        // ignore: unrelated_type_equality_checks
+        .firstWhere((element) => element.id == gameItem.wordId);
+    word.errorCount = word.errorCount! + 1;
+
+    _errorCount = _errorCount! + 1;
+  }
+
+  void resetSelections(VoidCallback addCallback) async {}
+
+  void boxDown() {
+    _currentGameItems![_siradaki!].Wordoffsets![0] = Offset(
+        _currentGameItems![_siradaki!].Wordoffsets![0].dx,
+        GameSizeClass.boxEndPosition);
+    _currentGameItems![_siradaki!].Wordoffsets![1] = Offset(
+        _currentGameItems![_siradaki!].Wordoffsets![1].dx,
+        GameSizeClass.boxEndPosition);
+
+    notifyListeners();
+  }
+
+  Future<void> wrongAnswer(GameItem gameItem, VoidCallback? callback) async {
+    _errorAccuried = true;
+    notifyListeners();
+
+    Timer(Duration(seconds: 1), callback!);
+  }
+
+  Future<void> successAnswer(GameItem gameItem, VoidCallback? callback) async {
+    _successAccuried = true;
+    notifyListeners();
+
+    Timer(Duration(seconds: 1), callback!);
   }
 }
 
@@ -261,6 +367,8 @@ class GameItem {
   late List<Offset>? Wordoffsets = [];
   late List<String>? words = [];
   late String? sound;
+  late int? wordId;
 
-  GameItem({this.trueIndex, this.Wordoffsets, this.words, this.sound});
+  GameItem(
+      {this.wordId, this.trueIndex, this.Wordoffsets, this.words, this.sound});
 }
