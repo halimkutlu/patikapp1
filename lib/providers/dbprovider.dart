@@ -169,6 +169,54 @@ from Words w where w.IsCategoryName = 1 """;
     }
   }
 
+  Future<bool> addToLearnedBox(int dbId) async {
+    try {
+      var status = await reOpenDbConnection();
+      if (!status) return false;
+      await database!.insert(
+        'WordStatistics',
+        WordStatistics(
+          wordId: dbId,
+          learned: 1,
+          repeat: 0,
+          workHard: 0, // WorkHard sütununu 1 yap
+          successCount: 0,
+          errorCount: 0,
+        ).toMap(),
+        conflictAlgorithm:
+            ConflictAlgorithm.replace, // Eğer aynı WordId varsa güncelle
+      );
+      return true;
+    } catch (e) {
+      print("Hata oluştu: $e");
+      return false;
+    }
+  }
+
+  Future<bool> addToRepeatBox(int dbId) async {
+    try {
+      var status = await reOpenDbConnection();
+      if (!status) return false;
+      await database!.insert(
+        'WordStatistics',
+        WordStatistics(
+          wordId: dbId,
+          learned: 0,
+          repeat: 1,
+          workHard: 0, // WorkHard sütununu 1 yap
+          successCount: 0,
+          errorCount: 0,
+        ).toMap(),
+        conflictAlgorithm:
+            ConflictAlgorithm.replace, // Eğer aynı WordId varsa güncelle
+      );
+      return true;
+    } catch (e) {
+      print("Hata oluştu: $e");
+      return false;
+    }
+  }
+
   Future<bool> updateWorkHard(int dbId) async {
     try {
       var status = await reOpenDbConnection();

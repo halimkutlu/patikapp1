@@ -4,17 +4,23 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
+import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/games/match_moving_square_game.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/services/sound_helper.dart';
+import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sqflite/sqflite.dart';
@@ -37,8 +43,8 @@ class MovingSquaresGameProvide extends ChangeNotifier {
   bool? _isShuffled = false;
   bool? get isShuffled => _isShuffled;
 
-  int? _roundName = 1;
-  int? get roundName => _roundName;
+  int _roundCount = 0;
+  int get roundCount => _roundCount;
 
   set shuffled(bool isShuffled) {
     _isShuffled = isShuffled;
@@ -263,7 +269,8 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     }
   }
 
-  void moveSquares([List<AnimationController>? _controllers]) {
+  void moveSquares(BuildContext context,
+      [List<AnimationController>? _controllers]) async {
     // PlayAudio(_currentGameItems![_siradaki!].sound);
 
     if (_siradaki! > 4) return;
@@ -290,7 +297,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
       // sonuncu animasyondan sonra tekrar girmiyor
       if (_siradaki! < 5) {
         _controllers![_siradaki!].addListener(() {
-          moveSquares(_controllers);
+          moveSquares(context, _controllers);
           notifyListeners();
         });
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -299,16 +306,22 @@ class MovingSquaresGameProvide extends ChangeNotifier {
         });
       } else {
         //yeni oyun başlar.
-
-        if (_errorCount! > 3) {
-          if (_interstitialAd != null) {
-            _interstitialAd?.show();
-            _errorCount = 0;
+        if (_roundCount < 3) {
+          _roundCount = _roundCount + 1;
+          if (_errorCount! > 3) {
+            if (_interstitialAd != null) {
+              _interstitialAd?.show();
+              _errorCount = 0;
+            } else {
+              closeAd();
+            }
           } else {
             closeAd();
           }
         } else {
-          closeAd();
+          _roundCount = 0;
+          await FilltheWordsInABox();
+          await showSuccessPage(context);
         }
       }
 
@@ -359,6 +372,35 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     notifyListeners();
 
     Timer(Duration(seconds: 1), callback!);
+  }
+
+  Future<void> FilltheWordsInABox() async {
+    print(comingWordListFromStorage);
+    DbProvider db = DbProvider();
+    for (var x in comingWordListFromStorage) {
+      /*KELİMELER NASIL SINIFLANDIRILACAK? 
+ 1 kez ve 2 kez hata yaptığı kelimeler ÖĞRENDİM kutusuna eklenecek. 
+3 ve 4 kez hata yaptığı kelimeler tekrar et kutusuna eklenecek. 
+4ten fazla kez hata yaptığı kelimeler SIKI ÇALIŞ kutusuna eklenecek. */
+      if (x.errorCount! >= 0 && x.errorCount! <= 2) {
+        await db.addToLearnedBox(x.id!);
+      } else if (x.errorCount! >= 3 && x.errorCount! <= 4) {
+        await db.addToRepeatBox(x.id!);
+      } else {
+        await db.addToWorkHardBox(x.id!);
+      }
+    }
+  }
+
+  showSuccessPage(BuildContext context) async {
+    await CustomAlertDialogOnlyConfirm(context, () {
+      Timer(Duration(milliseconds: 100), () {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => Dashboard(0)),
+            (Route<dynamic> route) => false);
+      });
+    }, "", AppLocalizations.of(context).translate("154"),
+        ArtSweetAlertType.success, "ok".tr);
   }
 }
 

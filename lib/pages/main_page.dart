@@ -156,12 +156,9 @@ class _MainPageState extends State<MainPage> {
                 height: 4.h,
                 fit: BoxFit.cover,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Patik",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 4.h),
-                ),
+              Text(
+                "Patik",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 4.h),
               )
             ],
           ),
@@ -217,7 +214,7 @@ class _MainPageState extends State<MainPage> {
 
   Widget boxArea() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(0.2.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

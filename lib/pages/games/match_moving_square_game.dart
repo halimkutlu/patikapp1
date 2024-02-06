@@ -122,7 +122,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
   void methodCallBack() {
     _controllers[movingSquaresGameProvide.siradaki!].addListener(() {
       setState(() {
-        movingSquaresGameProvide.moveSquares(_controllers);
+        movingSquaresGameProvide.moveSquares(context, _controllers);
       });
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -302,19 +302,6 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
           width: 42.w,
           height: 20.h,
           fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
-
-  Widget RoundText() {
-    return Container(
-      color: const Color.fromARGB(42, 255, 255, 255),
-      child: Center(
-        child: Container(
-          width: 42.w,
-          height: 20.h,
-          child: Text(movingSquaresGameProvide.roundName.toString() ?? "0"),
         ),
       ),
     );
