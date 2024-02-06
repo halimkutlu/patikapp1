@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, prefer_const_constructors
+// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
 
@@ -63,28 +63,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
         Provider.of<MovingSquaresGameProvide>(context, listen: false);
     movingSquaresGameProvide.init(context, methodCallBack, methodCallBack2);
 
-    _controllers = [
-      AnimationController(
-        vsync: this,
-        duration: Duration(seconds: durationSec),
-      ),
-      AnimationController(
-        vsync: this,
-        duration: Duration(seconds: durationSec),
-      ),
-      AnimationController(
-        vsync: this,
-        duration: Duration(seconds: durationSec),
-      ),
-      AnimationController(
-        vsync: this,
-        duration: Duration(seconds: durationSec),
-      ),
-      AnimationController(
-        vsync: this,
-        duration: Duration(seconds: durationSec),
-      )
-    ];
+    animationReload();
 
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
@@ -136,7 +115,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
     });
   }
 
-  void methodCallBack2() {
+  void animationReload() {
     _controllers = [
       AnimationController(
         vsync: this,
@@ -159,6 +138,10 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
         duration: Duration(seconds: durationSec),
       )
     ];
+  }
+
+  void methodCallBack2() {
+    animationReload();
     firstWordListened = false;
     methodCallBack();
   }
@@ -182,26 +165,12 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
       setState(() {
         provider.setIsClicked = true;
       });
-      if (provider.currentGameItems![provider.siradaki!].trueIndex == 0) {
-        //doğru
-        _controllers[provider.siradaki!].stop();
-        provider.successAnswer(provider.currentGameItems![provider.siradaki!],
-            () {
-          provider.setSuccessAccuried = false;
-          provider.boxDown();
-          methodCallBack();
-        });
-      } else {
-        _controllers[provider.siradaki!].stop();
-        provider.wrongAnswer(provider.currentGameItems![provider.siradaki!],
-            () {
-          provider.countError(provider.currentGameItems![provider.siradaki!]);
-          provider.setErrorAccuried = false;
-          provider.boxDown();
-          methodCallBack();
-        });
+      _controllers[provider.siradaki!].stop();
 
-        print("yanlış");
+      if (provider.currentGameItems![provider.siradaki!].trueIndex == 0) {
+        ShowSuccess(provider);
+      } else {
+        ShowError(provider);
       }
     }
 
@@ -209,33 +178,33 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
         rightSquarePosition.dx + GameSizeClass.boxSize >= position.dx &&
         rightSquarePosition.dy <= position.dy &&
         rightSquarePosition.dy + GameSizeClass.boxSize >= position.dy) {
-      print("İkinciye tıklandı");
       setState(() {
         provider.setIsClicked = true;
       });
+      _controllers[provider.siradaki!].stop();
       if (provider.currentGameItems![provider.siradaki!].trueIndex == 1) {
-        //doğru
-        _controllers[provider.siradaki!].stop();
-        await provider
-            .successAnswer(provider.currentGameItems![provider.siradaki!], () {
-          provider.setSuccessAccuried = false;
-          provider.boxDown();
-          methodCallBack();
-        });
+        ShowSuccess(provider);
       } else {
-        _controllers[provider.siradaki!].stop();
-        await provider
-            .wrongAnswer(provider.currentGameItems![provider.siradaki!], () {
-          provider.countError(provider.currentGameItems![provider.siradaki!]);
-
-          provider.setErrorAccuried = false;
-          provider.boxDown();
-          methodCallBack();
-        });
-
-        print("yanlış");
+        ShowError(provider);
       }
     }
+  }
+
+  void ShowError(MovingSquaresGameProvide provider) {
+    provider.wrongAnswer(provider.currentGameItems![provider.siradaki!], () {
+      provider.countError(provider.currentGameItems![provider.siradaki!]);
+      provider.setErrorAccuried = false;
+      provider.boxDown();
+      methodCallBack();
+    });
+  }
+
+  void ShowSuccess(MovingSquaresGameProvide provider) {
+    provider.successAnswer(provider.currentGameItems![provider.siradaki!], () {
+      provider.setSuccessAccuried = false;
+      provider.boxDown();
+      methodCallBack();
+    });
   }
 
   @override

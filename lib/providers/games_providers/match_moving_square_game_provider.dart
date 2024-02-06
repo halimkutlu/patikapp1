@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields
+// ignore_for_file: prefer_final_fields, prefer_const_constructors, non_constant_identifier_names
 
 import 'dart:async';
 import 'dart:io';
@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
+import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
@@ -39,6 +40,9 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
   int? _roundName = 1;
   int? get roundName => _roundName;
+
+  int gameReloadCount = 0;
+  int gameMaxReloadCount = 3;
 
   set shuffled(bool isShuffled) {
     _isShuffled = isShuffled;
@@ -93,7 +97,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
       VoidCallback? callback,
       VoidCallback? _callback]) async {
     GameSizeClass().Init();
-
+    gameReloadCount = 0;
     _siradaki = 0;
     _errorCount = 0;
     buildContext = context;
@@ -115,14 +119,6 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveSelectedWords() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> serializedWords =
-        comingWordListFromStorage.map((word) => word.toJson()).toList();
-    prefs.setStringList('selectedWords', serializedWords);
-    print('Selected words saved to SharedPreferences');
-  }
-
   Future<List<Word>> getSavedWords() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? serializedWords = prefs.getStringList('selectedWords');
@@ -135,36 +131,20 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     }
   }
 
-  Future<String> getCurrentLanguageAsString() async {
-    int? language;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    language = prefs.getInt(StorageProvider.learnLcidKey);
-    if (language != null) {
-      Lcid lcid = Languages.GetLngFromLCID(language);
-      return lcid.Code;
-    }
-
-    return "";
-  }
-
   getWordsFileInformationFromStorage(List<Word>? selectedCategoryWords) async {
     _wordListDbInformation = [];
     _wordListPool = [];
-    String currentLanguage = await getCurrentLanguageAsString();
+    String currentLanguage = StorageProvider.learnLanguge!.Code;
 
     Directory dir = await getApplicationDocumentsDirectory();
 
     if (selectedCategoryWords!.isNotEmpty) {
       for (var x in selectedCategoryWords) {
-        final wordImage = await File(
-                '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg')
-            .readAsBytes();
         final wordSound =
             '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3';
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
-            imageBytes: wordImage,
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,
@@ -187,28 +167,15 @@ class MovingSquaresGameProvide extends ChangeNotifier {
           onAdLoaded: (ad) {
             ad.fullScreenContentCallback = FullScreenContentCallback(
                 // Called when the ad showed the full screen content.
-                onAdShowedFullScreenContent: (ad) {
-              print("object");
-            },
+                onAdShowedFullScreenContent: (ad) {},
                 // Called when an impression occurs on the ad.
-                onAdImpression: (ad) {
-              print("object");
-            },
+                onAdImpression: (ad) {},
                 // Called when the ad failed to show full screen content.
-                onAdFailedToShowFullScreenContent: (ad, err) {
-              print("object");
-              // Dispose the ad here to free resources.
-            },
+                onAdFailedToShowFullScreenContent: (ad, err) {},
                 // Called when the ad dismissed full screen content.
-                onAdDismissedFullScreenContent: (ad) {
-              if (onAdDismissed != null) {
-                onAdDismissed();
-              }
-            },
+                onAdDismissedFullScreenContent: (ad) => onAdDismissed(),
                 // Called when a click is recorded for an ad.
-                onAdClicked: (ad) {
-              print("object");
-            });
+                onAdClicked: (ad) {});
 
             debugPrint('$ad loaded.');
             // Keep a reference to the ad so you can show it later.
@@ -248,16 +215,17 @@ class MovingSquaresGameProvide extends ChangeNotifier {
       _currentGameItems = [];
 
       for (int i = 0; i < _wordListDbInformation!.length; i++) {
-        var differentWord = _wordListPool!.firstWhere(
-          (element) => element.word != _wordListDbInformation![i].word,
-          orElse: () => _wordListPool!.first,
-        );
+        var differentWord = _wordListPool!
+            .where((element) => element.word != _wordListDbInformation![i].word)
+            .elementAt(Random().nextInt(_wordListDbInformation!.length - 1));
 
         _currentGameItems!.add(fillGameItem(
             _wordListDbInformation![i].word!,
             differentWord.word!,
             _wordListDbInformation![i].audio,
             _wordListDbInformation![i].id));
+
+        _currentGameItems!.shuffle();
       }
       notifyListeners();
     }
@@ -299,16 +267,20 @@ class MovingSquaresGameProvide extends ChangeNotifier {
         });
       } else {
         //yeni oyun başlar.
-
-        if (_errorCount! > 3) {
-          if (_interstitialAd != null) {
-            _interstitialAd?.show();
-            _errorCount = 0;
+        gameReloadCount++;
+        if (gameReloadCount >= gameMaxReloadCount) {
+          goToDashboard();
+        } else {
+          if (_errorCount! > 3) {
+            if (_interstitialAd != null) {
+              _interstitialAd?.show();
+              _errorCount = 0;
+            } else {
+              closeAd();
+            }
           } else {
             closeAd();
           }
-        } else {
-          closeAd();
         }
       }
 
@@ -334,8 +306,6 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     _errorCount = _errorCount! + 1;
   }
 
-  void resetSelections(VoidCallback addCallback) async {}
-
   void boxDown() {
     _currentGameItems![_siradaki!].Wordoffsets![0] = Offset(
         _currentGameItems![_siradaki!].Wordoffsets![0].dx,
@@ -359,6 +329,14 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     notifyListeners();
 
     Timer(Duration(seconds: 1), callback!);
+  }
+
+  void goToDashboard() {
+    Timer(Duration(seconds: 2), () {
+      Navigator.of(buildContext!).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Dashboard(0)),
+          (Route<dynamic> route) => false);
+    });
   }
 }
 
