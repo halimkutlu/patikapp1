@@ -1,21 +1,26 @@
-// ignore_for_file: prefer_final_fields, prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_final_fields, prefer_const_constructors, non_constant_identifier_names, use_build_context_synchronously, prefer_spread_collections
 
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/games/match_moving_square_game.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/services/sound_helper.dart';
+import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sqflite/sqflite.dart';
@@ -26,9 +31,12 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
   final apirepository = APIRepository();
   final database = Database;
+  final int maxRoundCount = 3;
 
   InterstitialAd? _interstitialAd;
   InterstitialAd get interstitialAd => _interstitialAd!;
+
+  DbProvider db = DbProvider();
 
   List<Word> comingWordListFromStorage = [];
 
@@ -38,11 +46,8 @@ class MovingSquaresGameProvide extends ChangeNotifier {
   bool? _isShuffled = false;
   bool? get isShuffled => _isShuffled;
 
-  int? _roundName = 1;
-  int? get roundName => _roundName;
-
-  int gameReloadCount = 0;
-  int gameMaxReloadCount = 3;
+  int _roundCount = 0;
+  int get roundCount => _roundCount;
 
   set shuffled(bool isShuffled) {
     _isShuffled = isShuffled;
@@ -52,8 +57,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
   List<WordListDBInformation>? get wordListDbInformation =>
       _wordListDbInformation;
 
-  List<WordListDBInformation>? _wordListPool;
-  List<WordListDBInformation>? get wordListPool => _wordListPool;
+  List<WordListDBInformation>? _rndWordListDbInformation = [];
 
   bool? _errorAccuried = false;
   bool? get errorAccuried => _errorAccuried;
@@ -97,7 +101,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
       VoidCallback? callback,
       VoidCallback? _callback]) async {
     GameSizeClass().Init();
-    gameReloadCount = 0;
+    _roundCount = 0;
     _siradaki = 0;
     _errorCount = 0;
     buildContext = context;
@@ -133,7 +137,6 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
   getWordsFileInformationFromStorage(List<Word>? selectedCategoryWords) async {
     _wordListDbInformation = [];
-    _wordListPool = [];
     String currentLanguage = StorageProvider.learnLanguge!.Code;
 
     Directory dir = await getApplicationDocumentsDirectory();
@@ -152,7 +155,21 @@ class MovingSquaresGameProvide extends ChangeNotifier {
             wordAppLng: x.wordAppLng);
 
         _wordListDbInformation!.add(wordInfo);
-        _wordListPool!.add(wordInfo);
+      }
+
+      var rndList = await db.getRandomStatisticsWordList(
+          limit: 5,
+          ignoreIdList: _wordListDbInformation!.map((e) => e.id!).toList());
+
+      for (var x in rndList) {
+        WordListDBInformation wordInfo = WordListDBInformation(
+            word: x.word,
+            wordA: x.wordA,
+            wordT: x.wordT,
+            id: x.id,
+            wordAppLng: x.wordAppLng);
+
+        _rndWordListDbInformation!.add(wordInfo);
       }
     }
     print(_wordListDbInformation);
@@ -210,14 +227,16 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     return item;
   }
 
-  getWords() {
-    if (_wordListDbInformation != null && _wordListPool != null) {
+  getWords() async {
+    if (_wordListDbInformation != null) {
       _currentGameItems = [];
-
+      var diffStatisticWords = []
+        ..addAll(_wordListDbInformation!)
+        ..addAll(_rndWordListDbInformation!);
       for (int i = 0; i < _wordListDbInformation!.length; i++) {
-        var differentWord = _wordListPool!
+        var differentWord = diffStatisticWords!
             .where((element) => element.word != _wordListDbInformation![i].word)
-            .elementAt(Random().nextInt(_wordListDbInformation!.length - 1));
+            .elementAt(Random().nextInt(diffStatisticWords!.length - 1));
 
         _currentGameItems!.add(fillGameItem(
             _wordListDbInformation![i].word!,
@@ -231,10 +250,11 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     }
   }
 
-  void moveSquares([List<AnimationController>? _controllers]) {
+  void moveSquares(BuildContext context,
+      [List<AnimationController>? _controllers]) async {
     // PlayAudio(_currentGameItems![_siradaki!].sound);
 
-    if (_siradaki! > 4) return;
+    if (_siradaki! > _wordListDbInformation!.length - 1) return;
     GameSizeClass.boxEndPosition = (GameSizeClass.bottomMargin -
         ((GameSizeClass.boxSize * (_siradaki! + 1)) + (_siradaki! * 2.h)));
     //siradaki kutuların konumu değiştiriliyor
@@ -256,9 +276,9 @@ class MovingSquaresGameProvide extends ChangeNotifier {
       // sonraki animasyona geçiliyor
       _siradaki = _siradaki! + 1;
       // sonuncu animasyondan sonra tekrar girmiyor
-      if (_siradaki! < 5) {
+      if (_siradaki! < _wordListDbInformation!.length) {
         _controllers![_siradaki!].addListener(() {
-          moveSquares(_controllers);
+          moveSquares(context, _controllers);
           notifyListeners();
         });
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -266,11 +286,8 @@ class MovingSquaresGameProvide extends ChangeNotifier {
           _controllers[_siradaki!].forward();
         });
       } else {
-        //yeni oyun başlar.
-        gameReloadCount++;
-        if (gameReloadCount >= gameMaxReloadCount) {
-          goToDashboard();
-        } else {
+        _roundCount++;
+        if (_roundCount < maxRoundCount) {
           if (_errorCount! > 3) {
             if (_interstitialAd != null) {
               _interstitialAd?.show();
@@ -281,11 +298,15 @@ class MovingSquaresGameProvide extends ChangeNotifier {
           } else {
             closeAd();
           }
+        } else {
+          _roundCount = 0;
+          await FilltheWordsInABox();
+          await showSuccessPage(context);
         }
-      }
 
-      _isClicked = false;
-      notifyListeners();
+        _isClicked = false;
+        notifyListeners();
+      }
     }
   }
 
@@ -331,12 +352,31 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     Timer(Duration(seconds: 1), callback!);
   }
 
-  void goToDashboard() {
-    Timer(Duration(seconds: 2), () {
-      Navigator.of(buildContext!).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Dashboard(0)),
-          (Route<dynamic> route) => false);
-    });
+  Future<void> FilltheWordsInABox() async {
+    for (var x in comingWordListFromStorage) {
+      /*KELİMELER NASIL SINIFLANDIRILACAK? 
+ 1 kez ve 2 kez hata yaptığı kelimeler ÖĞRENDİM kutusuna eklenecek. 
+3 ve 4 kez hata yaptığı kelimeler tekrar et kutusuna eklenecek. 
+4ten fazla kez hata yaptığı kelimeler SIKI ÇALIŞ kutusuna eklenecek. */
+      if (x.errorCount! >= 0 && x.errorCount! <= 2) {
+        await db.addToLearnedBox(x.id!);
+      } else if (x.errorCount! >= 3 && x.errorCount! <= 4) {
+        await db.addToRepeatBox(x.id!);
+      } else {
+        await db.addToWorkHardBox(x.id!);
+      }
+    }
+  }
+
+  showSuccessPage(BuildContext context) async {
+    await CustomAlertDialogOnlyConfirm(context, () {
+      Timer(Duration(milliseconds: 100), () {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => Dashboard(0)),
+            (Route<dynamic> route) => false);
+      });
+    }, "", AppLocalizations.of(context).translate("154"),
+        ArtSweetAlertType.success, "ok".tr);
   }
 }
 

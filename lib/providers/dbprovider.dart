@@ -169,6 +169,54 @@ from Words w where w.IsCategoryName = 1 """;
     }
   }
 
+  Future<bool> addToLearnedBox(int dbId) async {
+    try {
+      var status = await reOpenDbConnection();
+      if (!status) return false;
+      await database!.insert(
+        'WordStatistics',
+        WordStatistics(
+          wordId: dbId,
+          learned: 1,
+          repeat: 0,
+          workHard: 0, // WorkHard sütununu 1 yap
+          successCount: 0,
+          errorCount: 0,
+        ).toMap(),
+        conflictAlgorithm:
+            ConflictAlgorithm.replace, // Eğer aynı WordId varsa güncelle
+      );
+      return true;
+    } catch (e) {
+      print("Hata oluştu: $e");
+      return false;
+    }
+  }
+
+  Future<bool> addToRepeatBox(int dbId) async {
+    try {
+      var status = await reOpenDbConnection();
+      if (!status) return false;
+      await database!.insert(
+        'WordStatistics',
+        WordStatistics(
+          wordId: dbId,
+          learned: 0,
+          repeat: 1,
+          workHard: 0, // WorkHard sütununu 1 yap
+          successCount: 0,
+          errorCount: 0,
+        ).toMap(),
+        conflictAlgorithm:
+            ConflictAlgorithm.replace, // Eğer aynı WordId varsa güncelle
+      );
+      return true;
+    } catch (e) {
+      print("Hata oluştu: $e");
+      return false;
+    }
+  }
+
   Future<bool> updateWorkHard(int dbId) async {
     try {
       var status = await reOpenDbConnection();
@@ -242,6 +290,33 @@ from Words w where w.IsCategoryName = 1 """;
     ${limit > 0 ? "LIMIT $limit" : ""} 
     """;
     print(sqlQuery);
+    var res = await database!.rawQuery(sqlQuery);
+
+    List<Word> list = res.map((c) => Word.fromMap(c)).toList();
+    list = await AppDbProvider().setWordAppLng(list);
+    return list;
+  }
+
+  Future<List<Word>> getRandomStatisticsWordList(
+      {String? dbId = "", int limit = 5, List<int>? ignoreIdList}) async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
+    String ignoreIds = "";
+    if (ignoreIdList != null && ignoreIdList.isNotEmpty) {
+      ignoreIds = "and ws.WordId not in (${ignoreIdList.join(",")})";
+    }
+
+    String sqlQuery = """
+    SELECT w.* FROM Words w
+    JOIN WordStatistics ws on w.Id = ws.WordId
+    where 
+    w.IsCategoryName != 1 
+    ${dbId!.isNotEmpty ? "and Categories LIKE '%|$dbId|%'" : ""}
+    $ignoreIds
+    ORDER BY RANDOM()
+    ${limit > 0 ? "LIMIT $limit" : ""} 
+    """;
     var res = await database!.rawQuery(sqlQuery);
 
     List<Word> list = res.map((c) => Word.fromMap(c)).toList();

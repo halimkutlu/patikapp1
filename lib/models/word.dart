@@ -151,4 +151,9 @@ class WordListDBInformation {
       this.isAddedToWorkHard,
       this.lastCard = false,
       this.wordAppLng = ""});
+
+  WordListDBInformation.fromMap(Word w)
+      : word = w.word,
+        wordA = w.wordA,
+        wordT = w.wordT;
 }
