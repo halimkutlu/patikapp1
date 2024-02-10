@@ -221,14 +221,14 @@ class _TrainingSelectState extends State<TrainingSelect> {
                 playWith: playWith,
               )));
     } else if (widget.selectedGame == trainingSelectNames.WordTetris) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => MovingSquaresGame()));
+      // Navigator.of(context)
+      //     .push(MaterialPageRoute(builder: (context) => MovingSquaresGame()));
     } else if (widget.selectedGame == trainingSelectNames.LetterPuzzle) {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => FillTheBlankGame()));
     } else if (widget.selectedGame == trainingSelectNames.FiveOptions) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => MultipleChoiceGame()));
+      // Navigator.of(context)
+      //     .push(MaterialPageRoute(builder: (context) => MultipleChoiceGame()));
     }
   }
 }
