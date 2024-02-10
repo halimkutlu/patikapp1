@@ -215,8 +215,11 @@ class _TrainingSelectState extends State<TrainingSelect> {
                 playWith: playWith,
               )));
     } else if (widget.selectedGame == trainingSelectNames.soundWordMatching) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => MatchWithSoundGame()));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MatchWithSoundGame(
+                trainingGame: true,
+                playWith: playWith,
+              )));
     } else if (widget.selectedGame == trainingSelectNames.WordTetris) {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => MovingSquaresGame()));

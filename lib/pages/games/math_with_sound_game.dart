@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_with_sound_game_provider.dart';
@@ -17,7 +18,10 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class MatchWithSoundGame extends StatefulWidget {
-  const MatchWithSoundGame({super.key});
+  final bool? trainingGame;
+  final playWithEnum? playWith;
+  const MatchWithSoundGame(
+      {super.key, this.trainingGame = false, this.playWith});
 
   @override
   State<MatchWithSoundGame> createState() => _MatchWithSoundGameState();
@@ -28,14 +32,13 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
 
   late MatchWithSoundGameProvide matchWithSoundGameProvide;
 
-  List<WordListDBInformation> soundList = [];
-  List<WordListDBInformation> wordList = [];
   @override
   void initState() {
     super.initState();
     matchWithSoundGameProvide =
         Provider.of<MatchWithSoundGameProvide>(context, listen: false);
-    matchWithSoundGameProvide.init(context);
+    matchWithSoundGameProvide.init(context, widget.playWith,
+        trainingGame: widget.trainingGame!);
 
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
@@ -73,8 +76,8 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
         await askToGoMainMenu(func: () {
           setState(() {
             matchWithSoundGameProvide.resetData();
-            soundList = [];
-            wordList = [];
+            matchWithSoundGameProvide.setUISound = [];
+            matchWithSoundGameProvide.setUIWord = [];
           });
         });
       },
@@ -85,11 +88,14 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
             if (!provider.wordsLoaded!) {
               // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
               return Center(child: CircularProgressIndicator());
-            } else if (soundList.isEmpty || wordList.isEmpty) {
-              soundList = List.from(provider.wordListDbInformation!);
-              wordList = List.from(provider.wordListDbInformation!);
-              soundList.shuffle();
-              wordList.shuffle();
+            } else if (matchWithSoundGameProvide.UIsoundList.isEmpty ||
+                matchWithSoundGameProvide.UIwordList.isEmpty) {
+              matchWithSoundGameProvide.setUISound =
+                  List.from(provider.wordListDbInformation!);
+              matchWithSoundGameProvide.setUIWord =
+                  List.from(provider.wordListDbInformation!);
+              matchWithSoundGameProvide.UIsoundList.shuffle();
+              matchWithSoundGameProvide.UIwordList.shuffle();
             }
             return Stack(
               children: [
@@ -113,11 +119,14 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
                         children: [
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: _buildSoundWidgets(soundList, provider),
+                            children: _buildSoundWidgets(
+                                matchWithSoundGameProvide.UIsoundList,
+                                provider),
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: _buildWordWidgets(wordList, provider),
+                            children: _buildWordWidgets(
+                                matchWithSoundGameProvide.UIwordList, provider),
                           ),
                         ],
                       ),
