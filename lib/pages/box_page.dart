@@ -48,93 +48,104 @@ class _BoxPageState extends State<BoxPage> {
               ? MainColors.boxColor2
               : MainColors.boxColor3,
       body: Consumer<BoxPageProvider>(builder: (context, provider, child) {
-        return Center(
-          child: Column(
-            children: [
-              Center(
-                child: BoxWidget(
-                  text: AppLocalizations.of(context)
-                      .translate(widget.selectedBox == 1
-                          ? "101"
-                          : widget.selectedBox == 2
-                              ? "102"
-                              : "103"),
-                  color: widget.selectedBox == 1
-                      ? MainColors.boxColor1
-                      : widget.selectedBox == 2
-                          ? MainColors.boxColor2
-                          : MainColors.boxColor3,
-                  value: widget.selectedBox == 1
-                      ? provider.getLernedWordCount.toString()
-                      : widget.selectedBox == 2
-                          ? provider.getRepeatedWordCount.toString()
-                          : provider.getWorkHardCount.toString(),
-                  iconUrl: widget.selectedBox == 1
-                      ? 'lib/assets/img/ilearned.png'
-                      : widget.selectedBox == 2
-                          ? 'lib/assets/img/repeat.png'
-                          : 'lib/assets/img/sun.png',
-                  onTap: () {},
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: provider.wordListDbInformation!.length,
-                  itemBuilder: (context, horizontalIndex) {
-                    var item = provider.wordListDbInformation![horizontalIndex];
+        if (!provider.wordsLoaded!) {
+          // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
+          return Center(child: CircularProgressIndicator());
+        }
 
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          left: 8.0.w, right: 8.0.w, bottom: 1.h, top: 1.h),
-                      child: Container(
-                        height: 5.h,
-                        width: 4.w,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 4.w),
-                                child: SvgPicture.memory(
-                                  item.imageBytes!,
-                                  height: 4.h,
-                                ),
-                              ),
-                              item.wordA != null
-                                  ? Column(
-                                      children: [
-                                        Text(item.word!),
-                                        Text(item.wordA != null
-                                            ? item.wordA!
-                                            : ""),
-                                      ],
-                                    )
-                                  : Text(item.word!),
-                              InkWell(
-                                onTap: () {
-                                  PlayAudio(item.audio!);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.volume_up,
-                                    size: 3.h,
-                                    color: Colors.blue,
+        return Stack(
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  Center(
+                    child: BoxWidget(
+                      text: AppLocalizations.of(context)
+                          .translate(widget.selectedBox == 1
+                              ? "101"
+                              : widget.selectedBox == 2
+                                  ? "102"
+                                  : "103"),
+                      color: widget.selectedBox == 1
+                          ? MainColors.boxColor1
+                          : widget.selectedBox == 2
+                              ? MainColors.boxColor2
+                              : MainColors.boxColor3,
+                      value: widget.selectedBox == 1
+                          ? provider.getLernedWordCount.toString()
+                          : widget.selectedBox == 2
+                              ? provider.getRepeatedWordCount.toString()
+                              : provider.getWorkHardCount.toString(),
+                      iconUrl: widget.selectedBox == 1
+                          ? 'lib/assets/img/ilearned.png'
+                          : widget.selectedBox == 2
+                              ? 'lib/assets/img/repeat.png'
+                              : 'lib/assets/img/sun.png',
+                      onTap: () {},
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: provider.wordListDbInformation!.length,
+                      itemBuilder: (context, horizontalIndex) {
+                        var item =
+                            provider.wordListDbInformation![horizontalIndex];
+
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: 8.0.w, right: 8.0.w, bottom: 1.h, top: 1.h),
+                          child: Container(
+                            height: 5.h,
+                            width: 4.w,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 4.w),
+                                    child: SvgPicture.memory(
+                                      item.imageBytes!,
+                                      height: 4.h,
+                                    ),
                                   ),
-                                ),
-                              )
-                            ]),
-                      ),
-                    );
-                  },
-                ),
+                                  item.wordA != null
+                                      ? Column(
+                                          children: [
+                                            Text(item.word!),
+                                            Text(item.wordA != null
+                                                ? item.wordA!
+                                                : ""),
+                                          ],
+                                        )
+                                      : Text(item.word!),
+                                  InkWell(
+                                    onTap: () {
+                                      PlayAudio(item.audio!);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.volume_up,
+                                        size: 3.h,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  )
+                                ]),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         );
       }),
     );
