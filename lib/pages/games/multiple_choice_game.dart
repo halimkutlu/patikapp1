@@ -28,7 +28,9 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
   @override
   void dispose() {
     _bannerAd?.dispose();
-    multipleChoiceGameProvider.interstitialAd.dispose();
+    if (multipleChoiceGameProvider.interstitialAd != null) {
+      multipleChoiceGameProvider.interstitialAd!.dispose();
+    }
     super.dispose();
   }
 

@@ -224,8 +224,11 @@ class _TrainingSelectState extends State<TrainingSelect> {
       // Navigator.of(context)
       //     .push(MaterialPageRoute(builder: (context) => MovingSquaresGame()));
     } else if (widget.selectedGame == trainingSelectNames.LetterPuzzle) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => FillTheBlankGame()));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => FillTheBlankGame(
+                trainingGame: true,
+                playWith: playWith,
+              )));
     } else if (widget.selectedGame == trainingSelectNames.FiveOptions) {
       // Navigator.of(context)
       //     .push(MaterialPageRoute(builder: (context) => MultipleChoiceGame()));

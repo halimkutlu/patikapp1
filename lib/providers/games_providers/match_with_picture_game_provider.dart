@@ -10,6 +10,7 @@ import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
 import 'package:patikmobile/pages/dashboard.dart';
+import 'package:patikmobile/pages/games/math_with_sound_game.dart';
 import 'package:patikmobile/pages/games/multiple_choice_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
@@ -22,7 +23,7 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
   final database = Database;
 
   InterstitialAd? _interstitialAd;
-  InterstitialAd get interstitialAd => _interstitialAd!;
+  InterstitialAd? get interstitialAd => _interstitialAd;
 
   List<Word> comingWordListFromStorage = [];
 
@@ -299,7 +300,7 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
       saveSelectedWords();
       Timer(Duration(milliseconds: 100), () {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => MultipleChoiceGame()),
+            MaterialPageRoute(builder: (context) => MatchWithSoundGame()),
             (Route<dynamic> route) => false);
       });
     } else {

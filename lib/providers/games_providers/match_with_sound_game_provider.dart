@@ -21,7 +21,7 @@ class MatchWithSoundGameProvide extends ChangeNotifier {
   final database = Database;
 
   InterstitialAd? _interstitialAd;
-  InterstitialAd get interstitialAd => _interstitialAd!;
+  InterstitialAd? get interstitialAd => _interstitialAd;
 
   List<Word> comingWordListFromStorage = [];
 
@@ -311,9 +311,11 @@ class MatchWithSoundGameProvide extends ChangeNotifier {
   }
 
   void resetSelections() async {
-    var word = comingWordListFromStorage
-        .firstWhere((element) => element.id == _listenedSound!.id);
-    word.errorCount = word.errorCount! + 1;
+    if (!isTrainingGame) {
+      var word = comingWordListFromStorage
+          .firstWhere((element) => element.id == _listenedSound!.id);
+      word.errorCount = word.errorCount! + 1;
+    }
 
     _errorCount = _errorCount! + 1;
     _listenedSound!.isSoundCorrect = null;

@@ -61,7 +61,9 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
   @override
   void dispose() {
     _bannerAd?.dispose();
-    matchWithSoundGameProvide.interstitialAd.dispose();
+    if (matchWithSoundGameProvide.interstitialAd != null) {
+      matchWithSoundGameProvide.interstitialAd!.dispose();
+    }
     super.dispose();
   }
 

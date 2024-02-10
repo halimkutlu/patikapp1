@@ -64,7 +64,9 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
     // TODO: Dispose a BannerAd object
     _bannerAd?.dispose();
     // TODO: Dispose an InterstitialAd object
-    matchWithPictureGameProvide.interstitialAd.dispose();
+    if (matchWithPictureGameProvide.interstitialAd != null) {
+      matchWithPictureGameProvide.interstitialAd!.dispose();
+    }
     super.dispose();
   }
 

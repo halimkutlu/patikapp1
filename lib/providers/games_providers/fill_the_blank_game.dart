@@ -1,14 +1,20 @@
 // ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
+import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
+import 'package:patikmobile/models/word_statistics.dart';
+import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/games/multiple_choice_game.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/widgets/keyboard_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -17,7 +23,7 @@ class FillTheBlankGameProvider extends ChangeNotifier {
   final database = Database;
 
   InterstitialAd? _interstitialAd;
-  InterstitialAd get interstitialAd => _interstitialAd!;
+  InterstitialAd? get interstitialAd => _interstitialAd;
 
   List<Word> comingWordListFromStorage = [];
 
@@ -42,14 +48,28 @@ class FillTheBlankGameProvider extends ChangeNotifier {
   int? _errorCount = 0;
   int? get errorCount => _errorCount;
 
-  init([BuildContext? context]) async {
+  bool isTrainingGame = false;
+  int trainingGameIndex = 0;
+  List<List<WordListDBInformation>>? _dividedList = [];
+  List<WordListDBInformation>? _trainingWordListDbInformation;
+  List<WordListDBInformation>? get trainingWordListDbInformation =>
+      _trainingWordListDbInformation;
+
+  init(BuildContext? context, playWithEnum? playWith,
+      {bool trainingGame = false}) async {
+    trainingGameIndex = 0;
     _selectedWord = null;
     _selectedWordTextEditingController = TextEditingController();
     _errorCount = 0;
+    isTrainingGame = trainingGame;
     _wordsLoaded = false;
     buildContext = context;
     loadAd();
-    await startFillTheBlankGame();
+    if (!isTrainingGame) {
+      await startFillTheBlankGame(null);
+    } else {
+      await startFillTheBlankGame(playWith);
+    }
   }
 
   Future<void> loadAd() async {
@@ -86,15 +106,50 @@ class FillTheBlankGameProvider extends ChangeNotifier {
         ));
   }
 
-  Future<void> startFillTheBlankGame() async {
+  Future<void> startFillTheBlankGame(playWithEnum? playWith) async {
     //1. ADIM ==> Öncelikle bir önceki aşamada seçilen 5 kart local storage üzerinden getirilir.
-    comingWordListFromStorage = await getSavedWords();
+    if (playWith == null) {
+      comingWordListFromStorage = await getSavedWords();
+    } else {
+      comingWordListFromStorage = await getTrainingWords(playWith);
+    }
     //2. ADIM ==> Seçilen kartların db verileri çekilir.
     await getWordsFileInformationFromStorage(comingWordListFromStorage);
     // _selectedWordInfo = _wordListDbInformation![0]; // İlk öğeyi seçelim.
 
     await takeWord();
     notifyListeners();
+  }
+
+  getTrainingWords(playWithEnum playWith) async {
+    DbProvider dbProvider = DbProvider();
+    List<WordStatistics> words = [];
+    List<Word> allWords =
+        await dbProvider.getWordList(withoutCategoryName: true);
+    List<WordStatistics> list = await dbProvider.getWordStatisticsList();
+
+    if (playWith == playWithEnum.learnedWords) {
+      words = list.where((wordStat) => wordStat.learned == 1).toList();
+    } else if (playWith == playWithEnum.repeatedWords) {
+      words = list.where((wordStat) => wordStat.repeat == 1).toList();
+    } else if (playWith == playWithEnum.workHardWords) {
+      words = list.where((wordStat) => wordStat.workHard == 1).toList();
+    } else if (playWith == playWithEnum.allWords) {
+      return allWords;
+    }
+
+    if (words.isNotEmpty) {
+      List<Word> result = [];
+      for (var wordStat in words) {
+        Word? word =
+            allWords.where((word) => word.id == wordStat.wordId).firstOrNull;
+
+        if (word != null) {
+          result.add(word);
+        }
+      }
+      return result;
+    }
   }
 
   List<WordListDBInformation> usedWords = [];
@@ -113,8 +168,37 @@ class FillTheBlankGameProvider extends ChangeNotifier {
       _wordsLoaded = true;
     } else {
       //oyun bitmiştir
-      goToNextGame(buildContext!);
-      print("TEBRİKLER");
+      if (!isTrainingGame) {
+        goToNextGame(buildContext!);
+        print("TEBRİKLER");
+      } else {
+        if (trainingGameIndex == _dividedList!.length) {
+          //ANTREMAN BİTMİŞTİR
+          Timer(Duration(milliseconds: 100), () {
+            Navigator.of(buildContext!).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => Dashboard(0)),
+                (Route<dynamic> route) => false);
+          });
+        } else {
+          resetData();
+          notifyListeners();
+
+          updateDividedList(_trainingWordListDbInformation!);
+          if (trainingGameIndex == _dividedList!.length) {
+            //ANTREMAN BİTMİŞTİR
+            Timer(Duration(milliseconds: 100), () {
+              Navigator.of(buildContext!).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Dashboard(0)),
+                  (Route<dynamic> route) => false);
+            });
+          } else {
+            _wordListDbInformation = _dividedList![trainingGameIndex];
+            _wordsLoaded = true;
+            notifyListeners();
+            startProcedures();
+          }
+        }
+      }
     }
   }
 
@@ -147,6 +231,8 @@ class FillTheBlankGameProvider extends ChangeNotifier {
 
   getWordsFileInformationFromStorage(List<Word>? selectedCategoryWords) async {
     _wordListDbInformation = [];
+    _trainingWordListDbInformation = [];
+
     String currentLanguage = StorageProvider.learnLanguge!.Code;
 
     Directory dir = await getApplicationDocumentsDirectory();
@@ -164,20 +250,60 @@ class FillTheBlankGameProvider extends ChangeNotifier {
             id: x.id);
 
         _wordListDbInformation!.add(wordInfo);
+        _trainingWordListDbInformation!.add(wordInfo);
+      }
+    }
+    if (isTrainingGame) {
+      if (_trainingWordListDbInformation!.length > 5) {
+        updateDividedList(_trainingWordListDbInformation!);
+        // _trainingIndex kontrolü burada yapılacak
+        _wordListDbInformation = _dividedList![trainingGameIndex];
+        // displayedList ile yapılacak işlemler devam edecek
       }
     }
     print(_wordListDbInformation);
   }
 
-  void goToNextGame(BuildContext context) {
-    resetData();
+  void updateDividedList(List<WordListDBInformation> list) {
+    _dividedList = divideListIntoChunks(list, 5);
+    trainingGameIndex = trainingGameIndex + 1;
+  }
 
-    saveSelectedWords();
-    Timer(Duration(milliseconds: 100), () {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MultipleChoiceGame()),
-          (Route<dynamic> route) => false);
-    });
+  List<List<WordListDBInformation>> divideListIntoChunks(
+      List<WordListDBInformation> list, int chunkSize) {
+    List<List<WordListDBInformation>> dividedList = [];
+    for (var i = 0; i < list.length; i += chunkSize) {
+      dividedList.add(list.sublist(
+          i, i + chunkSize > list.length ? list.length : i + chunkSize));
+    }
+    return dividedList;
+  }
+
+  void goToNextGame(BuildContext context) {
+    if (!isTrainingGame) {
+      resetData();
+
+      saveSelectedWords();
+      Timer(Duration(milliseconds: 100), () {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => MultipleChoiceGame()),
+            (Route<dynamic> route) => false);
+      });
+    } else {
+      resetData();
+      if (trainingGameIndex == _dividedList!.length) {
+        //ANTREMAN BİTMİŞTİR
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => Dashboard(0)),
+              (Route<dynamic> route) => false);
+        });
+      } else {
+        _wordListDbInformation = _dividedList![trainingGameIndex];
+      }
+      _wordsLoaded = true;
+      notifyListeners();
+    }
   }
 
   Future<void> wrongCharacter() async {
@@ -203,5 +329,97 @@ class FillTheBlankGameProvider extends ChangeNotifier {
       _errorAccuried = false;
       notifyListeners();
     });
+  }
+
+  bool processDone = false;
+  late int buttonCount = 25;
+  late List<KeyCharInformation> keyList = [];
+  late Map<String, int> wordCharList = <String, int>{};
+
+  String? _word = "";
+  String? get word => _word;
+
+  Uint8List? _image = Uint8List(0);
+  Uint8List? get image => _image;
+
+  void startProcedures() async {
+    _selectedWordTextEditingController = TextEditingController();
+    wordCharList = <String, int>{};
+    keyList = [];
+    processDone = false;
+    if (!isTrainingGame) {
+      await takeWord();
+      if (_selectedWord != null) {
+        _image = _selectedWord!.imageBytes;
+        _word = _selectedWord!.word;
+        final clearWord = word?.replaceAll(" ", "");
+
+        List<String>.generate(clearWord!.length, (index) => clearWord[index])
+            .forEach((x) => wordCharList[x] =
+                !wordCharList.containsKey(x) ? 1 : (wordCharList[x]! + 1));
+
+        keyList = Iterable<int>.generate(buttonCount)
+            .toList()
+            .map((r) => KeyCharInformation(r, 0, ''))
+            .toList();
+
+        wordCharList.forEach((key, value) {
+          var list = keyList.where((element) => element.Count == 0).toList();
+          if (list.isNotEmpty) {
+            KeyCharInformation keyButton =
+                (keyList.where((element) => element.Count == 0).toList()
+                      ..shuffle())
+                    .first;
+            if (keyButton != null) {
+              keyButton.Char = key;
+              keyButton.Count = value;
+            }
+          }
+        });
+        processDone = true;
+      }
+      notifyListeners();
+    } else {
+      if (trainingGameIndex == _dividedList!.length) {
+        //ANTREMAN BİTMİŞTİR
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(buildContext!).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => Dashboard(0)),
+              (Route<dynamic> route) => false);
+        });
+      } else {
+        await takeWord();
+        if (_selectedWord != null) {
+          _image = _selectedWord!.imageBytes;
+          _word = _selectedWord!.word;
+          final clearWord = word?.replaceAll(" ", "");
+
+          List<String>.generate(clearWord!.length, (index) => clearWord[index])
+              .forEach((x) => wordCharList[x] =
+                  !wordCharList.containsKey(x) ? 1 : (wordCharList[x]! + 1));
+
+          keyList = Iterable<int>.generate(buttonCount)
+              .toList()
+              .map((r) => KeyCharInformation(r, 0, ''))
+              .toList();
+
+          wordCharList.forEach((key, value) {
+            var list = keyList.where((element) => element.Count == 0).toList();
+            if (list.isNotEmpty) {
+              KeyCharInformation keyButton =
+                  (keyList.where((element) => element.Count == 0).toList()
+                        ..shuffle())
+                      .first;
+              if (keyButton != null) {
+                keyButton.Char = key;
+                keyButton.Count = value;
+              }
+            }
+          });
+          processDone = true;
+        }
+        notifyListeners();
+      }
+    }
   }
 }

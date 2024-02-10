@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/fill_the_blank_game.dart';
 import 'package:patikmobile/services/ad_helper.dart';
@@ -14,7 +15,9 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class FillTheBlankGame extends StatefulWidget {
-  const FillTheBlankGame({super.key});
+  final bool? trainingGame;
+  final playWithEnum? playWith;
+  const FillTheBlankGame({super.key, this.trainingGame = false, this.playWith});
 
   @override
   State<FillTheBlankGame> createState() => _FillTheBlankGameState();
@@ -30,7 +33,8 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
     super.initState();
     fillTheBlankGameProvide =
         Provider.of<FillTheBlankGameProvider>(context, listen: false);
-    fillTheBlankGameProvide.init(context);
+    fillTheBlankGameProvide.init(context, widget.playWith,
+        trainingGame: widget.trainingGame!);
 
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
@@ -55,7 +59,9 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
     // TODO: Dispose a BannerAd object
     _bannerAd?.dispose();
     // TODO: Dispose an InterstitialAd object
-    fillTheBlankGameProvide.interstitialAd.dispose();
+    if (fillTheBlankGameProvide.interstitialAd != null) {
+      fillTheBlankGameProvide.interstitialAd!.dispose();
+    }
     super.dispose();
   }
 

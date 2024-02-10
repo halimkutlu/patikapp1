@@ -27,22 +27,17 @@ class NumericKeypad extends StatefulWidget {
 }
 
 class _NumericKeypadState extends State<NumericKeypad> {
-  String? word = "";
-  TextEditingController? controller = TextEditingController();
   Uint8List? image = Uint8List(0);
-  bool processDone = false;
+
   final Widget _horizontalPadding = const SizedBox(
     width: 10.0,
   );
   final Widget _verticalPadding = const SizedBox(height: 10.0);
-  late int buttonCount = 25;
-  late Map<String, int> wordCharList = <String, int>{};
-  late List<KeyCharInformation> keyList = [];
 
   @override
   void initState() {
     super.initState();
-    startProcedures(widget.provider);
+    widget.provider.startProcedures();
   }
 
   @override
@@ -54,7 +49,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        if (processDone)
+        if (widget.provider.processDone)
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -78,7 +73,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
                                 BorderRadius.all(Radius.circular(10.0)),
                           ),
                           child: SvgPicture.memory(
-                            image!,
+                            widget.provider.image!,
                             height: 19.h,
                           ),
                         ),
@@ -93,9 +88,14 @@ class _NumericKeypadState extends State<NumericKeypad> {
                           child: Column(
                             children: [
                               Center(
-                                child: Text(word! + "(kalkacak)"),
+                                child:
+                                    Text(widget.provider.word! + "(kalkacak)"),
                               ),
-                              Center(child: Text(controller!.text)),
+                              Center(
+                                  child: Text(widget
+                                      .provider
+                                      .selectedWordTextEditingController!
+                                      .text)),
                             ],
                           ),
                         ),
@@ -200,12 +200,16 @@ class _NumericKeypadState extends State<NumericKeypad> {
       {String? text, VoidCallback? onPressed, bool? wideRow = false}) {
     int count = 0;
     if (buttonIndex >= 0) {
-      KeyCharInformation keyButton =
-          keyList.firstWhere((element) => element.Index == buttonIndex);
+      KeyCharInformation keyButton = widget.provider.keyList
+          .firstWhere((element) => element.Index == buttonIndex);
       text = keyButton.Char;
       count = keyButton.Count;
       if (text != null && text.isNotEmpty) {
-        count = keyButton.Count - text.allMatches(controller!.text).length;
+        count = keyButton.Count -
+            text
+                .allMatches(
+                    widget.provider.selectedWordTextEditingController!.text)
+                .length;
       }
     }
     return Expanded(
@@ -274,20 +278,23 @@ class _NumericKeypadState extends State<NumericKeypad> {
     int isMatch = await checkWordIsCorrect(text);
     if (isMatch == 1) {
       setState(() {
-        final value = controller!.text + text;
-        controller!.text = value;
-        final firstSpace = word?.replaceAll(controller!.text, "");
+        final value =
+            widget.provider.selectedWordTextEditingController!.text + text;
+        widget.provider.selectedWordTextEditingController!.text = value;
+        final firstSpace = widget.provider.word?.replaceAll(
+            widget.provider.selectedWordTextEditingController!.text, "");
         if (firstSpace!.startsWith(" ")) {
-          controller!.text += " ";
+          widget.provider.selectedWordTextEditingController!.text += " ";
         }
       });
     } else if (isMatch == 2) {
       setState(() {
-        final value = controller!.text + text;
-        controller!.text = value;
+        final value =
+            widget.provider.selectedWordTextEditingController!.text + text;
+        widget.provider.selectedWordTextEditingController!.text = value;
         return;
       });
-      startProcedures(widget.provider);
+      widget.provider.startProcedures();
     }
   }
 
@@ -295,9 +302,9 @@ class _NumericKeypadState extends State<NumericKeypad> {
     var isValid = false;
     var dumText = "";
     if (text.isNotEmpty) {
-      dumText = controller!.text + text;
+      dumText = widget.provider.selectedWordTextEditingController!.text + text;
       for (var i = 0; i < dumText.length; i++) {
-        if (dumText[i] == word![i]) {
+        if (dumText[i] == widget.provider.word![i]) {
           isValid = true;
         } else {
           isValid = false;
@@ -306,7 +313,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
     }
 
     if (isValid) {
-      if (word!.length == dumText.length) {
+      if (widget.provider.word!.length == dumText.length) {
         print("bitti");
         return 2;
       } else {
@@ -321,9 +328,10 @@ class _NumericKeypadState extends State<NumericKeypad> {
 
   void _backspace() {
     setState(() {
-      final value = controller!.text;
+      final value = widget.provider.selectedWordTextEditingController!.text;
       if (value.isNotEmpty) {
-        controller!.text = value.substring(0, value.length - 1);
+        widget.provider.selectedWordTextEditingController!.text =
+            value.substring(0, value.length - 1);
       }
     });
   }
@@ -331,44 +339,5 @@ class _NumericKeypadState extends State<NumericKeypad> {
   bool isDisabled(int index, String? text, int count) {
     if (index < 0) return false;
     return count == 0 || text == null || text.isEmpty;
-  }
-
-  void startProcedures(FillTheBlankGameProvider provider) async {
-    controller = TextEditingController();
-    wordCharList = <String, int>{};
-    keyList = [];
-    processDone = false;
-
-    await widget.provider.takeWord();
-    if (provider.selectedWord != null) {
-      image = provider.selectedWord!.imageBytes;
-      word = provider.selectedWord!.word;
-      final clearWord = word?.replaceAll(" ", "");
-      setState(() {
-        List<String>.generate(clearWord!.length, (index) => clearWord[index])
-            .forEach((x) => wordCharList[x] =
-                !wordCharList.containsKey(x) ? 1 : (wordCharList[x]! + 1));
-
-        keyList = Iterable<int>.generate(buttonCount)
-            .toList()
-            .map((r) => KeyCharInformation(r, 0, ''))
-            .toList();
-
-        wordCharList.forEach((key, value) {
-          var list = keyList.where((element) => element.Count == 0).toList();
-          if (list.isNotEmpty) {
-            KeyCharInformation keyButton =
-                (keyList.where((element) => element.Count == 0).toList()
-                      ..shuffle())
-                    .first;
-            if (keyButton != null) {
-              keyButton.Char = key;
-              keyButton.Count = value;
-            }
-          }
-        });
-      });
-      processDone = true;
-    }
   }
 }

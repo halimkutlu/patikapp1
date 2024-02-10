@@ -9,6 +9,7 @@ import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/dashboard.dart';
+import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +20,7 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
   final database = Database;
 
   InterstitialAd? _interstitialAd;
-  InterstitialAd get interstitialAd => _interstitialAd!;
+  InterstitialAd? get interstitialAd => _interstitialAd;
 
   List<Word> comingWordListFromStorage = [];
 
@@ -188,7 +189,7 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
     saveSelectedWords();
     Timer(Duration(milliseconds: 100), () {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Dashboard(0)),
+          MaterialPageRoute(builder: (context) => MovingSquaresGame()),
           (Route<dynamic> route) => false);
     });
   }
