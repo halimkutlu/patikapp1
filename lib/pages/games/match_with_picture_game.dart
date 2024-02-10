@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
@@ -17,7 +18,11 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class MatchWithPictureGame extends StatefulWidget {
-  const MatchWithPictureGame({super.key});
+  final bool? trainingGame;
+  final playWithEnum? playWith;
+
+  const MatchWithPictureGame(
+      {super.key, this.trainingGame = false, this.playWith});
 
   @override
   State<MatchWithPictureGame> createState() => _MatchWithPictureGameState();
@@ -27,14 +32,14 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
   BannerAd? _bannerAd;
 
   late MatchWithPictureGameProvide matchWithPictureGameProvide;
-  List<WordListDBInformation> imageList = [];
-  List<WordListDBInformation> wordList = [];
+
   @override
   void initState() {
     super.initState();
     matchWithPictureGameProvide =
         Provider.of<MatchWithPictureGameProvide>(context, listen: false);
-    matchWithPictureGameProvide.init(context);
+    matchWithPictureGameProvide.init(context, widget.playWith,
+        trainingGame: widget.trainingGame!);
 
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
@@ -74,8 +79,8 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
         await askToGoMainMenu(func: () {
           setState(() {
             matchWithPictureGameProvide.resetData();
-            imageList = [];
-            wordList = [];
+            matchWithPictureGameProvide.setUIimage = [];
+            matchWithPictureGameProvide.setUIWord = [];
           });
         });
       },
@@ -86,11 +91,14 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
             if (!provider.wordsLoaded!) {
               // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
               return Center(child: CircularProgressIndicator());
-            } else if (imageList.isEmpty || wordList.isEmpty) {
-              imageList = List.from(provider.wordListDbInformation!);
-              wordList = List.from(provider.wordListDbInformation!);
-              imageList.shuffle();
-              wordList.shuffle();
+            } else if (matchWithPictureGameProvide.UIimageList.isEmpty ||
+                matchWithPictureGameProvide.UIwordList.isEmpty) {
+              matchWithPictureGameProvide.setUIimage =
+                  List.from(provider.wordListDbInformation!);
+              matchWithPictureGameProvide.setUIWord =
+                  List.from(provider.wordListDbInformation!);
+              matchWithPictureGameProvide.UIimageList.shuffle();
+              matchWithPictureGameProvide.UIwordList.shuffle();
             }
             return Stack(
               children: [
@@ -114,11 +122,15 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
                         children: [
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: _buildImageWidgets(imageList, provider),
+                            children: _buildImageWidgets(
+                                matchWithPictureGameProvide.UIimageList,
+                                provider),
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: _buildWordWidgets(wordList, provider),
+                            children: _buildWordWidgets(
+                                matchWithPictureGameProvide.UIwordList,
+                                provider),
                           ),
                         ],
                       ),

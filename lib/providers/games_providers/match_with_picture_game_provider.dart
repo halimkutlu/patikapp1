@@ -6,8 +6,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
+import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
+import 'package:patikmobile/models/word_statistics.dart';
+import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/games/multiple_choice_game.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,11 +55,41 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
   int? _errorCount = 0;
   int? get errorCount => _errorCount;
 
-  init([BuildContext? context]) async {
+//antreman için buraya taşıdım
+  List<WordListDBInformation> _UIimageList = [];
+  List<WordListDBInformation> _UIwordList = [];
+
+  List<WordListDBInformation> get UIimageList => _UIimageList;
+  List<WordListDBInformation> get UIwordList => _UIwordList;
+
+  set setUIimage(List<WordListDBInformation> list) {
+    _UIimageList = list;
+  }
+
+  set setUIWord(List<WordListDBInformation> list) {
+    _UIwordList = list;
+  }
+
+//--
+  bool isTrainingGame = false;
+  int trainingGameIndex = 0;
+  List<List<WordListDBInformation>>? _dividedList = [];
+  List<WordListDBInformation>? _trainingWordListDbInformation;
+  List<WordListDBInformation>? get trainingWordListDbInformation =>
+      _trainingWordListDbInformation;
+
+  init(BuildContext context, playWithEnum? playWith,
+      {bool trainingGame = false}) async {
     _isShuffled = false;
     _errorCount = 0;
+    isTrainingGame = trainingGame;
+    trainingGameIndex = 0;
     loadAd();
-    await startMatchWithImageGame();
+    if (!trainingGame) {
+      await startMatchWithImageGame(null);
+    } else {
+      await startMatchWithImageGame(playWith);
+    }
   }
 
   Future<void> loadAd() async {
@@ -92,9 +126,13 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
         ));
   }
 
-  Future<void> startMatchWithImageGame() async {
+  Future<void> startMatchWithImageGame(playWithEnum? playWith) async {
     //1. ADIM ==> Öncelikle bir önceki aşamada seçilen 5 kart local storage üzerinden getirilir.
-    comingWordListFromStorage = await getSavedWords();
+    if (playWith == null) {
+      comingWordListFromStorage = await getSavedWords();
+    } else {
+      comingWordListFromStorage = await getTrainingWords(playWith);
+    }
     //2. ADIM ==> Seçilen kartların db verileri çekilir.
     await getWordsFileInformationFromStorage(comingWordListFromStorage);
     // _selectedWordInfo = _wordListDbInformation![0]; // İlk öğeyi seçelim.
@@ -108,6 +146,37 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
         comingWordListFromStorage.map((word) => word.toJson()).toList();
     prefs.setStringList('selectedWords', serializedWords);
     print('Selected words saved to SharedPreferences');
+  }
+
+  getTrainingWords(playWithEnum playWith) async {
+    DbProvider dbProvider = DbProvider();
+    List<WordStatistics> words = [];
+    List<Word> allWords =
+        await dbProvider.getWordList(withoutCategoryName: true);
+    List<WordStatistics> list = await dbProvider.getWordStatisticsList();
+
+    if (playWith == playWithEnum.learnedWords) {
+      words = list.where((wordStat) => wordStat.learned == 1).toList();
+    } else if (playWith == playWithEnum.repeatedWords) {
+      words = list.where((wordStat) => wordStat.repeat == 1).toList();
+    } else if (playWith == playWithEnum.workHardWords) {
+      words = list.where((wordStat) => wordStat.workHard == 1).toList();
+    } else if (playWith == playWithEnum.allWords) {
+      return allWords;
+    }
+
+    if (words.isNotEmpty) {
+      List<Word> result = [];
+      for (var wordStat in words) {
+        Word? word =
+            allWords.where((word) => word.id == wordStat.wordId).firstOrNull;
+
+        if (word != null) {
+          result.add(word);
+        }
+      }
+      return result;
+    }
   }
 
   Future<List<Word>> getSavedWords() async {
@@ -127,10 +196,13 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
     _wordListDbInformation = [];
     _selectedImage = null;
     _selectedWordInfo = null;
+    _UIimageList = [];
+    _UIwordList = [];
   }
 
   getWordsFileInformationFromStorage(List<Word>? selectedCategoryWords) async {
     _wordListDbInformation = [];
+    _trainingWordListDbInformation = [];
     String currentLanguage = await getCurrentLanguageAsString();
 
     Directory dir = await getApplicationDocumentsDirectory();
@@ -152,9 +224,34 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
             id: x.id);
 
         _wordListDbInformation!.add(wordInfo);
+        _trainingWordListDbInformation!.add(wordInfo);
+      }
+    }
+
+    if (isTrainingGame) {
+      if (_trainingWordListDbInformation!.length > 5) {
+        updateDividedList(_trainingWordListDbInformation!);
+        // _trainingIndex kontrolü burada yapılacak
+        _wordListDbInformation = _dividedList![trainingGameIndex];
+        // displayedList ile yapılacak işlemler devam edecek
       }
     }
     print(_wordListDbInformation);
+  }
+
+  void updateDividedList(List<WordListDBInformation> list) {
+    _dividedList = divideListIntoChunks(list, 5);
+    trainingGameIndex = trainingGameIndex + 1;
+  }
+
+  List<List<WordListDBInformation>> divideListIntoChunks(
+      List<WordListDBInformation> list, int chunkSize) {
+    List<List<WordListDBInformation>> dividedList = [];
+    for (var i = 0; i < list.length; i += chunkSize) {
+      dividedList.add(list.sublist(
+          i, i + chunkSize > list.length ? list.length : i + chunkSize));
+    }
+    return dividedList;
   }
 
   Future<String> getCurrentLanguageAsString() async {
@@ -197,13 +294,32 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
   }
 
   void goToNextGame(BuildContext context) {
-    resetData();
-    saveSelectedWords();
-    Timer(Duration(milliseconds: 100), () {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MultipleChoiceGame()),
-          (Route<dynamic> route) => false);
-    });
+    if (!isTrainingGame) {
+      resetData();
+      saveSelectedWords();
+      Timer(Duration(milliseconds: 100), () {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => MultipleChoiceGame()),
+            (Route<dynamic> route) => false);
+      });
+    } else {
+      resetData();
+      notifyListeners();
+
+      updateDividedList(_trainingWordListDbInformation!);
+      if (trainingGameIndex == _dividedList!.length) {
+        //ANTREMAN BİTMİŞTİR
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => Dashboard(0)),
+              (Route<dynamic> route) => false);
+        });
+      } else {
+        _wordListDbInformation = _dividedList![trainingGameIndex];
+      }
+      _wordsLoaded = true;
+      notifyListeners();
+    }
   }
 
   bool checkMatch() {
@@ -242,9 +358,11 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
   }
 
   void resetSelections() async {
-    var word = comingWordListFromStorage
-        .firstWhere((element) => element.id == _selectedImage!.id);
-    word.errorCount = word.errorCount! + 1;
+    if (!isTrainingGame) {
+      var word = comingWordListFromStorage
+          .firstWhere((element) => element.id == _selectedImage!.id);
+      word.errorCount = word.errorCount! + 1;
+    }
 
     _errorCount = _errorCount! + 1;
     _selectedImage!.isImageCorrect = null;
