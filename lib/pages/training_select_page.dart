@@ -233,8 +233,11 @@ class _TrainingSelectState extends State<TrainingSelect> {
                 playWith: playWith,
               )));
     } else if (widget.selectedGame == trainingSelectNames.FiveOptions) {
-      // Navigator.of(context)
-      //     .push(MaterialPageRoute(builder: (context) => MultipleChoiceGame()));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MultipleChoiceGame(
+                trainingGame: true,
+                playWith: playWith,
+              )));
     }
   }
 }

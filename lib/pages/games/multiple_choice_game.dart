@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/multiple_choice_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
@@ -15,7 +16,10 @@ import 'package:sizer/sizer.dart';
 import '../../assets/style/mainColors.dart';
 
 class MultipleChoiceGame extends StatefulWidget {
-  const MultipleChoiceGame({super.key});
+  final bool? trainingGame;
+  final playWithEnum? playWith;
+  const MultipleChoiceGame(
+      {super.key, this.trainingGame = false, this.playWith = null});
 
   @override
   State<MultipleChoiceGame> createState() => _MultipleChoiceGameState();
@@ -39,7 +43,8 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
     super.initState();
     multipleChoiceGameProvider =
         Provider.of<MultipleChoiceGameProvider>(context, listen: false);
-    multipleChoiceGameProvider.init(context);
+    multipleChoiceGameProvider.init(context, widget.playWith,
+        trainingGame: widget.trainingGame!);
 
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,

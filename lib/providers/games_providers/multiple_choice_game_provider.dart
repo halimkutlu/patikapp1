@@ -7,9 +7,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
+import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
+import 'package:patikmobile/models/word_statistics.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/games/match_moving_square_game.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,11 +61,25 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
 
   BuildContext? buildContext;
 
-  init([BuildContext? context]) async {
+  bool isTrainingGame = false;
+  int trainingGameIndex = 0;
+  List<List<WordListDBInformation>>? _dividedList = [];
+  List<WordListDBInformation>? _trainingWordListDbInformation;
+  List<WordListDBInformation>? get trainingWordListDbInformation =>
+      _trainingWordListDbInformation;
+
+  init(BuildContext? context, playWithEnum? playWith,
+      {bool trainingGame = false}) async {
     _errorCount = 0;
     buildContext = context;
+    isTrainingGame = trainingGame;
+    _wordsLoaded = false;
     loadAd();
-    await startMultipleChoiceGame();
+    if (!trainingGame) {
+      await startMultipleChoiceGame(null);
+    } else {
+      await startMultipleChoiceGame(playWith);
+    }
     await takeWord();
     notifyListeners();
   }
@@ -101,14 +118,51 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
         ));
   }
 
-  Future<void> startMultipleChoiceGame() async {
+  Future<void> startMultipleChoiceGame(playWithEnum? playWith) async {
     //1. ADIM ==> Öncelikle bir önceki aşamada seçilen 5 kart local storage üzerinden getirilir.
-    comingWordListFromStorage = await getSavedWords();
+    if (playWith == null) {
+      comingWordListFromStorage = await getSavedWords();
+    } else {
+      comingWordListFromStorage = await getTrainingWords(playWith);
+    }
     //2. ADIM ==> Seçilen kartların db verileri çekilir.
     await getWordsFileInformationFromStorage(comingWordListFromStorage);
     // _selectedWordInfo = _wordListDbInformation![0]; // İlk öğeyi seçelim.
-    _wordsLoaded = true;
+    // _wordsLoaded = true;
     notifyListeners();
+  }
+
+  getTrainingWords(playWithEnum playWith) async {
+    DbProvider dbProvider = DbProvider();
+    List<WordStatistics> words = [];
+    List<Word> allWords =
+        await dbProvider.getWordList(withoutCategoryName: true);
+    List<WordStatistics> list = await dbProvider.getWordStatisticsList();
+
+    if (playWith == playWithEnum.learnedWords) {
+      words = list.where((wordStat) => wordStat.learned == 1).toList();
+    } else if (playWith == playWithEnum.repeatedWords) {
+      words = list.where((wordStat) => wordStat.repeat == 1).toList();
+    } else if (playWith == playWithEnum.workHardWords) {
+      words = list.where((wordStat) => wordStat.workHard == 1).toList();
+    } else if (playWith == playWithEnum.allWords) {
+      return allWords;
+    }
+
+    if (words.isNotEmpty) {
+      List<Word> result = [];
+      for (var wordStat in words) {
+        Word? word =
+            allWords.where((word) => word.id == wordStat.wordId).firstOrNull;
+
+        if (word != null) {
+          result.add(word);
+        }
+      }
+
+      result = await AppDbProvider().setWordAppLng(result);
+      return result;
+    }
   }
 
   Future<void> saveSelectedWords() async {
@@ -211,22 +265,41 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
       await takeAnswers(_selectedWord);
     } else {
       //oyun bitmiştir
-      goToNextGame(buildContext!);
-      print("TEBRİKLER");
+      if (!isTrainingGame) {
+        goToNextGame(buildContext!);
+        print("TEBRİKLER");
+      } else {
+        //ANTREMAN BİTMİŞTİR
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(buildContext!).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => Dashboard(0)),
+              (Route<dynamic> route) => false);
+        });
+      }
     }
   }
 
   Future<void> takeAnswers(WordListDBInformation? selectedWord) async {
     _selectedAnswerList = [];
+    String answer = "";
+    bool isCorrect = false;
+
     List<WordListDBInformation> wordPool = _wordListPool!;
 
-    // Rastgele 5 cevap seçme işlemi
-    wordPool.shuffle();
-    for (int i = 0; i < min(5, wordPool.length); i++) {
-      String answer = wordPool[i].word!;
-      bool isCorrect = (answer == selectedWord?.word);
-      _selectedAnswerList!.add(GameAnswerModel(answer, isCorrect));
+    // // Rastgele 5 cevap seçme işlemi
+    // wordPool.shuffle();
+
+    wordPool = wordPool.where((x) => x.id != selectedWord!.id).toList();
+
+    if (wordPool.length >= 4) {
+      for (int i = 0; i < 4; i++) {
+        _selectedAnswerList!.add(GameAnswerModel(wordPool[i].word!, false));
+      }
     }
+
+    _selectedAnswerList!.add(GameAnswerModel(selectedWord!.word!, true));
+
+    _selectedAnswerList!.shuffle();
   }
 
   Future<void> checkAnswer(GameAnswerModel selectedAnswer) async {
