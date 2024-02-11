@@ -13,7 +13,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
+import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
+import 'package:patikmobile/models/word_statistics.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
@@ -96,31 +98,86 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
   VoidCallback? callback2;
 
+  //ANTREMAN
+  bool isTrainingGame = false;
+  int trainingGameIndex = 0;
+  List<List<WordListDBInformation>>? _dividedList = [];
+  List<WordListDBInformation>? _trainingWordListDbInformation;
+  List<WordListDBInformation>? get trainingWordListDbInformation =>
+      _trainingWordListDbInformation;
+
+//----
+  var diffStatisticWords = [];
   init(
       [BuildContext? context,
       VoidCallback? callback,
-      VoidCallback? _callback]) async {
+      VoidCallback? _callback,
+      playWithEnum? playWith,
+      bool trainingGame = false]) async {
     GameSizeClass().Init();
     _roundCount = 0;
+    diffStatisticWords = [];
     _siradaki = 0;
     _errorCount = 0;
     buildContext = context;
+    isTrainingGame = trainingGame;
+    trainingGameIndex = 0;
     loadAd(closeAd);
-    await startMatchMovingSquareGame();
+    if (!isTrainingGame) {
+      await startMatchMovingSquareGame(null);
+    } else {
+      await startMatchMovingSquareGame(playWith);
+    }
     notifyListeners();
+    print(_wordListDbInformation);
     await getWords();
     callback!();
     callback2 = _callback;
   }
 
-  startMatchMovingSquareGame() async {
+  startMatchMovingSquareGame(playWithEnum? playWith) async {
     //1. ADIM ==> Öncelikle bir önceki aşamada seçilen 5 kart local storage üzerinden getirilir.
-    comingWordListFromStorage = await getSavedWords();
+    if (playWith == null) {
+      comingWordListFromStorage = await getSavedWords();
+    } else {
+      comingWordListFromStorage = await getTrainingWords(playWith);
+    }
     //2. ADIM ==> Seçilen kartların db verileri çekilir.
     await getWordsFileInformationFromStorage(comingWordListFromStorage);
     // _selectedWordInfo = _wordListDbInformation![0]; // İlk öğeyi seçelim.
     _wordsLoaded = true;
     notifyListeners();
+  }
+
+  getTrainingWords(playWithEnum playWith) async {
+    DbProvider dbProvider = DbProvider();
+    List<WordStatistics> words = [];
+    List<Word> allWords =
+        await dbProvider.getWordList(withoutCategoryName: true);
+    List<WordStatistics> list = await dbProvider.getWordStatisticsList();
+
+    if (playWith == playWithEnum.learnedWords) {
+      words = list.where((wordStat) => wordStat.learned == 1).toList();
+    } else if (playWith == playWithEnum.repeatedWords) {
+      words = list.where((wordStat) => wordStat.repeat == 1).toList();
+    } else if (playWith == playWithEnum.workHardWords) {
+      words = list.where((wordStat) => wordStat.workHard == 1).toList();
+    } else if (playWith == playWithEnum.allWords) {
+      return allWords;
+    }
+
+    if (words.isNotEmpty) {
+      List<Word> result = [];
+      for (var wordStat in words) {
+        Word? word =
+            allWords.where((word) => word.id == wordStat.wordId).firstOrNull;
+
+        if (word != null) {
+          result.add(word);
+        }
+      }
+      return result;
+    }
   }
 
   Future<List<Word>> getSavedWords() async {
@@ -137,6 +194,8 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
   getWordsFileInformationFromStorage(List<Word>? selectedCategoryWords) async {
     _wordListDbInformation = [];
+    _trainingWordListDbInformation = [];
+
     String currentLanguage = StorageProvider.learnLanguge!.Code;
 
     Directory dir = await getApplicationDocumentsDirectory();
@@ -155,6 +214,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
             wordAppLng: x.wordAppLng);
 
         _wordListDbInformation!.add(wordInfo);
+        _trainingWordListDbInformation!.add(wordInfo);
       }
 
       var rndList = await db.getRandomStatisticsWordList(
@@ -172,7 +232,32 @@ class MovingSquaresGameProvide extends ChangeNotifier {
         _rndWordListDbInformation!.add(wordInfo);
       }
     }
+
+    if (isTrainingGame) {
+      if (_trainingWordListDbInformation!.length > 5) {
+        updateDividedList(_trainingWordListDbInformation!);
+        // _trainingIndex kontrolü burada yapılacak
+        _wordListDbInformation = _dividedList![trainingGameIndex];
+
+        // displayedList ile yapılacak işlemler devam edecek
+      }
+    }
+
     print(_wordListDbInformation);
+  }
+
+  void updateDividedList(List<WordListDBInformation> list) {
+    _dividedList = divideListIntoChunks(list, 5);
+  }
+
+  List<List<WordListDBInformation>> divideListIntoChunks(
+      List<WordListDBInformation> list, int chunkSize) {
+    List<List<WordListDBInformation>> dividedList = [];
+    for (var i = 0; i < list.length; i += chunkSize) {
+      dividedList.add(list.sublist(
+          i, i + chunkSize > list.length ? list.length : i + chunkSize));
+    }
+    return dividedList;
   }
 
   Future<void> loadAd(VoidCallback onAdDismissed) async {
@@ -230,7 +315,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
   getWords() async {
     if (_wordListDbInformation != null) {
       _currentGameItems = [];
-      var diffStatisticWords = []
+      diffStatisticWords = []
         ..addAll(_wordListDbInformation!)
         ..addAll(_rndWordListDbInformation!);
       for (int i = 0; i < _wordListDbInformation!.length; i++) {
@@ -299,9 +384,32 @@ class MovingSquaresGameProvide extends ChangeNotifier {
             closeAd();
           }
         } else {
-          _roundCount = 0;
-          await FilltheWordsInABox();
-          await showSuccessPage(context);
+          if (!isTrainingGame) {
+            _roundCount = 0;
+            await FilltheWordsInABox();
+            await showSuccessPage(context);
+          } else {
+            updateDividedList(_trainingWordListDbInformation!);
+
+            trainingGameIndex = trainingGameIndex + 1;
+            if (trainingGameIndex == _dividedList!.length) {
+              //ANTREMAN BİTMİŞTİR
+              Timer(Duration(milliseconds: 100), () {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => Dashboard(0)),
+                    (Route<dynamic> route) => false);
+              });
+            } else {
+              _roundCount = 0;
+              _wordListDbInformation = _dividedList![trainingGameIndex];
+              _wordsLoaded = true;
+              notifyListeners();
+              _siradaki = 0;
+              await getWords();
+              callback2!();
+              moveSquares(context, _controllers);
+            }
+          }
         }
 
         _isClicked = false;

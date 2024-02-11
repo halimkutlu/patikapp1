@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_moving_square_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
@@ -40,7 +41,10 @@ class GameSizeClass {
 }
 
 class MovingSquaresGame extends StatefulWidget {
-  const MovingSquaresGame({super.key});
+  final bool? trainingGame;
+  final playWithEnum? playWith;
+  const MovingSquaresGame(
+      {super.key, this.trainingGame = false, this.playWith});
 
   @override
   _MovingSquaresGame createState() => _MovingSquaresGame();
@@ -61,7 +65,8 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
 
     movingSquaresGameProvide =
         Provider.of<MovingSquaresGameProvide>(context, listen: false);
-    movingSquaresGameProvide.init(context, methodCallBack, methodCallBack2);
+    movingSquaresGameProvide.init(context, methodCallBack, methodCallBack2,
+        widget.playWith, widget.trainingGame!);
 
     animationReload();
 

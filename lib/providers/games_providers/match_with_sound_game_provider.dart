@@ -83,7 +83,7 @@ class MatchWithSoundGameProvide extends ChangeNotifier {
     isTrainingGame = trainingGame;
     _errorCount = 0;
     loadAd();
-
+    trainingGameIndex = 0;
     if (!trainingGame) {
       await startMatchWithSoundGame(null);
     } else {
