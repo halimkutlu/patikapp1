@@ -117,7 +117,11 @@ class FillTheBlankGameProvider extends ChangeNotifier {
     await getWordsFileInformationFromStorage(comingWordListFromStorage);
     // _selectedWordInfo = _wordListDbInformation![0]; // İlk öğeyi seçelim.
 
-    await takeWord();
+    if (!isTrainingGame) {
+      await takeWord();
+    } else {
+      startProcedures();
+    }
     notifyListeners();
   }
 
@@ -166,38 +170,20 @@ class FillTheBlankGameProvider extends ChangeNotifier {
       // _selectedWordTextEditingController!.text = _selectedWord!.word!;
       print(_selectedWord);
       _wordsLoaded = true;
+
+      trainingGameIndex = trainingGameIndex + 1;
     } else {
       //oyun bitmiştir
       if (!isTrainingGame) {
         goToNextGame(buildContext!);
         print("TEBRİKLER");
       } else {
-        if (trainingGameIndex == _dividedList!.length) {
-          //ANTREMAN BİTMİŞTİR
-          Timer(Duration(milliseconds: 100), () {
-            Navigator.of(buildContext!).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => Dashboard(0)),
-                (Route<dynamic> route) => false);
-          });
-        } else {
-          resetData();
-          notifyListeners();
-
-          updateDividedList(_trainingWordListDbInformation!);
-          if (trainingGameIndex == _dividedList!.length) {
-            //ANTREMAN BİTMİŞTİR
-            Timer(Duration(milliseconds: 100), () {
-              Navigator.of(buildContext!).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => Dashboard(0)),
-                  (Route<dynamic> route) => false);
-            });
-          } else {
-            _wordListDbInformation = _dividedList![trainingGameIndex];
-            _wordsLoaded = true;
-            notifyListeners();
-            startProcedures();
-          }
-        }
+        //ANTREMAN BİTMİŞTİR
+        Timer(Duration(milliseconds: 100), () {
+          Navigator.of(buildContext!).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => Dashboard(0)),
+              (Route<dynamic> route) => false);
+        });
       }
     }
   }
@@ -254,19 +240,13 @@ class FillTheBlankGameProvider extends ChangeNotifier {
       }
     }
     if (isTrainingGame) {
-      if (_trainingWordListDbInformation!.length > 5) {
-        updateDividedList(_trainingWordListDbInformation!);
-        // _trainingIndex kontrolü burada yapılacak
-        _wordListDbInformation = _dividedList![trainingGameIndex];
-        // displayedList ile yapılacak işlemler devam edecek
-      }
+      _wordListDbInformation = _trainingWordListDbInformation;
     }
     print(_wordListDbInformation);
   }
 
   void updateDividedList(List<WordListDBInformation> list) {
     _dividedList = divideListIntoChunks(list, 5);
-    trainingGameIndex = trainingGameIndex + 1;
   }
 
   List<List<WordListDBInformation>> divideListIntoChunks(
@@ -347,79 +327,37 @@ class FillTheBlankGameProvider extends ChangeNotifier {
     wordCharList = <String, int>{};
     keyList = [];
     processDone = false;
-    if (!isTrainingGame) {
-      await takeWord();
-      if (_selectedWord != null) {
-        _image = _selectedWord!.imageBytes;
-        _word = _selectedWord!.word;
-        final clearWord = word?.replaceAll(" ", "");
+    await takeWord();
+    if (_selectedWord != null) {
+      _image = _selectedWord!.imageBytes;
+      _word = _selectedWord!.word;
+      final clearWord = word?.replaceAll(" ", "");
 
-        List<String>.generate(clearWord!.length, (index) => clearWord[index])
-            .forEach((x) => wordCharList[x] =
-                !wordCharList.containsKey(x) ? 1 : (wordCharList[x]! + 1));
+      List<String>.generate(clearWord!.length, (index) => clearWord[index])
+          .forEach((x) => wordCharList[x] =
+              !wordCharList.containsKey(x) ? 1 : (wordCharList[x]! + 1));
 
-        keyList = Iterable<int>.generate(buttonCount)
-            .toList()
-            .map((r) => KeyCharInformation(r, 0, ''))
-            .toList();
+      keyList = Iterable<int>.generate(buttonCount)
+          .toList()
+          .map((r) => KeyCharInformation(r, 0, ''))
+          .toList();
 
-        wordCharList.forEach((key, value) {
-          var list = keyList.where((element) => element.Count == 0).toList();
-          if (list.isNotEmpty) {
-            KeyCharInformation keyButton =
-                (keyList.where((element) => element.Count == 0).toList()
-                      ..shuffle())
-                    .first;
-            if (keyButton != null) {
-              keyButton.Char = key;
-              keyButton.Count = value;
-            }
+      wordCharList.forEach((key, value) {
+        var list = keyList.where((element) => element.Count == 0).toList();
+        if (list.isNotEmpty) {
+          KeyCharInformation keyButton =
+              (keyList.where((element) => element.Count == 0).toList()
+                    ..shuffle())
+                  .first;
+          if (keyButton != null) {
+            keyButton.Char = key;
+            keyButton.Count = value;
           }
-        });
-        processDone = true;
-      }
-      notifyListeners();
-    } else {
-      if (trainingGameIndex == _dividedList!.length) {
-        //ANTREMAN BİTMİŞTİR
-        Timer(Duration(milliseconds: 100), () {
-          Navigator.of(buildContext!).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => Dashboard(0)),
-              (Route<dynamic> route) => false);
-        });
-      } else {
-        await takeWord();
-        if (_selectedWord != null) {
-          _image = _selectedWord!.imageBytes;
-          _word = _selectedWord!.word;
-          final clearWord = word?.replaceAll(" ", "");
-
-          List<String>.generate(clearWord!.length, (index) => clearWord[index])
-              .forEach((x) => wordCharList[x] =
-                  !wordCharList.containsKey(x) ? 1 : (wordCharList[x]! + 1));
-
-          keyList = Iterable<int>.generate(buttonCount)
-              .toList()
-              .map((r) => KeyCharInformation(r, 0, ''))
-              .toList();
-
-          wordCharList.forEach((key, value) {
-            var list = keyList.where((element) => element.Count == 0).toList();
-            if (list.isNotEmpty) {
-              KeyCharInformation keyButton =
-                  (keyList.where((element) => element.Count == 0).toList()
-                        ..shuffle())
-                      .first;
-              if (keyButton != null) {
-                keyButton.Char = key;
-                keyButton.Count = value;
-              }
-            }
-          });
-          processDone = true;
         }
-        notifyListeners();
-      }
+      });
+      processDone = true;
     }
+    notifyListeners();
   }
+  // }
 }

@@ -37,7 +37,9 @@ class _NumericKeypadState extends State<NumericKeypad> {
   @override
   void initState() {
     super.initState();
-    widget.provider.startProcedures();
+    if (!widget.provider.isTrainingGame) {
+      widget.provider.startProcedures();
+    }
   }
 
   @override
