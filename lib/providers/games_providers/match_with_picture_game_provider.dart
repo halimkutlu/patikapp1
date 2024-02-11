@@ -234,7 +234,10 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
         updateDividedList(_trainingWordListDbInformation!);
         // _trainingIndex kontrolü burada yapılacak
         _wordListDbInformation = _dividedList![trainingGameIndex];
+        trainingGameIndex = trainingGameIndex + 1;
         // displayedList ile yapılacak işlemler devam edecek
+      } else {
+        trainingGameIndex = trainingGameIndex + 1;
       }
     }
     print(_wordListDbInformation);
@@ -242,7 +245,6 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
 
   void updateDividedList(List<WordListDBInformation> list) {
     _dividedList = divideListIntoChunks(list, 5);
-    trainingGameIndex = trainingGameIndex + 1;
   }
 
   List<List<WordListDBInformation>> divideListIntoChunks(
@@ -317,6 +319,7 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
         });
       } else {
         _wordListDbInformation = _dividedList![trainingGameIndex];
+        trainingGameIndex = trainingGameIndex + 1;
       }
       _wordsLoaded = true;
       notifyListeners();
