@@ -3,6 +3,7 @@
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/pages/dashboard.dart';
@@ -12,6 +13,7 @@ import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
+import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,6 +44,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
 
   void onReceiveProgress(int received_, int total_) {
     setState(() {
+      StaticVariables.loading = false;
       received = received_ / total_;
     });
   }
@@ -143,7 +146,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                 () async {
                               Navigator.pop(_scaffoldKey.currentContext!);
                               isDownloading = true;
-
+                              StaticVariables.loading = true;
                               FileDownloadStatus status = await loginProvider
                                   .startProcessOfDownloadLearnLanguage(
                                       language, true, onReceiveProgress);
@@ -220,7 +223,8 @@ class _SelectLanguageState extends State<SelectLanguage> {
               ],
             ),
           ),
-        ]
+        ],
+        Positioned(child: Loading())
       ]),
     );
   }
