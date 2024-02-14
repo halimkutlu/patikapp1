@@ -80,6 +80,7 @@ class _LoginState extends State<Login> {
                   width: 0.3.w,
                   height: 2.5.h,
                   onTap: () {
+                    FocusScope.of(context).unfocus();
                     loginProvider.login(context);
                   },
                 ),
