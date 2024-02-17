@@ -226,13 +226,15 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    info.wordT!,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  info.wordT != null
+                      ? Text(
+                          info.wordT ?? "",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      : Container(),
                   Text(
                     info.word!,
                     style: TextStyle(
