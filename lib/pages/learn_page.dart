@@ -92,7 +92,7 @@ class _LearnPageState extends State<LearnPage> {
                                   if (horizontalCategory.order ==
                                       category.order) {
                                     return categoryBox(
-                                        "",
+                                        horizontalCategory.categoryImage!,
                                         horizontalCategory.categoryAppLngName!,
                                         horizontalCategory.categoryWordCount!,
                                         horizontalCategory.totalCount!,
@@ -153,11 +153,14 @@ class _LearnPageState extends State<LearnPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Center(
-                child: Icon(
-                  Icons.logo_dev,
-                  color: Color(color),
-                  size: 5.h,
-                ),
+                child: image.isNotEmpty
+                    ? Image.asset(
+                        image,
+                        width: 20,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      )
+                    : Icon(Icons.developer_board),
               ),
               Center(
                 child: AutoSizeText(

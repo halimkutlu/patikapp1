@@ -58,8 +58,8 @@ class LoginProvider extends ChangeNotifier {
       apirepository.removeToken();
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
-    }, AppLocalizations.of(context).translate("81"), "logoutMessage".tr,
-        ArtSweetAlertType.question, "yes".tr, "no".tr);
+    }, AppLocalizations.of(context).translate("81"), "",
+        ArtSweetAlertType.question, "Evet", "Hayır");
   }
 
   void login(BuildContext context) async {

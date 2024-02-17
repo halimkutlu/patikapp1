@@ -9,6 +9,7 @@ import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/fill_the_blank_game.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:patikmobile/widgets/keyboard_widget.dart';
 import 'package:provider/provider.dart';
@@ -145,7 +146,7 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
   }
 
   Future<void> askToGoMainMenu({VoidCallback? func}) async {
-    await CustomAlertDialogOnlyConfirm(context, () {
+    await CustomAlertDialog(context, () {
       if (func != null) {
         func();
       }
@@ -153,9 +154,10 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
           MaterialPageRoute(builder: (context) => Dashboard(0)),
           (Route<dynamic> route) => false);
     },
-        "warning".tr,
+        "Emin misiniz?",
         "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
-        ArtSweetAlertType.info,
-        "ok".tr);
+        ArtSweetAlertType.question,
+        "Tamam",
+        "Geri");
   }
 }

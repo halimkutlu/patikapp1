@@ -225,7 +225,7 @@ class _DashboardState extends State<Dashboard> {
                       onTap: () {}),
                   MenuItem(
                       logo: 'lib/assets/img/key.png',
-                      text: AppLocalizations.of(context).translate("22"),
+                      text: AppLocalizations.of(context).translate("75"),
                       centerWidget: Text(""),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(

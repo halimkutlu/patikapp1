@@ -27,8 +27,8 @@ class _FeedbackPage extends State<FeedbackPage> {
           Padding(
             padding: EdgeInsets.all(4.0.h),
             child: Text(
-              "FeedbackDescription".tr,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              AppLocalizations.of(context).translate("80"),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 2.7.h),
               textAlign: TextAlign.justify,
             ),
           ),

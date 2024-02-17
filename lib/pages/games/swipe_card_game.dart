@@ -16,6 +16,7 @@ import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/services/sound_helper.dart';
+import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -301,19 +302,18 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
   }
 
   Future<void> askToGoMainMenu({VoidCallback? func}) async {
-    await CustomAlertDialogOnlyConfirm(context, () {
+    await CustomAlertDialog(context, () {
       if (func != null) {
         func();
       }
-      Timer(Duration(milliseconds: 100), () {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Dashboard(0)),
-            (Route<dynamic> route) => false);
-      });
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Dashboard(0)),
+          (Route<dynamic> route) => false);
     },
-        "warning".tr,
+        "Emin misiniz?",
         "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
-        ArtSweetAlertType.info,
-        "ok".tr);
+        ArtSweetAlertType.question,
+        "Tamam",
+        "Geri");
   }
 }

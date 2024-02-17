@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/faq.dart';
+import 'package:patikmobile/pages/feedback.dart';
+import 'package:sizer/sizer.dart';
 
 class AboutApp extends StatefulWidget {
   const AboutApp({super.key});
@@ -45,77 +47,24 @@ class _AboutAppState extends State<AboutApp> {
             children: [
               Center(
                 child: Text(
-                  "Patik",
+                  AppLocalizations.of(context).translate("94"),
                   style: TextStyle(
                       color: Colors.red,
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              Center(
-                child: Text(
-                  " " + "whatisit".tr + "?",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
             ],
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(3.h),
             child: Center(
               child: Text(
-                "aboutAppDescription".tr,
+                AppLocalizations.of(context).translate("95"),
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   color: const Color.fromRGBO(0, 0, 0, 1),
                   fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white, border: Border.all(width: 0.2)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(Icons.question_mark_rounded),
-                      Text("faq".tr),
-                      Icon(Icons.chevron_right)
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white, border: Border.all(width: 0.2)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "www.lingobetik.com",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ),
@@ -135,8 +84,34 @@ class _AboutAppState extends State<AboutApp> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Icon(Icons.question_mark_rounded),
+                      Text(AppLocalizations.of(context).translate("79")),
+                      Icon(Icons.chevron_right)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const FeedbackPage()));
+            },
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white, border: Border.all(width: 0.2)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Icon(Icons.mail_outline),
-                      Text("feedback".tr),
+                      Text(
+                        AppLocalizations.of(context).translate("80"),
+                      ),
                       Icon(Icons.chevron_right)
                     ],
                   ),

@@ -34,7 +34,7 @@ class _IconListItemState extends State<IconListItem> {
               child: Image.asset(
                 widget.imageStr ?? 'lib/assets/graduate.png',
                 width: 7.w,
-                height: 4.h,
+                height: 3.h,
                 fit: BoxFit.cover,
               ),
             ),

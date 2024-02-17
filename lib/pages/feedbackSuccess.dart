@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:sizer/sizer.dart';
@@ -25,16 +26,17 @@ class _FeedbackSuccess extends State<FeedbackSuccess> {
         children: [
           Center(
             child: Padding(
-              padding: EdgeInsets.only(top: 4.0.h, bottom: 1.h),
+              padding: EdgeInsets.only(
+                  top: 20.0.h, bottom: 1.h, right: 3.h, left: 3.h),
               child: Text(
-                "FeedbackSuccessTitle".tr,
+                AppLocalizations.of(context).translate("91"),
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 2.5.h),
                 textAlign: TextAlign.justify,
               ),
             ),
           ),
           Text(
-            "FeedbackSuccessDescription".tr,
+            AppLocalizations.of(context).translate("92"),
             style: TextStyle(fontWeight: FontWeight.bold),
             textAlign: TextAlign.justify,
           ),
@@ -44,7 +46,7 @@ class _FeedbackSuccess extends State<FeedbackSuccess> {
               textColor: Colors.black,
               colors: MainColors.primaryColor,
               icons: Icon(Icons.send),
-              name: 'backToMainPage'.tr,
+              name: AppLocalizations.of(context).translate("93"),
               width: 0.3.w,
               height: 2.5.h,
               onTap: () {
