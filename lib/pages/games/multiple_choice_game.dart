@@ -12,8 +12,7 @@ import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../assets/style/mainColors.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 
 class MultipleChoiceGame extends StatefulWidget {
   final bool? trainingGame;

@@ -10,7 +10,7 @@
     <!-- To handle the reselection within the app on Android 14+ (when targeting API 33+) -->
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
     <application
-        android:label="patikapp1"
+        android:label="Patik"
         android:requestLegacyExternalStorage="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

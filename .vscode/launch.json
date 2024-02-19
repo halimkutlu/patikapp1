@@ -6,18 +6,18 @@
     "configurations": [
     
         {
-            "name": "patikapp1",
+            "name": "Patik",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "patikapp1 (profile mode)",
+            "name": "Patik (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "patikapp1 (release mode)",
+            "name": "Patik (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

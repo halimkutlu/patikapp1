@@ -7,6 +7,7 @@ import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/dialog_page.dart';
 import 'package:patikmobile/pages/learn_page.dart';
 import 'package:patikmobile/pages/main_page.dart';
+import 'package:patikmobile/pages/select_dialog_category.dart';
 import 'package:patikmobile/pages/training_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,7 +18,7 @@ class DashboardProvider extends ChangeNotifier {
     MainPage(),
     LearnPage(),
     TrainingPage(),
-    DialogPage(),
+    SelectDialogCategory(),
   ];
 
   List get pages => _pages;

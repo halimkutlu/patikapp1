@@ -1,6 +1,6 @@
 {
-    "name": "patikapp1",
-    "short_name": "patikapp1",
+    "name": "Patik",
+    "short_name": "Patik",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

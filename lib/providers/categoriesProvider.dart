@@ -46,7 +46,7 @@ class CategoriesProvider extends ChangeNotifier {
 
   void getCategories(BuildContext context) async {
     _categoryList = await dbProvider.getCategories(context);
-    _categoryList = await AppDbProvider().setCategoryAppLng(_categoryList);
+    //_categoryList = await AppDbProvider().setCategoryAppLng(_categoryList);
     notifyListeners();
   }
 

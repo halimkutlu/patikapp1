@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
+import 'package:patikmobile/models/dialog.dart' as dialog;
 import 'package:patikmobile/models/information.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
@@ -142,7 +143,26 @@ Select w.*, (Select Count(*) from Words w1 where w1.Categories LIKE '%|' || w.Id
 (Select count(*) from Words w2 where w2.IsCategoryName != 1) as TotalWordCount
 from Words w where w.IsCategoryName = 1 """;
     var res = await database!.rawQuery(sql);
-    return res.map((e) => WordListInformation.fromMap(e, context)).toList();
+    var liste =
+        res.map((e) => WordListInformation.fromMap(e, context)).toList();
+    return await AppDbProvider().setCategoryAppLng(liste);
+  }
+
+  Future<List<dialog.DialogListInformation>> getDialogCategories(
+      BuildContext context) async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
+    Directory dir = await getApplicationDocumentsDirectory();
+    String sql = """
+Select w.*, (Select Count(*) from Dialogs w1 where w1.Categories LIKE '%|' || w.Id || '|%') as CategoryDialogCount,
+(Select count(*) from Dialogs w2 where w2.IsCategoryName != 1) as TotalDialogCount
+from Dialogs w where w.IsCategoryName = 1 """;
+    var res = await database!.rawQuery(sql);
+    var liste = res
+        .map((e) => dialog.DialogListInformation.fromMap(dir.path, e, context))
+        .toList();
+    return await AppDbProvider().setDialogCategoryAppLng(liste);
   }
 
   Future<bool> addToWorkHardBox(int dbId) async {
@@ -420,6 +440,34 @@ class AppDbProvider extends ChangeNotifier {
     String idList = liste.map((e) => e.dbId).toList().join(",");
     var res =
         await database!.rawQuery("Select * from Words where Id In ($idList)");
+
+    res.forEach((c) => liste
+        .firstWhere((r) => r.dbId == c["Id"].toString())
+        .categoryAppLngName = c["Word"] as String?);
+    return liste;
+  }
+
+  Future<List<dialog.Dialog>> setDialogAppLng(List<dialog.Dialog> liste) async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
+    String idList = liste.map((e) => e.id).toList().join(",");
+    var res =
+        await database!.rawQuery("Select * from Dialogs where Id In ($idList)");
+
+    res.forEach((c) => liste.firstWhere((r) => r.id == c["Id"]).dialogAppLng =
+        c["Word"] as String?);
+    return liste;
+  }
+
+  Future<List<dialog.DialogListInformation>> setDialogCategoryAppLng(
+      List<dialog.DialogListInformation> liste) async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
+    String idList = liste.map((e) => e.dbId).toList().join(",");
+    var res =
+        await database!.rawQuery("Select * from Dialogs where Id In ($idList)");
 
     res.forEach((c) => liste
         .firstWhere((r) => r.dbId == c["Id"].toString())

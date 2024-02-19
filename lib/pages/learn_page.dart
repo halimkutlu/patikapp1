@@ -6,7 +6,6 @@ import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/box_page.dart';
-import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/pages/games/swipe_card_game.dart';
 import 'package:patikmobile/providers/categoriesProvider.dart';
 import 'package:patikmobile/widgets/box_widget.dart';
@@ -82,7 +81,7 @@ class _LearnPageState extends State<LearnPage> {
                             ),
                             Divider(),
                             SizedBox(
-                              height: 15.h,
+                              height: 16.h,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: provider.categoryList.length,
@@ -134,7 +133,7 @@ class _LearnPageState extends State<LearnPage> {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           width: 30.w,
-          height: 15.h,
+          //height: 16.h,
           margin: EdgeInsets.symmetric(horizontal: 5.0),
           decoration: BoxDecoration(
             color: Colors.white,

@@ -2,12 +2,11 @@
 
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
-import 'package:patikmobile/locale/app_localizations.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 
-class Word {
+class Dialog {
   int? id;
   String? word;
   String? wordA;
@@ -16,11 +15,11 @@ class Word {
   String? categories;
   String? activities;
   int? orderId;
-  String? wordAppLng;
+  String? dialogAppLng;
 
   int? errorCount = 0;
 
-  Word(
+  Dialog(
       {this.id,
       this.word,
       this.wordA,
@@ -30,9 +29,9 @@ class Word {
       this.activities,
       this.orderId,
       this.errorCount = 0,
-      this.wordAppLng = ""});
+      this.dialogAppLng = ""});
 
-  factory Word.fromMap(Map<String, dynamic> json) => Word(
+  factory Dialog.fromMap(Map<String, dynamic> json) => Dialog(
       id: json["Id"],
       word: json["Word"],
       wordA: json["WordA"],
@@ -42,7 +41,7 @@ class Word {
       activities: json["Activities"],
       orderId: json["OrderId"],
       errorCount: json["errorCount"] ?? 0,
-      wordAppLng: json["wordAppLng"]);
+      dialogAppLng: json["dialogAppLng"]);
 
   Map<String, dynamic> toMap() => {
         "Id": id,
@@ -54,7 +53,7 @@ class Word {
         "Activities": activities,
         "OrderId": orderId,
         "errorCount": errorCount ?? 0,
-        "wordAppLng": wordAppLng
+        "dialogAppLng": dialogAppLng
       };
 
   String toJson() {
@@ -62,71 +61,58 @@ class Word {
     return json.encode(data);
   }
 
-  factory Word.fromJson(String str) {
+  factory Dialog.fromJson(String str) {
     final Map<String, dynamic> data = json.decode(str);
-    return Word.fromMap(data);
+    return Dialog.fromMap(data);
   }
 }
 
-class WordListInformation {
+class DialogListInformation {
   String? categoryName;
-  int? categoryWordCount;
+  int? categoryDialogCount;
   int? totalCount;
-  String? categoryImage;
-  String? categoryOrderName;
+  String? categoryIconPath;
+  Uint8List? categoryIcon;
+  String? categoryBackgroundImagePath;
+  Uint8List? categoryBackgroundImage;
   int? order;
   int? orderColor;
   String? dbId;
   String? categoryAppLngName;
 
-  WordListInformation(
-      {this.categoryImage,
+  DialogListInformation(
+      {this.categoryIconPath,
+      this.categoryBackgroundImagePath,
       this.categoryName,
-      this.categoryWordCount,
+      this.categoryDialogCount,
       this.order,
-      this.categoryOrderName,
-      this.orderColor,
       this.totalCount,
       this.dbId,
       this.categoryAppLngName = ""});
 
-  factory WordListInformation.fromMap(
-          Map<String, dynamic> json, BuildContext context) =>
-      WordListInformation(
+  factory DialogListInformation.fromMap(
+          String dir, Map<String, dynamic> json, BuildContext context) =>
+      DialogListInformation(
           dbId: json["Id"].toString(),
           categoryName: json["Word"],
-          categoryImage: "",
-          categoryWordCount: json["CategoryWordCount"],
-          categoryOrderName: WordListInformation.getCategoryOrderName(
-              context, json["Activities"]),
-          orderColor: StaticVariables
-              .ColorList[(int.tryParse(json["Activities"]) ?? 0) - 1],
-          totalCount: json["TotalWordCount"],
-          order: json["IsCategory"] != 1
-              ? int.tryParse(json["Activities"]) ?? json["OrderId"]
-              : null,
+          categoryIconPath:
+              '$dir/${StorageProvider.learnLanguge!.Code}/di${json["Id"]}.svg',
+          categoryBackgroundImagePath:
+              '$dir/${StorageProvider.learnLanguge!.Code}/dr${json["Id"]}.svg',
+          categoryDialogCount: json["CategoryDialogCount"],
+          totalCount: json["TotalDialogCount"],
+          order: json["OrderId"],
           categoryAppLngName: "");
-
-  static getCategoryOrderName(BuildContext context, String activities) {
-    var key = "107";
-    if (activities == "2")
-      key = "115";
-    else if (activities == "3")
-      key = "123";
-    else if (activities == "4") key = "133";
-
-    return AppLocalizations.of(context).translate(key);
-  }
 }
 
-class WordListDBInformation {
+class DialogListDBInformation {
   String? word;
   String? wordA;
   String? wordT;
   String? audio;
   Uint8List? imageBytes;
   int? id;
-  String? wordAppLng;
+  String? dialogAppLng;
   bool? isAddedToWorkHard = false;
   bool? lastCard = false;
 
@@ -140,7 +126,7 @@ class WordListDBInformation {
   bool? isSoundCorrect;
   bool? isSoundListened;
 
-  WordListDBInformation(
+  DialogListDBInformation(
       {this.audio,
       this.imageBytes,
       this.word,
@@ -149,9 +135,9 @@ class WordListDBInformation {
       this.id,
       this.isAddedToWorkHard,
       this.lastCard = false,
-      this.wordAppLng = ""});
+      this.dialogAppLng = ""});
 
-  WordListDBInformation.fromMap(Word w)
+  DialogListDBInformation.fromMap(Dialog w)
       : word = w.word,
         wordA = w.wordA,
         wordT = w.wordT;
