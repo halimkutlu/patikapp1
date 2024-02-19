@@ -13,6 +13,7 @@ import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -222,12 +223,26 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
                           : Colors.white,
             ),
             child: Center(
-              child: Text(
-                info.word!,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  info.wordT != null
+                      ? Text(
+                          info.wordT ?? "",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      : Container(),
+                  Text(
+                    info.word!,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -251,7 +266,7 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
   }
 
   Future<void> askToGoMainMenu({VoidCallback? func}) async {
-    await CustomAlertDialogOnlyConfirm(context, () {
+    await CustomAlertDialog(context, () {
       if (func != null) {
         func();
       }
@@ -259,9 +274,10 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
           MaterialPageRoute(builder: (context) => Dashboard(0)),
           (Route<dynamic> route) => false);
     },
-        "warning".tr,
+        "Emin misiniz?",
         "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
-        ArtSweetAlertType.info,
-        "ok".tr);
+        ArtSweetAlertType.question,
+        "Tamam",
+        "Geri");
   }
 }

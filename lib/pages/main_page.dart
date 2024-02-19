@@ -6,6 +6,9 @@ import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/box_page.dart';
 import 'package:patikmobile/pages/dashboard.dart';
+import 'package:patikmobile/pages/dialog_page.dart';
+import 'package:patikmobile/pages/learn_page.dart';
+import 'package:patikmobile/pages/training_page.dart';
 import 'package:patikmobile/providers/mainPageProvider.dart';
 import 'package:patikmobile/services/appTimer.dart';
 import 'package:patikmobile/widgets/box_widget.dart';
@@ -64,19 +67,24 @@ class _MainPageState extends State<MainPage> {
             IconListItem(
                 Text: AppLocalizations.of(context).translate("97"),
                 imageStr: 'lib/assets/img/graduate.png',
-                onTap: () {}),
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => LearnPage()));
+                }),
             IconListItem(
                 Text: AppLocalizations.of(context).translate("98"),
                 imageStr: 'lib/assets/img/muscle.png',
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => Dashboard(1)));
+                      MaterialPageRoute(builder: (context) => TrainingPage()));
                 }),
             IconListItem(
-              Text: AppLocalizations.of(context).translate("99"),
-              imageStr: 'lib/assets/img/chat.png',
-              onTap: () => mainProvider.changePage(3),
-            ),
+                Text: AppLocalizations.of(context).translate("99"),
+                imageStr: 'lib/assets/img/chat.png',
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => DialogPage()));
+                }),
             statusArea(),
             brandArea(),
             boxArea()

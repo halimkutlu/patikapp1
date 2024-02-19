@@ -181,7 +181,9 @@ class _TrainingSelectState extends State<TrainingSelect> {
             value: trainingProvider.getLernedWordCount.toString(),
             iconUrl: 'lib/assets/img/ilearned.png',
             onTap: () {
-              playWithSelectedOptions(playWithEnum.learnedWords);
+              if (trainingProvider.getLernedWordCount > 0) {
+                playWithSelectedOptions(playWithEnum.learnedWords);
+              }
             },
           ),
           BoxWidget(
@@ -190,7 +192,9 @@ class _TrainingSelectState extends State<TrainingSelect> {
             value: trainingProvider.getRepeatedWordCount.toString(),
             iconUrl: 'lib/assets/img/repeat.png',
             onTap: () {
-              playWithSelectedOptions(playWithEnum.repeatedWords);
+              if (trainingProvider.getRepeatedWordCount > 0) {
+                playWithSelectedOptions(playWithEnum.repeatedWords);
+              }
             },
           ),
           BoxWidget(
@@ -199,7 +203,9 @@ class _TrainingSelectState extends State<TrainingSelect> {
             value: trainingProvider.getWorkHardCount.toString(),
             iconUrl: 'lib/assets/img/sun.png',
             onTap: () {
-              playWithSelectedOptions(playWithEnum.workHardWords);
+              if (trainingProvider.getWorkHardCount > 0) {
+                playWithSelectedOptions(playWithEnum.workHardWords);
+              }
             },
           ),
         ],

@@ -50,7 +50,20 @@ class _BoxPageState extends State<BoxPage> {
       body: Consumer<BoxPageProvider>(builder: (context, provider, child) {
         if (!provider.wordsLoaded!) {
           // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    AppLocalizations.of(context).translate("97"),
+                  ),
+                ),
+                CircularProgressIndicator(),
+              ],
+            ),
+          );
         }
 
         return Stack(

@@ -64,6 +64,7 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
                 child: CTextfield(
+                  obscureText: true,
                   controller: loginProvider.password,
                   name: AppLocalizations.of(context).translate("10"),
                   hintText: AppLocalizations.of(context).translate("10"),
@@ -77,8 +78,8 @@ class _LoginState extends State<Login> {
                   colors: MainColors.primaryColor,
                   icons: Icon(Icons.send),
                   name: AppLocalizations.of(context).translate("7"),
-                  width: 0.3.w,
-                  height: 2.5.h,
+                  width: 0.283.w,
+                  height: 3.2.h,
                   onTap: () {
                     FocusScope.of(context).unfocus();
                     loginProvider.login(context);
@@ -116,7 +117,7 @@ class _LoginState extends State<Login> {
                   icons: Icon(Icons.invert_colors),
                   name: AppLocalizations.of(context).translate("13"),
                   width: 0.3.w,
-                  height: 2.5.h,
+                  height: 3.4.h,
                   onTap: () {
                     loginProvider.LoginWithGoogle(context);
                   },

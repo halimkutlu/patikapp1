@@ -41,6 +41,7 @@ class _RegisterState extends State<Register> {
                 child: CTextfield(
                     controller: registerProvider.userName,
                     icon: Icons.person_outline,
+                    inputType: TextInputType.emailAddress,
                     name: AppLocalizations.of(context).translate("9"),
                     hintText: AppLocalizations.of(context).translate("9",
                         addRight: AppLocalizations.of(context)
