@@ -1,7 +1,6 @@
-// ignore_for_file: non_constant_identifier_names, avoid_print
+// ignore_for_file: non_constant_identifier_names, avoid_print, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
-import 'dart:io';
-
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:patikmobile/providers/dialogCategoriesProvider.dart';
@@ -52,40 +51,96 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                             itemCount: provider.categoryList.length,
                             itemBuilder: (context, index) {
                               return InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => Dialog()));
+                                },
                                 child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 8.0.w, right: 8.0.w, bottom: 1.h),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                                0.2), // Gölge rengi ve opaklık
-                                            spreadRadius: 2, // Yayılma alanı
-                                            blurRadius:
-                                                1, // Bulanıklık yarıçapı
-                                            offset: const Offset(
-                                                0, 2), // Gölge offset
+                                    padding: EdgeInsets.only(
+                                        top: 0.8.h,
+                                        left: 8.0.w,
+                                        right: 8.0.w,
+                                        bottom: 0.7.h),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Color.fromARGB(
+                                              238, 255, 255, 255),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(
+                                                  0.5), // Gölge rengi ve opaklık
+                                              spreadRadius: 1, // Yayılma alanı
+                                              blurRadius:
+                                                  1, // Bulanıklık yarıçapı
+                                              offset: const Offset(
+                                                  0, 1), // Gölge offset
+                                            ),
+                                          ],
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: Column(children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 0.3.h, right: 1.h),
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                    '${provider.categoryList[index].categoryDialogCount!} / ',
+                                                    style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 1.7.h)),
+                                                Text(
+                                                    provider.categoryList[index]
+                                                        .totalCount!
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.red
+                                                            .withOpacity(0.5),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 1.7.h))
+                                              ]),
+                                        ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: FileImage(provider
+                                                      .categoryList[index]
+                                                      .categoryBackgroundImage!),
+                                                  fit: BoxFit.cover)),
+                                          padding: const EdgeInsets.all(10),
+
+                                          // Arka plan rengi
+                                          child: Center(
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SvgPicture.file(provider
+                                                      .categoryList[index]
+                                                      .categoryIcon!),
+                                                  AutoSizeText(
+                                                    provider.categoryList[index]
+                                                        .categoryAppLngName!,
+                                                    style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 2.2
+                                                            .h), // Metin rengi
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 1.h))
+                                                ]),
                                           ),
-                                        ],
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(7))),
-                                    padding: const EdgeInsets.all(50),
-                                    // Arka plan rengi
-                                    child: Center(
-                                      child: Text(
-                                        provider.categoryList[index]
-                                            .categoryAppLngName!,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 1.7.h), // Metin rengi
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                        )
+                                      ]),
+                                    )),
                               );
                             }))
                   ],

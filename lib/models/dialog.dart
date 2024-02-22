@@ -1,9 +1,9 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 
 class Dialog {
@@ -72,9 +72,9 @@ class DialogListInformation {
   int? categoryDialogCount;
   int? totalCount;
   String? categoryIconPath;
-  Uint8List? categoryIcon;
+  File? categoryIcon;
   String? categoryBackgroundImagePath;
-  Uint8List? categoryBackgroundImage;
+  File? categoryBackgroundImage;
   int? order;
   int? orderColor;
   String? dbId;
@@ -82,7 +82,9 @@ class DialogListInformation {
 
   DialogListInformation(
       {this.categoryIconPath,
+      this.categoryIcon,
       this.categoryBackgroundImagePath,
+      this.categoryBackgroundImage,
       this.categoryName,
       this.categoryDialogCount,
       this.order,
@@ -97,8 +99,12 @@ class DialogListInformation {
           categoryName: json["Word"],
           categoryIconPath:
               '$dir/${StorageProvider.learnLanguge!.Code}/di${json["Id"]}.svg',
+          categoryIcon: File(
+              '$dir/${StorageProvider.learnLanguge!.Code}/di${json["Id"]}.svg'),
           categoryBackgroundImagePath:
-              '$dir/${StorageProvider.learnLanguge!.Code}/dr${json["Id"]}.svg',
+              '$dir/${StorageProvider.learnLanguge!.Code}/di${json["Id"]}.png',
+          categoryBackgroundImage: File(
+              '$dir/${StorageProvider.learnLanguge!.Code}/di${json["Id"]}.png'),
           categoryDialogCount: json["CategoryDialogCount"],
           totalCount: json["TotalDialogCount"],
           order: json["OrderId"],

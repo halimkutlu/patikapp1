@@ -157,7 +157,7 @@ from Words w where w.IsCategoryName = 1 """;
     String sql = """
 Select w.*, (Select Count(*) from Dialogs w1 where w1.Categories LIKE '%|' || w.Id || '|%') as CategoryDialogCount,
 (Select count(*) from Dialogs w2 where w2.IsCategoryName != 1) as TotalDialogCount
-from Dialogs w where w.IsCategoryName = 1 """;
+from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     var res = await database!.rawQuery(sql);
     var liste = res
         .map((e) => dialog.DialogListInformation.fromMap(dir.path, e, context))

@@ -21,12 +21,6 @@ class DialogCategoriesProvider extends ChangeNotifier {
 
   void getCategories(BuildContext context) async {
     categoryList = await dbProvider.getDialogCategories(context);
-    for (var element in categoryList) {
-      element.categoryIcon =
-          await File(element.categoryIconPath!).readAsBytes();
-      element.categoryBackgroundImage =
-          await File(element.categoryBackgroundImagePath!).readAsBytes();
-    }
     isLoadList = true;
     //_categoryList = await AppDbProvider().setCategoryAppLng(_categoryList);
     notifyListeners();
