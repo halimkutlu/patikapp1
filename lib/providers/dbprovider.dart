@@ -165,6 +165,21 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     return await AppDbProvider().setDialogCategoryAppLng(liste);
   }
 
+  Future<List<dialog.DialogListInformation>> getDialogListSelectedCategories(
+      BuildContext context, String id) async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
+    Directory dir = await getApplicationDocumentsDirectory();
+
+    var res = await database!
+        .rawQuery("Select * from Dialogs where Categories LIKE '%|$id|%'");
+    var liste = res
+        .map((e) => dialog.DialogListInformation.fromMap(dir.path, e, context))
+        .toList();
+    return await AppDbProvider().setDialogCategoryAppLng(liste);
+  }
+
   Future<bool> addToWorkHardBox(int dbId) async {
     try {
       var status = await reOpenDbConnection();

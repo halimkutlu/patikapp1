@@ -3,6 +3,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:patikmobile/pages/dialog_page.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/dialogCategoriesProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -52,8 +54,14 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
+                                  // DbProvider dbProvider = DbProvider();
+                                  // dbProvider.getDialogListSelectedCategories(
+                                  //     context,
+                                  //     provider.categoryList[index].dbId!);
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Dialog()));
+                                      builder: (context) => DialogPage(
+                                          dialogId: provider
+                                              .categoryList[index].dbId!)));
                                 },
                                 child: Padding(
                                     padding: EdgeInsets.only(

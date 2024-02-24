@@ -5,15 +5,22 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/models/dialog.dart';
+import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DialogCategoriesProvider extends ChangeNotifier {
   final dbProvider = DbProvider();
   final List<DialogListInformation> wordList = [];
 
   List<DialogListInformation> categoryList = [];
+  List<DialogListDBInformation> dialogs = [];
+
   bool isLoadList = false;
+  bool isDialogListLoaded = false;
 
   init(BuildContext context) async {
     getCategories(context);
@@ -44,5 +51,48 @@ class DialogCategoriesProvider extends ChangeNotifier {
         ],
       ),
     );
+  }
+
+  Future<String> getCurrentLanguageAsString() async {
+    if (StorageProvider.learnLanguge != null) {
+      return StorageProvider.learnLanguge!.Code;
+    }
+
+    int? language;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    language = prefs.getInt(StorageProvider.learnLcidKey);
+    if (language != null) {
+      Lcid lcid = Languages.GetLngFromLCID(language);
+      return lcid.Code;
+    }
+
+    return "";
+  }
+
+  void dialogPageInit(String? dialogId, BuildContext context) async {
+    String currentLanguage = await getCurrentLanguageAsString();
+
+    Directory dir = await getApplicationDocumentsDirectory();
+    dialogs = [];
+    var dialogList =
+        await dbProvider.getDialogListSelectedCategories(context, dialogId!);
+
+    for (var x in dialogList) {
+      final wordSound =
+          '${dir.path}/$currentLanguage/${currentLanguage}_${x.dbId}.mp3';
+
+      DialogListDBInformation wordInfo = DialogListDBInformation(
+        audio: wordSound,
+        word: x.categoryName,
+        wordA: x.categoryAppLngName,
+        wordT: "okunuşu",
+        id: 0,
+      );
+
+      dialogs.add(wordInfo);
+    }
+    isDialogListLoaded = true;
+    notifyListeners();
+    print(dialogs);
   }
 }
