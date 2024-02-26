@@ -123,7 +123,7 @@ class LoginProvider extends ChangeNotifier {
           await _auth.signInWithCredential(credential);
       final User? user = authResult.user;
 
-      if (user == null || user.uid.isEmpty || user.email!.isEmpty) {
+      if (user == null || user.uid.isEmpty) {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
         }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
@@ -132,8 +132,10 @@ class LoginProvider extends ChangeNotifier {
         return;
       }
 
+      var email = user.email ?? user.providerData[0].email;
+
       UserResult apiresult = await apirepository.login(
-          userName: user.email,
+          userName: email,
           password: user.uid,
           rememberMe: false,
           Uid: user.uid,

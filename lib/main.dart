@@ -44,8 +44,8 @@ void main() async {
   if (Platform.isAndroid) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        apiKey: 'AIzaSyBFDNgEQpj6uQg_cIGYzUIBM3p7cEijcog',
-        appId: '1:587524623446:android:4673d988efc27735a57ff7',
+        apiKey: 'AIzaSyCIxSGHTmGLmrOy7xYLzSSY4j1MujNR1XA',
+        appId: '1:799969018625:android:3cd8551608a3b49e6cd100',
         messagingSenderId: '',
         projectId: 'patikmobile',
       ),
