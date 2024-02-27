@@ -47,7 +47,7 @@ void main() async {
         apiKey: 'AIzaSyCIxSGHTmGLmrOy7xYLzSSY4j1MujNR1XA',
         appId: '1:799969018625:android:3cd8551608a3b49e6cd100',
         messagingSenderId: '',
-        projectId: 'patikmobile',
+        projectId: 'patik',
       ),
     );
   } else {
