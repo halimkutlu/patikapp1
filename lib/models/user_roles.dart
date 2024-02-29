@@ -1,6 +1,10 @@
-import 'dart:convert';
+// ignore_for_file: constant_identifier_names
 
-import 'package:shared_preferences/shared_preferences.dart';
+class LngPlanType {
+  static const int Free = 0;
+  static const int QRCode = 1;
+  static const int Premium = 2;
+}
 
 class UserRole {
   static const int admin = 1;

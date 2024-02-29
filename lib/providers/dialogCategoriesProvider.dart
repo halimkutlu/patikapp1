@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, unnecessary_new, avoid_function_literals_in_foreach_calls, non_constant_identifier_names, avoid_unnecessary_containers
+// ignore_for_file: file_names, unnecessary_new, avoid_function_literals_in_foreach_calls, non_constant_identifier_names, avoid_unnecessary_containers, use_build_context_synchronously
 
 import 'dart:io';
 import 'dart:typed_data';
@@ -71,28 +71,10 @@ class DialogCategoriesProvider extends ChangeNotifier {
 
   void dialogPageInit(String? dialogId, BuildContext context) async {
     String currentLanguage = await getCurrentLanguageAsString();
-
     Directory dir = await getApplicationDocumentsDirectory();
-    dialogs = [];
-    var dialogList =
-        await dbProvider.getDialogListSelectedCategories(context, dialogId!);
-
-    for (var x in dialogList) {
-      final wordSound =
-          '${dir.path}/$currentLanguage/${currentLanguage}_${x.dbId}.mp3';
-
-      DialogListDBInformation wordInfo = DialogListDBInformation(
-        audio: wordSound,
-        word: x.categoryName,
-        wordA: x.categoryAppLngName,
-        wordT: "okunuşu",
-        id: 0,
-      );
-
-      dialogs.add(wordInfo);
-    }
+    dialogs = await dbProvider.getDialogListSelectedCategories(
+        context, dialogId!, dir.path, currentLanguage);
     isDialogListLoaded = true;
     notifyListeners();
-    print(dialogs);
   }
 }

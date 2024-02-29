@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
+import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/dialog.dart' as dialog;
 import 'package:patikmobile/models/information.dart';
 import 'package:patikmobile/models/language.model.dart';
@@ -89,6 +90,7 @@ class DbProvider extends ChangeNotifier {
         if (checkInformation == true) {
           Information infrm = await getInformation();
           String hash = infrm.lngHash!;
+          StaticVariables.lngPlanType = infrm.lngPlanType!;
           String phoneId = DeviceProvider.getPhoneId();
           result.status =
               await FlutterBcrypt.verify(password: phoneId, hash: hash);
@@ -165,8 +167,11 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     return await AppDbProvider().setDialogCategoryAppLng(liste);
   }
 
-  Future<List<dialog.DialogListInformation>> getDialogListSelectedCategories(
-      BuildContext context, String id) async {
+  Future<List<dialog.DialogListDBInformation>> getDialogListSelectedCategories(
+      BuildContext context,
+      String id,
+      String path,
+      String currentLanguage) async {
     var status = await reOpenDbConnection();
     if (!status) return [];
 
@@ -175,9 +180,10 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     var res = await database!
         .rawQuery("Select * from Dialogs where Categories LIKE '%|$id|%'");
     var liste = res
-        .map((e) => dialog.DialogListInformation.fromMap(dir.path, e, context))
+        .map((e) =>
+            dialog.DialogListDBInformation.fromMap(e, path, currentLanguage))
         .toList();
-    return await AppDbProvider().setDialogCategoryAppLng(liste);
+    return await AppDbProvider().setDialogAppLng(liste);
   }
 
   Future<bool> addToWorkHardBox(int dbId) async {
@@ -462,7 +468,8 @@ class AppDbProvider extends ChangeNotifier {
     return liste;
   }
 
-  Future<List<dialog.Dialog>> setDialogAppLng(List<dialog.Dialog> liste) async {
+  Future<List<dialog.DialogListDBInformation>> setDialogAppLng(
+      List<dialog.DialogListDBInformation> liste) async {
     var status = await reOpenDbConnection();
     if (!status) return [];
 

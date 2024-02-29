@@ -142,7 +142,9 @@ class _DashboardState extends State<Dashboard> {
                                           TextSpan(
                                             children: [
                                               TextSpan(
-                                                text: 'Sınırlı kullanım ',
+                                                text:
+                                                    AppLocalizations.of(context)
+                                                        .translate("72"),
                                                 style: TextStyle(
                                                   color: Color(0xFF605E5E),
                                                   fontSize: 14,
@@ -151,16 +153,16 @@ class _DashboardState extends State<Dashboard> {
                                                   height: 0.10,
                                                 ),
                                               ),
-                                              TextSpan(
-                                                text: 'Ücretsiz sürüm',
-                                                style: TextStyle(
-                                                  color: Color(0xFFE8233D),
-                                                  fontSize: 14,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 0.10,
-                                                ),
-                                              ),
+                                              // TextSpan(
+                                              //   text: 'Ücretsiz sürüm',
+                                              //   style: TextStyle(
+                                              //     color: Color(0xFFE8233D),
+                                              //     fontSize: 14,
+                                              //     fontFamily: 'Roboto',
+                                              //     fontWeight: FontWeight.w400,
+                                              //     height: 0.10,
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                           textAlign: TextAlign.center,

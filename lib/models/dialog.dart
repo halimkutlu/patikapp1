@@ -5,6 +5,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:widgets_to_image/widgets_to_image.dart';
 
 class Dialog {
   int? id;
@@ -143,8 +145,13 @@ class DialogListDBInformation {
       this.lastCard = false,
       this.dialogAppLng = ""});
 
-  DialogListDBInformation.fromMap(Dialog w)
-      : word = w.word,
-        wordA = w.wordA,
-        wordT = w.wordT;
+  factory DialogListDBInformation.fromMap(
+          Map<String, dynamic> json, String path, String currentLanguage) =>
+      DialogListDBInformation(
+          id: json["Id"],
+          word: json["Word"],
+          wordA: json["WordA"],
+          wordT: json["WordT"],
+          audio:
+              '$path/$currentLanguage/${currentLanguage}_Di_${json["Id"]}.mp3');
 }

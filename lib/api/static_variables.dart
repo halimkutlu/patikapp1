@@ -3,6 +3,8 @@
 
 import 'dart:ui';
 
+import 'package:patikmobile/models/user_roles.dart';
+
 class StaticVariables {
   static String token = "";
   static String UserName = "";
@@ -12,6 +14,7 @@ class StaticVariables {
   static String LangCode = "";
   static bool FirstTimeLogin = true;
   static String PhoneID = "";
+  static int lngPlanType = LngPlanType.Free;
 
   StaticVariables.reset() {
     token = "";
