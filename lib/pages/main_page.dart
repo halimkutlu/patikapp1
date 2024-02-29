@@ -82,8 +82,10 @@ class _MainPageState extends State<MainPage> {
                 Text: AppLocalizations.of(context).translate("99"),
                 imageStr: 'lib/assets/img/chat.png',
                 onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => DialogPage()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DialogPage(
+                            dialogId: "-1",
+                          )));
                 }),
             statusArea(),
             brandArea(),

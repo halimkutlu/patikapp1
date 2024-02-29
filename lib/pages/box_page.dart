@@ -1,8 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:io';
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
@@ -23,12 +20,17 @@ class BoxPage extends StatefulWidget {
 
 class _BoxPageState extends State<BoxPage> {
   late BoxPageProvider boxPageProvider;
-
+  late bool loading = true;
   @override
   void initState() {
     super.initState();
     boxPageProvider = Provider.of<BoxPageProvider>(context, listen: false);
     boxPageProvider.init(context, widget.selectedBox);
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) super.setState(fn);
   }
 
   @override
@@ -49,18 +51,22 @@ class _BoxPageState extends State<BoxPage> {
               : MainColors.boxColor3,
       body: Consumer<BoxPageProvider>(builder: (context, provider, child) {
         if (!provider.wordsLoaded!) {
+          Future.delayed(
+              Duration(seconds: 5), () => setState(() => loading = false));
           // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    AppLocalizations.of(context).translate("97"),
-                  ),
-                ),
-                CircularProgressIndicator(),
+                if (loading)
+                  CircularProgressIndicator()
+                else
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      AppLocalizations.of(context).translate("97"),
+                    ),
+                  )
               ],
             ),
           );

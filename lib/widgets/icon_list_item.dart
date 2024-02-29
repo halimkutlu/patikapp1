@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:sizer/sizer.dart';
 
 class IconListItem extends StatefulWidget {
@@ -41,7 +42,7 @@ class _IconListItemState extends State<IconListItem> {
             Padding(
               padding: EdgeInsets.only(left: 4.w),
               child: Text(
-                widget.Text ?? "Yeni Kelimeler Öğren",
+                widget.Text ?? AppLocalizations.of(context).translate("97"),
                 style: TextStyle(fontSize: 2.5.h, fontWeight: FontWeight.w500),
               ),
             )
