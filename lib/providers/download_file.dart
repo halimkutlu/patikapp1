@@ -1,18 +1,45 @@
 // ignore_for_file: avoid_print
 
-import 'dart:convert';
-import 'dart:typed_data';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:patikmobile/locale/ChangeLanguage.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/api_urls.dart';
 import '../models/language.model.dart';
+
+Future<bool> getPermissions() async {
+  bool gotPermissions = false;
+
+  if (Platform.isAndroid) {
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    var sdkInt = androidInfo.version.sdkInt; // SDK, example: 31
+
+    if (sdkInt >= 30) {
+      gotPermissions =
+          await Permission.manageExternalStorage.request().isGranted;
+    } else {
+      // (SDK < 30)
+      var storage = await Permission.storage.status;
+
+      if (storage != PermissionStatus.granted) {
+        await Permission.storage.request();
+      }
+
+      storage = await Permission.storage.status;
+
+      if (storage == PermissionStatus.granted) {
+        gotPermissions = true;
+      }
+    }
+  } else {
+    gotPermissions = true;
+  }
+
+  return gotPermissions;
+}
 
 Future<FileDownloadStatus> downloadFile(String endpoint,
     {required int lcid, void Function(int, int)? onReceiveProgress}) async {
@@ -22,8 +49,7 @@ Future<FileDownloadStatus> downloadFile(String endpoint,
   String url = "$BASE_URL/Downloads/$endpoint";
   String filename = Languages.GetCodeFromLCID(lcid);
   try {
-    bool permissionStatus =
-        await Permission.manageExternalStorage.request().isGranted;
+    bool permissionStatus = await getPermissions();
 
     if (!permissionStatus) {
       result.status = false;

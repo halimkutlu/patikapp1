@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/user_roles.dart';
