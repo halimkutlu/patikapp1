@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_field
 
 import 'dart:async';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
@@ -98,10 +99,10 @@ class _MainPageState extends State<MainPage> {
 
   Widget statusArea() {
     return Padding(
-      padding: EdgeInsets.only(top: 1.0.h, bottom: 2.h),
+      padding: EdgeInsets.only(top: 1.0.h, bottom: 2.h, left: 2.w,),
       child: Column(
         children: [
-          Text(
+          AutoSizeText(
             AppLocalizations.of(context).translate("64"),
             style: TextStyle(fontSize: 2.5.h),
           ),
@@ -114,18 +115,18 @@ class _MainPageState extends State<MainPage> {
             children: [
               Text(
                 AppLocalizations.of(context).translate("66", addRight: ""),
-                style: TextStyle(fontSize: 2.0.h, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
               ),
               Text(
                 appMinute.toString(),
                 style: TextStyle(
-                    fontSize: 3.0.h,
+                    fontSize: 2.0.h,
                     color: Colors.red,
                     fontWeight: FontWeight.bold),
               ),
               Text(
                 AppLocalizations.of(context).translate("63", addLeft: " "),
-                style: TextStyle(fontSize: 2.0.h, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -134,12 +135,12 @@ class _MainPageState extends State<MainPage> {
             children: [
               Text(
                 AppLocalizations.of(context).translate("67", addRight: " "),
-                style: TextStyle(fontSize: 2.0.h, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
               ),
               Text(
                 mainProvider.getLernedWordCount.toString(),
                 style: TextStyle(
-                    fontSize: 3.0.h,
+                    fontSize: 2.0.h,
                     color: Colors.red,
                     fontWeight: FontWeight.bold),
               ),

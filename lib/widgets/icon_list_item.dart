@@ -24,7 +24,7 @@ class _IconListItemState extends State<IconListItem> {
       child: Padding(
         padding: EdgeInsets.only(left: 2.h, right: 2.h, top: 1.h),
         child: Container(
-          height: 6.5.h,
+          height: 5.5.h,
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: const BorderRadius.all(Radius.circular(25)),
@@ -43,7 +43,7 @@ class _IconListItemState extends State<IconListItem> {
               padding: EdgeInsets.only(left: 4.w),
               child: Text(
                 widget.Text ?? AppLocalizations.of(context).translate("97"),
-                style: TextStyle(fontSize: 2.5.h, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 2.1.h, fontWeight: FontWeight.w500),
               ),
             )
           ]),

@@ -113,20 +113,20 @@ class _DashboardState extends State<Dashboard> {
                         child: Column(
                           children: [
                             Container(
-                              height: 10.h,
-                              width: 25.w,
+                              height: 9.h,
+                              width: 20.w,
                               decoration: const ShapeDecoration(
                                 color: Color(0xFFD7D6D6),
                                 shape: OvalBorder(),
                               ),
                               child: Image.asset(
                                 'lib/assets/img/avatar.png',
-                                height: 10.h,
+                                height: 8.h,
                                 width: 10.w,
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: Center(child: Text(mainProvider.userName)),
                             ),
                             Center(
@@ -134,42 +134,40 @@ class _DashboardState extends State<Dashboard> {
                               mainProvider.nameLastname,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             )),
-                            Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Center(
-                                  child: mainProvider.roleid == UserRole.free
-                                      ? Text.rich(
+                            Center(
+                              child: mainProvider.roleid == UserRole.free
+                                  ? Text.rich(
+                                      TextSpan(
+                                        children: [
                                           TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text:
-                                                    AppLocalizations.of(context)
-                                                        .translate("72"),
-                                                style: TextStyle(
-                                                  color: Color(0xFF605E5E),
-                                                  fontSize: 14,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 0.10,
-                                                ),
-                                              ),
-                                              // TextSpan(
-                                              //   text: 'Ücretsiz sürüm',
-                                              //   style: TextStyle(
-                                              //     color: Color(0xFFE8233D),
-                                              //     fontSize: 14,
-                                              //     fontFamily: 'Roboto',
-                                              //     fontWeight: FontWeight.w400,
-                                              //     height: 0.10,
-                                              //   ),
-                                              // ),
-                                            ],
+                                            text:
+                                                AppLocalizations.of(context)
+                                                    .translate("72"),
+                                            style: TextStyle(
+                                              color: Color(0xFF605E5E),
+                                              fontSize: 14,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w500,
+                                              height: 0.10,
+                                            ),
                                           ),
-                                          textAlign: TextAlign.center,
-                                        )
-                                      : Text(UserRole.getRoleDescriptionFromId(
-                                          mainProvider.roleid)),
-                                )),
+                                          // TextSpan(
+                                          //   text: 'Ücretsiz sürüm',
+                                          //   style: TextStyle(
+                                          //     color: Color(0xFFE8233D),
+                                          //     fontSize: 14,
+                                          //     fontFamily: 'Roboto',
+                                          //     fontWeight: FontWeight.w400,
+                                          //     height: 0.10,
+                                          //   ),
+                                          // ),
+                                        ],
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  : Text(UserRole.getRoleDescriptionFromId(
+                                      mainProvider.roleid)),
+                            ),
                             CustomIconButton(
                               textSize: 20,
                               height: 2.7.h,

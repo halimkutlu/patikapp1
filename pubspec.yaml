@@ -57,11 +57,11 @@ dependencies:
   percent_indicator: ^4.2.3
   auto_size_text: ^3.0.0
   flutter_card_swiper: ^6.1.0
-  audioplayers: ^5.2.1
   flutter_svg: ^2.0.9
   google_mobile_ads: ^4.0.0
   share_plus: ^7.2.2
   widgets_to_image: ^0.0.2
+  just_audio: ^0.9.36
 
 dev_dependencies:
   flutter_test:

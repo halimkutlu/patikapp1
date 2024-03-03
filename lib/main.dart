@@ -1,7 +1,6 @@
 // ignore_for_file: unused_local_variable, prefer_const_constructors
 
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,6 +53,7 @@ void main() async {
   } else {
     await Firebase.initializeApp();
   }
+
   runApp(MultiProvider(providers: providers, child: const MyApp()));
 }
 

@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:art_sweetalert/art_sweetalert.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get/get.dart';
@@ -34,7 +33,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
   BannerAd? _bannerAd;
   bool contentLoaded = false;
   late SwipeCardGameProvider swipeCardProvider;
-  AudioPlayer audioPlayer = AudioPlayer();
+ 
 
   @override
   void initState() {
