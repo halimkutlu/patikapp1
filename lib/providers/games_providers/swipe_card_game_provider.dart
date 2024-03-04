@@ -11,6 +11,7 @@ import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
+import 'package:patikmobile/pages/games/fill_the_blank_game.dart';
 import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/pages/games/match_with_picture_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';

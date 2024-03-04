@@ -3,16 +3,13 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
-import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
@@ -341,7 +338,8 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
     if (_siradaki! > _wordListDbInformation!.length - 1) return;
     GameSizeClass.boxEndPosition = (GameSizeClass.bottomMargin -
-        ((GameSizeClass.boxSize * (_siradaki! + 1)) + (_siradaki! * 2.h)));
+        ((GameSizeClass.boxSize.height * (_siradaki! + 1)) +
+            (_siradaki! * 2.h)));
     //siradaki kutuların konumu değiştiriliyor
     for (int i = 0;
         i < _currentGameItems![_siradaki!].Wordoffsets!.length;

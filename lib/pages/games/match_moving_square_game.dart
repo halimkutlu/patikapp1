@@ -1,10 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
-
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
@@ -14,14 +12,13 @@ import 'package:patikmobile/providers/games_providers/match_moving_square_game_p
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/services/sound_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
-import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class GameSizeClass {
   static double Height = StaticVariables.AppSize.height;
   static double Width = StaticVariables.AppSize.width;
-  static double boxSize = 0;
+  static Size boxSize = Size(0, 0);
   static double boxEndPosition = 0;
   static double bottomMargin = 0;
   static double firstBoxOffset = 0;
@@ -29,15 +26,15 @@ class GameSizeClass {
   static double perMargin = 0;
   void Init() {
     // Aşağıda duracakları konum
-    bottomMargin = Height - 3.h;
+    bottomMargin = Height - 2.h;
     // Kutu boyutu
-    boxSize = (Height - 22.h) / 5;
+    boxSize = Size((Width - 5.h) / 2, Height / 10);
 
-    var margin = (Width - (boxSize * 2)) / 3;
+    var margin = (Width - (boxSize.width * 2)) / 3;
     // ilk kutu left
     firstBoxOffset = margin;
     // ikinci kutu left
-    secondBoxOffset = boxSize + (margin * 2);
+    secondBoxOffset = boxSize.width + (margin * 2);
   }
 }
 
@@ -59,7 +56,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
   late List<AnimationController> _controllers;
   // late List<List<Offset>> squareOffsets;
   // animasyon hızı
-  int durationSec = 30;
+  int durationSec = 40;
   @override
   void initState() {
     super.initState();
@@ -165,9 +162,9 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
     Offset position = details.localPosition;
 
     if (leftSquarePosition.dx <= position.dx &&
-        leftSquarePosition.dx + GameSizeClass.boxSize >= position.dx &&
+        leftSquarePosition.dx + GameSizeClass.boxSize.width >= position.dx &&
         leftSquarePosition.dy <= position.dy &&
-        leftSquarePosition.dy + GameSizeClass.boxSize >= position.dy) {
+        leftSquarePosition.dy + GameSizeClass.boxSize.height >= position.dy) {
       setState(() {
         provider.setIsClicked = true;
       });
@@ -181,9 +178,9 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
     }
 
     if (rightSquarePosition.dx <= position.dx &&
-        rightSquarePosition.dx + GameSizeClass.boxSize >= position.dx &&
+        rightSquarePosition.dx + GameSizeClass.boxSize.width >= position.dx &&
         rightSquarePosition.dy <= position.dy &&
-        rightSquarePosition.dy + GameSizeClass.boxSize >= position.dy) {
+        rightSquarePosition.dy + GameSizeClass.boxSize.height >= position.dy) {
       setState(() {
         provider.setIsClicked = true;
       });
@@ -253,7 +250,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
                     top: 0,
                     child: Container(
                         width: StaticVariables.AppSize.width,
-                        height: GameSizeClass.boxSize - 100,
+                        height: GameSizeClass.boxSize.height / 1.2,
                         decoration:
                             BoxDecoration(color: MainColors.backgroundColor))),
                 if (provider.errorAccuried == true) ...[
@@ -343,8 +340,8 @@ class SquarePainter extends CustomPainter {
 
         Path path = Path();
         path.addRRect(RRect.fromRectAndRadius(
-            Rect.fromLTWH(offset.dx, offset.dy, GameSizeClass.boxSize,
-                GameSizeClass.boxSize),
+            Rect.fromLTWH(offset.dx, offset.dy, GameSizeClass.boxSize.width,
+                GameSizeClass.boxSize.height),
             Radius.circular(10)));
 
         canvas.drawPath(path, index == 0 ? paint : paint2);
@@ -368,8 +365,11 @@ class SquarePainter extends CustomPainter {
         textPainter.layout();
         textPainter.paint(
             canvas,
-            Offset(offset.dx + (GameSizeClass.boxSize - textPainter.width) / 2,
-                offset.dy + (GameSizeClass.boxSize - textPainter.height) / 2));
+            Offset(
+                offset.dx +
+                    (GameSizeClass.boxSize.width - textPainter.width) / 2,
+                offset.dy +
+                    (GameSizeClass.boxSize.height - textPainter.height) / 2));
       }
     }
   }

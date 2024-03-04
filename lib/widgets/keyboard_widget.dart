@@ -215,62 +215,57 @@ class _NumericKeypadState extends State<NumericKeypad> {
       }
     }
     return Expanded(
-      child: Container(
-        width: 29.56,
-        height: 40,
-        padding: const EdgeInsets.only(top: 4, left: 0, right: 3, bottom: 5),
-        decoration: ShapeDecoration(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          shadows: [
-            BoxShadow(
-              color: Color(0x44000000),
-              blurRadius: 0,
-              offset: Offset(0, 1),
-              spreadRadius: 0,
-            )
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: TextButton(
-                onPressed: onPressed ??
-                    (isDisabled(buttonIndex, text, count)
-                        ? null
-                        : () => _input(text!)),
+      child: InkWell(
+        onTap: onPressed ??
+            (isDisabled(buttonIndex, text, count) ? null : () => _input(text!)),
+        child: Container(
+          width: 29.56,
+          height: 40,
+          padding: const EdgeInsets.only(top: 4, left: 0, right: 3, bottom: 5),
+          decoration: ShapeDecoration(
+            color: Colors.white,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            shadows: [
+              BoxShadow(
+                color: Color(0x44000000),
+                blurRadius: 0,
+                offset: Offset(0, 1),
+                spreadRadius: 0,
+              )
+            ],
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Text(
+                    count > 1 ? count.toString() : "",
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      color: Color(0xFFE8233D),
+                      fontSize: 10,
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.w700,
+                      height: 0,
+                    ),
+                  )),
+              Align(
+                alignment: Alignment.center,
                 child: Text(
+                  textAlign: TextAlign.center,
                   isDisabled(buttonIndex, text, count) ? "" : text!,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 2.3.h,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w500,
-                    height: 0.02,
                   ),
                 ),
-                // textAlign: TextAlign.center,
               ),
-            ),
-            SizedBox(
-              width: 5.96,
-              height: 30.h,
-              child: Text(
-                count > 1 ? count.toString() : "",
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  color: Color(0xFFE8233D),
-                  fontSize: 10,
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w700,
-                  height: 0,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

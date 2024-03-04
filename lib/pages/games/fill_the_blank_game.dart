@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, non_constant_identifier_names
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/models/training_select_names.dart';
@@ -10,7 +9,6 @@ import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/fill_the_blank_game.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
-import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:patikmobile/widgets/keyboard_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -30,7 +28,6 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
   late FillTheBlankGameProvider fillTheBlankGameProvide;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fillTheBlankGameProvide =
         Provider.of<FillTheBlankGameProvider>(context, listen: false);
@@ -57,9 +54,7 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
 
   @override
   void dispose() {
-    // TODO: Dispose a BannerAd object
     _bannerAd?.dispose();
-    // TODO: Dispose an InterstitialAd object
     if (fillTheBlankGameProvide.interstitialAd != null) {
       fillTheBlankGameProvide.interstitialAd!.dispose();
     }
@@ -90,12 +85,6 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
               // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
               return Center(child: CircularProgressIndicator());
             }
-            // else if (imageList.isEmpty || wordList.isEmpty) {
-            //   imageList = List.from(provider.wordListDbInformation!);
-            //   wordList = List.from(provider.wordListDbInformation!);
-            //   imageList.shuffle();
-            //   wordList.shuffle();
-            // }
             return Stack(
               children: [
                 if (_bannerAd != null)
