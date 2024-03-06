@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
-
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,12 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
-import 'package:patikmobile/models/word_statistics.dart';
-import 'package:patikmobile/pages/games/fill_the_blank_game.dart';
 import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/pages/games/match_with_picture_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
-import 'package:patikmobile/providers/games_providers/match_moving_square_game_provider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -105,31 +100,6 @@ class SwipeCardGameProvider extends ChangeNotifier {
     _selectedCategoryWords = await dbProvider.getRandomWordList(
         dbId: dbId, withoutCategoryName: true);
 
-    // List<Word> allWords =
-    //     await dbProvider.getWordList(withoutCategoryName: true);
-
-    // List<WordStatistics> allWordStatistics =
-    //     await dbProvider.getWordStatisticsList();
-
-    // if (allWords.isNotEmpty) {
-    //   // Rastgele sıralama işlemi
-    //   Random random = Random();
-    //   allWords.shuffle(random);
-
-    //   // allWordStatistics içindeki WordId'leri al
-    //   Set<int> existingWordIds =
-    //       allWordStatistics.map((statistics) => statistics.wordId!).toSet();
-
-    //   // allWords içinde allWordStatistics'te bulunmayan WordId'lere sahip kelimeleri filtrele
-    //   _selectedCategoryWords = allWords
-    //       .where(
-    //         (word) =>
-    //             word.categories == dbId && !existingWordIds.contains(word.id),
-    //       )
-    //       .take(5)
-    //       .toList();
-    // }
-
     return _selectedCategoryWords!;
   }
 
@@ -158,11 +128,11 @@ class SwipeCardGameProvider extends ChangeNotifier {
 
         _wordListDbInformation!.add(wordInfo);
       }
-      WordListDBInformation lastCard = WordListDBInformation(
-        lastCard: true,
-        word: "Tüm kartları öğrendiniz",
-      );
-      _wordListDbInformation!.add(lastCard);
+      // WordListDBInformation lastCard = WordListDBInformation(
+      //   lastCard: true,
+      //   word: "Tüm kartları öğrendiniz",
+      // );
+      // _wordListDbInformation!.add(lastCard);
     }
     print(_wordListDbInformation);
   }
@@ -188,7 +158,7 @@ class SwipeCardGameProvider extends ChangeNotifier {
 
     Timer(Duration(milliseconds: 100), () {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MatchWithPictureGame()),
+          MaterialPageRoute(builder: (context) => MovingSquaresGame()),
           (Route<dynamic> route) => false);
     });
   }

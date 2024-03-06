@@ -31,9 +31,8 @@ class SwipeCardGame extends StatefulWidget {
 
 class _SwipeCardGameState extends State<SwipeCardGame> {
   BannerAd? _bannerAd;
-  bool contentLoaded = false;
+  bool firstLoad = true;
   late SwipeCardGameProvider swipeCardProvider;
- 
 
   @override
   void initState() {
@@ -94,6 +93,12 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
               children: [
                 if (provider.wordsLoaded == true) ...[
                   CardSwiper(
+                    onSwipe: (oncekiIndex, index, direction) {
+                      if (index != null && index > 0) {
+                        PlayAudio(provider.wordListDbInformation![index].audio);
+                      }
+                      return true;
+                    },
                     onEnd: () {
                       provider.goToNextGame(context);
                     },
@@ -103,6 +108,10 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                         : 1,
                     cardBuilder:
                         (context, index, percentThresholdX, percentThresholdY) {
+                      if (firstLoad) {
+                        firstLoad = false;
+                        PlayAudio(provider.wordListDbInformation![0].audio);
+                      }
                       return Center(
                         child: Container(
                           height: 80.h,

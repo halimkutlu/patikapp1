@@ -134,8 +134,8 @@ class _SelectLanguageState extends State<SelectLanguage> {
                       var language = Languages.LngList[index];
                       return InkWell(
                         onTap: () async {
-                          var lngCheck =
-                              await appDbProvider.checkLanguage(language.LCID);
+                          var lngCheck = await appDbProvider
+                              .checkAppLanguage(language.LCID);
                           if (lngCheck) {
                             loginProvider.setUseLanguage(
                                 language,

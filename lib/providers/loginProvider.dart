@@ -84,7 +84,7 @@ class LoginProvider extends ChangeNotifier {
             StorageProvider.learnLanguge!.LCID > 0) {
           DbProvider dbProvider = DbProvider();
           bool isLanguageExist = await dbProvider
-              .checkLanguage(StorageProvider.learnLanguge!.LCID);
+              .checkLearnLanguage(StorageProvider.learnLanguge!.LCID);
 
           if (isLanguageExist)
             Navigator.of(context).push(

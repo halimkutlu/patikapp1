@@ -144,13 +144,13 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                       var language = Languages.LngList[index];
                       return InkWell(
                         onTap: () async {
-                          var lngCheck =
-                              await dbProvider.checkLanguage(language.LCID);
+                          var lngCheck = await dbProvider
+                              .checkLearnLanguage(language.LCID);
                           if (lngCheck) {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             prefs.setString(
-                                "CurrentLanguageName", language.Name!);
+                                "LearnLanguageName", language.Name!);
                             prefs.setInt(
                                 StorageProvider.learnLcidKey, language.LCID);
                             await dbProvider.closeDbConnection();

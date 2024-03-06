@@ -365,11 +365,11 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     return list;
   }
 
-  checkLanguage(int lcid) async {
+  checkLearnLanguage(int lcid) async {
     Lcid language = Languages.GetLngFromLCID(lcid);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt(StorageProvider.learnLcidKey, lcid);
-    await prefs.setString("CurrentLanguageName", language.Name!);
+    await prefs.setString("LearnLanguageName", language.Name!);
     StorageProvider.learnLanguge = Languages.GetLngFromLCID(lcid);
 
     var path = await getDbPath(lngName: language.Code);
@@ -514,11 +514,11 @@ class AppDbProvider extends ChangeNotifier {
     return list.first;
   }
 
-  checkLanguage(int lcid) async {
+  checkAppLanguage(int lcid) async {
     Lcid language = Languages.GetLngFromLCID(lcid);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt(StorageProvider.appLcidKey, lcid);
-    await prefs.setString("language_name", language.Name!);
+    await prefs.setString("AppLanguageName", language.Name!);
     StorageProvider.appLanguge = Languages.GetLngFromLCID(lcid);
 
     var path = await getDbPath(lngName: language.Code);

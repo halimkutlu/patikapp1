@@ -50,8 +50,8 @@ class DashboardProvider extends ChangeNotifier {
     _userName = prefs.getString("userName") ?? "";
     _nameLastname =
         "${prefs.getString("firstName") ?? ""} ${prefs.getString("lastName") ?? ""}";
-    _useLanguageName = prefs.getString("language_name");
-    _learnLanguageName = prefs.getString("CurrentLanguageName");
+    _useLanguageName = prefs.getString("AppLanguageName");
+    _learnLanguageName = prefs.getString("LearnLanguageName");
     getRoles(prefs);
 
     notifyListeners();

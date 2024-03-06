@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
-import 'dart:math';
-
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/models/training_select_names.dart';
@@ -14,7 +11,6 @@ import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
-import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 

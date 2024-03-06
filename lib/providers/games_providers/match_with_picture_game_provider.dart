@@ -11,7 +11,6 @@ import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/games/math_with_sound_game.dart';
-import 'package:patikmobile/pages/games/multiple_choice_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';

@@ -32,7 +32,8 @@ class StorageProvider {
         await shrdp.setInt(StorageProvider.appLcidKey, applcid);
       }
       StorageProvider.appLanguge = Languages.GetLngFromLCID(applcid);
-      await shrdp.setString("language_name", StorageProvider.appLanguge!.Name!);
+      await shrdp.setString(
+          "AppLanguageName", StorageProvider.appLanguge!.Name!);
     }
     return StorageProvider.appLanguge!;
   }
@@ -57,7 +58,7 @@ class StorageProvider {
   static updateLanguage(BuildContext context, Lcid locale) async {
     SharedPreferences shrdp = await SharedPreferences.getInstance();
     await shrdp.setInt(appLcidKey, locale.LCID);
-    await shrdp.setString("language_name", locale.Name!);
+    await shrdp.setString("AppLanguageName", locale.Name!);
     AppLocalizationsDelegate().load(const Locale('en'));
     Get.updateLocale(Locale(locale.Code.split('-').first));
   }

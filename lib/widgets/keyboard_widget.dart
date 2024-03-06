@@ -3,6 +3,7 @@
 import 'dart:core';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:patikmobile/main.dart';
@@ -56,6 +57,10 @@ class _NumericKeypadState extends State<NumericKeypad> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
+                if (kDebugMode)
+                  Center(
+                      child: Text(
+                          '${widget.provider.word!} (release modda görülmeyecek)')),
                 Container(
                   decoration: const BoxDecoration(
                     color: Color(0xffe8eaed),
@@ -87,19 +92,9 @@ class _NumericKeypadState extends State<NumericKeypad> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
                           ),
-                          child: Column(
-                            children: [
-                              Center(
-                                child:
-                                    Text(widget.provider.word! + "(kalkacak)"),
-                              ),
-                              Center(
-                                  child: Text(widget
-                                      .provider
-                                      .selectedWordTextEditingController!
-                                      .text)),
-                            ],
-                          ),
+                          child: Center(
+                              child: Text(widget.provider
+                                  .selectedWordTextEditingController!.text)),
                         ),
                       ],
                     ),
