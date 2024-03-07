@@ -140,13 +140,15 @@ class DbProvider extends ChangeNotifier {
     var status = await reOpenDbConnection();
     if (!status) return [];
 
+    Directory dir = await getApplicationDocumentsDirectory();
     String sql = """
 Select w.*, (Select Count(*) from Words w1 where w1.Categories LIKE '%|' || w.Id || '|%') as CategoryWordCount,
 (Select count(*) from Words w2 where w2.IsCategoryName != 1) as TotalWordCount
 from Words w where w.IsCategoryName = 1 """;
     var res = await database!.rawQuery(sql);
-    var liste =
-        res.map((e) => WordListInformation.fromMap(e, context)).toList();
+    var liste = res
+        .map((e) => WordListInformation.fromMap(dir.path, e, context, true))
+        .toList();
     return await AppDbProvider().setCategoryAppLng(liste);
   }
 

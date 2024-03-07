@@ -1,7 +1,10 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, unnecessary_null_comparison
+
+import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/word.dart';
@@ -120,7 +123,7 @@ class _LearnPageState extends State<LearnPage> {
     );
   }
 
-  Widget categoryBox(String image, String name, int wordCount, int totalCount,
+  Widget categoryBox(File image, String name, int wordCount, int totalCount,
       int color, WordListInformation horizontalCategory) {
     return InkWell(
       onTap: () {
@@ -151,13 +154,14 @@ class _LearnPageState extends State<LearnPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Padding(
+                padding: EdgeInsets.all(0),
+              ),
               Center(
-                child: image.isNotEmpty
-                    ? Image.asset(
+                child: image != null
+                    ? SvgPicture.file(
                         image,
-                        width: 20,
-                        height: 50,
-                        fit: BoxFit.cover,
+                        height: 4.h,
                       )
                     : Icon(Icons.developer_board),
               ),

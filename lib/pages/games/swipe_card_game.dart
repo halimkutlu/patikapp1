@@ -1,11 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
-import 'dart:io';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
@@ -16,7 +14,6 @@ import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.d
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/services/sound_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
-import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -114,7 +111,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                       }
                       return Center(
                         child: Container(
-                          height: 80.h,
+                          height: 71.h,
                           decoration: BoxDecoration(
                             color: MainColors.primaryColor,
                             borderRadius: BorderRadius.all(Radius.circular(40)),

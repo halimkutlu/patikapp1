@@ -1,11 +1,13 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 
 class Word {
   int? id;
@@ -68,34 +70,67 @@ class Word {
   }
 }
 
+Map<String, String> categoryImageMap = {
+  "-1": "1",
+  "-2": "12",
+  "-3": "64",
+  "-4": "78",
+  "-5": "98",
+  "-6": "119",
+  "-7": "133",
+  "-8": "158",
+  "-9": "185",
+  "-10": "218",
+  "-11": "253",
+  "-12": "299",
+  "-13": "335",
+  "-14": "365",
+  "-15": "423",
+  "-16": "463",
+  "-17": "506",
+  "-18": "553",
+  "-19": "563",
+  "-20": "688",
+  "-21": "718",
+  "-22": "740",
+  "-23": "762",
+  "-24": "809",
+  "-25": "827",
+  "-26": "850",
+  "-27": "950"
+};
+
+File getCategoryImage(String path, String categoryId) => File(
+    '$path/${StorageProvider.learnLanguge!.Code}/${StorageProvider.learnLanguge!.Code}_${categoryImageMap[categoryId]}.svg');
+
 class WordListInformation {
   String? categoryName;
   int? categoryWordCount;
   int? totalCount;
-  String? categoryImage;
+  File? categoryImage;
   String? categoryOrderName;
   int? order;
   int? orderColor;
   String? dbId;
   String? categoryAppLngName;
 
-  WordListInformation(
-      {this.categoryImage,
-      this.categoryName,
-      this.categoryWordCount,
-      this.order,
-      this.categoryOrderName,
-      this.orderColor,
-      this.totalCount,
-      this.dbId,
-      this.categoryAppLngName = ""});
+  WordListInformation({
+    this.categoryImage,
+    this.categoryName,
+    this.categoryWordCount,
+    this.order,
+    this.categoryOrderName,
+    this.orderColor,
+    this.totalCount,
+    this.dbId,
+    this.categoryAppLngName = "",
+  });
 
-  factory WordListInformation.fromMap(
-          Map<String, dynamic> json, BuildContext context) =>
+  factory WordListInformation.fromMap(String path, Map<String, dynamic> json,
+          BuildContext context, bool isCategory) =>
       WordListInformation(
           dbId: json["Id"].toString(),
           categoryName: json["Word"],
-          categoryImage: "",
           categoryWordCount: json["CategoryWordCount"],
           categoryOrderName: WordListInformation.getCategoryOrderName(
               context, json["Activities"]),
@@ -105,7 +140,10 @@ class WordListInformation {
           order: json["IsCategory"] != 1
               ? int.tryParse(json["Activities"]) ?? json["OrderId"]
               : null,
-          categoryAppLngName: "");
+          categoryAppLngName: "",
+          categoryImage: !isCategory
+              ? null
+              : getCategoryImage(path, json["Id"].toString()));
 
   static getCategoryOrderName(BuildContext context, String activities) {
     var key = "107";
