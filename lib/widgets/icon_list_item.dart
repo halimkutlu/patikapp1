@@ -34,9 +34,9 @@ class _IconListItemState extends State<IconListItem> {
               padding: EdgeInsets.only(left: 4.w),
               child: Image.asset(
                 widget.imageStr ?? 'lib/assets/graduate.png',
-                width: 7.w,
+                width: 5.5.w,
                 height: 3.h,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
             Padding(

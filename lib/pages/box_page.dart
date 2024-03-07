@@ -12,7 +12,13 @@ import 'package:sizer/sizer.dart';
 
 class BoxPage extends StatefulWidget {
   final int selectedBox;
-  const BoxPage({super.key, required this.selectedBox});
+  final bool? completedGame;
+  final String? dbId;
+  const BoxPage(
+      {super.key,
+      required this.selectedBox,
+      this.completedGame = false,
+      this.dbId = ""});
 
   @override
   State<BoxPage> createState() => _BoxPageState();
@@ -25,7 +31,8 @@ class _BoxPageState extends State<BoxPage> {
   void initState() {
     super.initState();
     boxPageProvider = Provider.of<BoxPageProvider>(context, listen: false);
-    boxPageProvider.init(context, widget.selectedBox);
+    boxPageProvider.init(
+        context, widget.selectedBox, widget.completedGame, widget.dbId);
   }
 
   @override
@@ -38,17 +45,21 @@ class _BoxPageState extends State<BoxPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        backgroundColor: widget.selectedBox == 1
-            ? MainColors.boxColor1
-            : widget.selectedBox == 2
-                ? MainColors.boxColor2
-                : MainColors.boxColor3,
+        backgroundColor: !widget.completedGame!
+            ? widget.selectedBox == 1
+                ? MainColors.boxColor1
+                : widget.selectedBox == 2
+                    ? MainColors.boxColor2
+                    : MainColors.boxColor3
+            : Color.fromARGB(255, 235, 235, 235),
       ),
-      backgroundColor: widget.selectedBox == 1
-          ? MainColors.boxColor1
-          : widget.selectedBox == 2
-              ? MainColors.boxColor2
-              : MainColors.boxColor3,
+      backgroundColor: !widget.completedGame!
+          ? widget.selectedBox == 1
+              ? MainColors.boxColor1
+              : widget.selectedBox == 2
+                  ? MainColors.boxColor2
+                  : MainColors.boxColor3
+          : Color.fromARGB(255, 235, 235, 235),
       body: Consumer<BoxPageProvider>(builder: (context, provider, child) {
         if (!provider.wordsLoaded!) {
           Future.delayed(
@@ -77,32 +88,34 @@ class _BoxPageState extends State<BoxPage> {
             Center(
               child: Column(
                 children: [
-                  Center(
-                    child: BoxWidget(
-                      text: AppLocalizations.of(context)
-                          .translate(widget.selectedBox == 1
-                              ? "101"
-                              : widget.selectedBox == 2
-                                  ? "102"
-                                  : "103"),
-                      color: widget.selectedBox == 1
-                          ? MainColors.boxColor1
-                          : widget.selectedBox == 2
-                              ? MainColors.boxColor2
-                              : MainColors.boxColor3,
-                      value: widget.selectedBox == 1
-                          ? provider.getLernedWordCount.toString()
-                          : widget.selectedBox == 2
-                              ? provider.getRepeatedWordCount.toString()
-                              : provider.getWorkHardCount.toString(),
-                      iconUrl: widget.selectedBox == 1
-                          ? 'lib/assets/img/ilearned.png'
-                          : widget.selectedBox == 2
-                              ? 'lib/assets/img/repeat.png'
-                              : 'lib/assets/img/sun.png',
-                      onTap: () {},
-                    ),
-                  ),
+                  !widget.completedGame!
+                      ? Center(
+                          child: BoxWidget(
+                            text: AppLocalizations.of(context)
+                                .translate(widget.selectedBox == 1
+                                    ? "101"
+                                    : widget.selectedBox == 2
+                                        ? "102"
+                                        : "103"),
+                            color: widget.selectedBox == 1
+                                ? MainColors.boxColor1
+                                : widget.selectedBox == 2
+                                    ? MainColors.boxColor2
+                                    : MainColors.boxColor3,
+                            value: widget.selectedBox == 1
+                                ? provider.getLernedWordCount.toString()
+                                : widget.selectedBox == 2
+                                    ? provider.getRepeatedWordCount.toString()
+                                    : provider.getWorkHardCount.toString(),
+                            iconUrl: widget.selectedBox == 1
+                                ? 'lib/assets/img/ilearned.png'
+                                : widget.selectedBox == 2
+                                    ? 'lib/assets/img/repeat.png'
+                                    : 'lib/assets/img/sun.png',
+                            onTap: () {},
+                          ),
+                        )
+                      : Container(),
                   Expanded(
                     child: ListView.builder(
                       scrollDirection: Axis.vertical,

@@ -47,9 +47,15 @@ class _MenuItemState extends State<MenuItem> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 1.5.h),
-                  child: AutoSizeText(
-                    widget.text!,
-                    maxLines: 1,
+                  child: SizedBox(
+                    width: 40.w,
+                    child: AutoSizeText(
+                      widget.text!,
+                      maxLines: 2,
+                      minFontSize: 5,
+                      maxFontSize: 30,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ],

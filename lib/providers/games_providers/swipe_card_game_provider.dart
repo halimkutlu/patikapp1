@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
+import 'package:patikmobile/pages/box_page.dart';
 import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/pages/games/match_with_picture_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
@@ -62,11 +63,11 @@ class SwipeCardGameProvider extends ChangeNotifier {
       notifyListeners();
     }
     if (_selectedCategoryWords!.isEmpty) {
-      CustomAlertDialogOnlyConfirm(context, () {
-        Navigator.pop(context);
-        Navigator.pop(context);
-      }, "warning".tr, "Kategoriye ait kelime bulunamadı",
-          ArtSweetAlertType.info, "ok".tr);
+      Navigator.pop(context);
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              BoxPage(selectedBox: 0, completedGame: true, dbId: dbId)));
     } else {
       //ADIM 3 ==> Seçilen 5 kelimeyi kayıt altında tut! (Diğer oyunlar için kullanacağız)
       await saveSelectedWords(_selectedCategoryWords!);

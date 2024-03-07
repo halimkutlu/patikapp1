@@ -99,7 +99,11 @@ class _MainPageState extends State<MainPage> {
 
   Widget statusArea() {
     return Padding(
-      padding: EdgeInsets.only(top: 1.0.h, bottom: 2.h, left: 2.w,),
+      padding: EdgeInsets.only(
+        top: 1.0.h,
+        bottom: 2.h,
+        left: 2.w,
+      ),
       child: Column(
         children: [
           AutoSizeText(
@@ -153,7 +157,7 @@ class _MainPageState extends State<MainPage> {
 
   Widget brandArea() {
     return Padding(
-      padding: EdgeInsets.only(left: 3.w, right: 3.w),
+      padding: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
       child: Container(
         height: 21.h,
         decoration: BoxDecoration(color: MainColors.primaryColor),
@@ -165,11 +169,14 @@ class _MainPageState extends State<MainPage> {
                 'lib/assets/img/bicyle.png',
                 width: 9.w,
                 height: 4.h,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
-              Text(
-                "Patik",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 4.h),
+              Padding(
+                padding: EdgeInsets.only(left: 2.w),
+                child: Text(
+                  "Patik",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 4.h),
+                ),
               )
             ],
           ),
@@ -178,31 +185,36 @@ class _MainPageState extends State<MainPage> {
             children: [
               Image.asset(
                 'lib/assets/img/twitter.png',
-                width: 9.w,
-                height: 4.h,
-                fit: BoxFit.cover,
+                width: 6.w,
+                height: 3.4.h,
+                fit: BoxFit.fill,
               ),
               Image.asset(
                 'lib/assets/img/facebook.png',
-                width: 9.w,
-                height: 4.h,
-                fit: BoxFit.cover,
+                width: 6.w,
+                height: 3.4.h,
+                fit: BoxFit.fill,
               ),
-              Text(
-                AppLocalizations.of(context).translate("68"),
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 2.h),
+              Container(
+                width: 35.w,
+                child: AutoSizeText(
+                  AppLocalizations.of(context).translate("68"),
+                  minFontSize: 8,
+                  maxFontSize: 40,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
               Image.asset(
                 'lib/assets/img/instagram.png',
-                width: 9.w,
-                height: 4.h,
-                fit: BoxFit.cover,
+                width: 6.w,
+                height: 3.4.h,
+                fit: BoxFit.fill,
               ),
               Image.asset(
                 'lib/assets/img/whatsapp.png',
-                width: 9.w,
-                height: 4.h,
-                fit: BoxFit.cover,
+                width: 6.w,
+                height: 3.4.h,
+                fit: BoxFit.fill,
               ),
             ],
           ),

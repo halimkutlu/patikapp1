@@ -2,6 +2,7 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class CustomIconButton extends StatelessWidget {
   final VoidCallback? onTap;
@@ -74,6 +75,8 @@ class CustomIconButton extends StatelessWidget {
                               AutoSizeText(
                                 name,
                                 maxLines: 1,
+                                minFontSize: 12,
+                                maxFontSize: 20,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(

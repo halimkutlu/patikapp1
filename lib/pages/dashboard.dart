@@ -140,9 +140,8 @@ class _DashboardState extends State<Dashboard> {
                                       TextSpan(
                                         children: [
                                           TextSpan(
-                                            text:
-                                                AppLocalizations.of(context)
-                                                    .translate("72"),
+                                            text: AppLocalizations.of(context)
+                                                .translate("72"),
                                             style: TextStyle(
                                               color: Color(0xFF605E5E),
                                               fontSize: 14,
@@ -170,7 +169,7 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             CustomIconButton(
                               textSize: 20,
-                              height: 2.7.h,
+                              height: 4.h,
                               textInlinePadding: 3.h,
                               width: 0.3.h,
                               colors: Colors.red,
@@ -215,7 +214,7 @@ class _DashboardState extends State<Dashboard> {
                       logo: 'lib/assets/img/internet.png',
                       text: AppLocalizations.of(context).translate("74"),
                       centerWidget: CustomIconButton(
-                        textSize: 10,
+                        textSize: 5,
                         textInlinePadding: 3.0.h,
                         width: 0.5.h,
                         height: 0.5.h,

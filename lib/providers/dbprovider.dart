@@ -312,6 +312,18 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     return list;
   }
 
+  Future<List<Word>> getWordListById(String? dbId) async {
+    var status = await reOpenDbConnection();
+    if (!status) return [];
+
+    var res = await database!
+        .rawQuery("Select * from Words where Categories LIKE '%|$dbId|%'");
+
+    List<Word> list = res.map((c) => Word.fromMap(c)).toList();
+    list = await AppDbProvider().setWordAppLng(list);
+    return list;
+  }
+
   Future<List<Word>> getRandomWordList(
       {String? dbId = "",
       bool withoutCategoryName = false,
