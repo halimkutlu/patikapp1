@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
+import 'dart:io';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
@@ -79,6 +80,26 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
         });
       },
       child: Scaffold(
+        appBar: !Platform.isAndroid ? AppBar(
+           toolbarHeight: 3.1.h,
+        backgroundColor: MainColors.backgroundColor,
+        elevation: 0.0,
+        centerTitle: true,
+        leading: InkWell(
+          onTap: () async{
+           await askToGoMainMenu(func: () {
+          setState(() {
+            swipeCardProvider.resetData();
+          });
+        
+        });
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black54,
+          ),
+        ),
+      ): null,
           backgroundColor: MainColors.backgroundColor,
           body: Consumer<SwipeCardGameProvider>(
               builder: (context, provider, child) {

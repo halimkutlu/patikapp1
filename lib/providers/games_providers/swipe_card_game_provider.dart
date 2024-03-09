@@ -159,7 +159,7 @@ class SwipeCardGameProvider extends ChangeNotifier {
 
     Timer(Duration(milliseconds: 100), () {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MovingSquaresGame()),
+          MaterialPageRoute(builder: (context) => MatchWithPictureGame()),
           (Route<dynamic> route) => false);
     });
   }

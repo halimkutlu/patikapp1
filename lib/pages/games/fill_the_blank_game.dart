@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, non_constant_identifier_names
 
+import 'dart:io';
+
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -78,6 +80,26 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
         });
       },
       child: Scaffold(
+         appBar: !Platform.isAndroid ? AppBar(
+           toolbarHeight: 3.1.h,
+        backgroundColor: MainColors.backgroundColor,
+        elevation: 0.0,
+        centerTitle: true,
+        leading: InkWell(
+          onTap: () async{
+         await askToGoMainMenu(func: () {
+          setState(() {
+            fillTheBlankGameProvide.resetData();
+        
+          });
+        });
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black54,
+          ),
+        ),
+      ): null,
           backgroundColor: MainColors.backgroundColor,
           body: Consumer<FillTheBlankGameProvider>(
               builder: (context, provider, child) {
