@@ -1,5 +1,6 @@
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, non_constant_identifier_names
+
 import 'package:flutter/material.dart';
-import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/training_select_page.dart';

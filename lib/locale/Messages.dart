@@ -81,7 +81,7 @@
 //           "noAccount": "Kein Konto?",
 //           "register": "Registrieren",
 //           "ok": "OK",
-//           "warning": "Warnung",
+//           AppLocalizations.of(context).translate("164")": "Warnung",
 //           "userpasswordNotEmpty":
 //               "Benutzername oder Passwort darf nicht leer sein",
 //           "back": "Zurück",

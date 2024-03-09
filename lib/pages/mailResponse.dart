@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/registerProvider.dart';

@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
@@ -46,31 +43,6 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   // Method to load the localized strings for a locale
   @override
   Future<AppLocalizations> load(Locale locale) async {
-    // if (StorageProvider.appLanguge == null ||
-    //     StorageProvider.appLanguge?.LCID == 0) {
-    //   StorageProvider.load();
-    // if (StorageProvider.prefs == null) {
-    //   SharedPreferences.getInstance()
-    //       .then((value) => AppLocalizationsDelegate.prefs = value);
-    //   sleep(const Duration(milliseconds: 500));
-    // }
-
-    //   AppLocalizationsDelegate.lcid = Languages.GetLngFromLCID(
-    //       AppLocalizationsDelegate.prefs!.getInt("applcid")!);
-    // }
-
-    // Create an instance of AppLocalizations for the given locale
-    // if (AppLocalizationsDelegate.lcid == null ||
-    //     AppLocalizationsDelegate.lcid?.LCID == 0) {
-    //   AppLocalizationsDelegate.lcid = Languages.GetLngFromCode(
-    //       "${locale.languageCode}-${locale.countryCode}");
-    // }
-
-    // if (AppLocalizationsDelegate.lcid == null ||
-    //     AppLocalizationsDelegate.lcid?.LCID == 0) {
-    //   AppLocalizationsDelegate.lcid = Languages.GetLngFromCode("en-US");
-    // }
-
     SharedPreferences shrdp = await SharedPreferences.getInstance();
     int llcid = shrdp.getInt(StorageProvider.appLcidKey) ??
         Languages.GetLCIDFromCode(

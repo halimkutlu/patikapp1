@@ -61,8 +61,8 @@ class _RegisterState extends State<Register> {
                 padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
                 child: CTextfield(
                   controller: registerProvider.firstName,
-                  name: "Ad",
-                  hintText: "Ad",
+                  name: AppLocalizations.of(context).translate("173"),
+                  hintText: AppLocalizations.of(context).translate("173"),
                   icon: Icons.contact_page_outlined,
                 ),
               ),
@@ -70,8 +70,8 @@ class _RegisterState extends State<Register> {
                 padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
                 child: CTextfield(
                   controller: registerProvider.lastName,
-                  name: "Soyad",
-                  hintText: "Soyad",
+                  name: AppLocalizations.of(context).translate("174"),
+                  hintText: AppLocalizations.of(context).translate("174"),
                   icon: Icons.contact_page_outlined,
                 ),
               ),

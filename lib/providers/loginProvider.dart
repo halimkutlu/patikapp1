@@ -66,8 +66,11 @@ class LoginProvider extends ChangeNotifier {
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
-      }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
-          "ok".tr);
+      },
+          AppLocalizations.of(context).translate("164"),
+          AppLocalizations.of(context).translate("169"),
+          ArtSweetAlertType.info,
+          AppLocalizations.of(context).translate("159"));
     } else {
       print("login provider girdi.");
       notifyListeners();
@@ -99,8 +102,11 @@ class LoginProvider extends ChangeNotifier {
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
-        }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
-            "ok".tr);
+        },
+            AppLocalizations.of(context).translate("164"),
+            apiresult.message.toString(),
+            ArtSweetAlertType.danger,
+            AppLocalizations.of(context).translate("159"));
       }
       notifyListeners();
     }
@@ -126,8 +132,11 @@ class LoginProvider extends ChangeNotifier {
       if (user == null || user.uid.isEmpty) {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
-        }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
-            "ok".tr);
+        },
+            AppLocalizations.of(context).translate("164"),
+            AppLocalizations.of(context).translate("169"),
+            ArtSweetAlertType.info,
+            AppLocalizations.of(context).translate("159"));
 
         return;
       }
@@ -152,8 +161,11 @@ class LoginProvider extends ChangeNotifier {
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
-        }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
-            "ok".tr);
+        },
+            AppLocalizations.of(context).translate("164"),
+            apiresult.message.toString(),
+            ArtSweetAlertType.danger,
+            AppLocalizations.of(context).translate("159"));
       }
       notifyListeners();
     } catch (error) {
@@ -165,8 +177,11 @@ class LoginProvider extends ChangeNotifier {
     if (!forgotMailController.text.isEmail) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
-      }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
-          "ok".tr);
+      },
+          AppLocalizations.of(context).translate("164"),
+          AppLocalizations.of(context).translate("169"),
+          ArtSweetAlertType.info,
+          AppLocalizations.of(context).translate("159"));
     } else {
       notifyListeners();
       httpSonucModel apiresult = await apirepository.post(
@@ -178,8 +193,11 @@ class LoginProvider extends ChangeNotifier {
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
-        }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
-            "ok".tr);
+        },
+            AppLocalizations.of(context).translate("164"),
+            apiresult.message.toString(),
+            ArtSweetAlertType.danger,
+            AppLocalizations.of(context).translate("159"));
       }
       notifyListeners();
     }
@@ -197,18 +215,10 @@ class LoginProvider extends ChangeNotifier {
       Languages.fromJson(lngList.data);
       notifyListeners();
     }
-    // else {
-    //   CustomAlertDialogOnlyConfirm(context, () {
-    //     Navigator.pop(context);
-    //   }, "error".tr, "errorAccured".tr, ArtSweetAlertType.info, "ok".tr);
-    // }
   }
 
   setUseLanguage(Lcid language, BuildContext context, bool dashboard) {
     changeLanguage(language, context, dashboard);
-    // CustomAlertDialog(context, () {
-    // }, "areYouSure".tr, "${language.Name!}", ArtSweetAlertType.question,
-    //     "yes".tr, "no".tr);
   }
 
   changeLanguage(Lcid locale, BuildContext context, bool dashboard) {
@@ -226,7 +236,11 @@ class LoginProvider extends ChangeNotifier {
       }
 
       notifyListeners();
-    }, "success".tr, "langSuccess".tr, ArtSweetAlertType.success, "ok".tr);
+    },
+        AppLocalizations.of(context).translate("164"),
+        AppLocalizations.of(context).translate("168"),
+        ArtSweetAlertType.success,
+        AppLocalizations.of(context).translate("159"));
   }
 
   Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(Lcid lcid,

@@ -7,7 +7,6 @@ import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/dialog_page.dart';
-import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/dialogCategoriesProvider.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:provider/provider.dart';
@@ -81,10 +80,6 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                               itemBuilder: (context, index) {
                                 return InkWell(
                                   onTap: () {
-                                    // DbProvider dbProvider = DbProvider();
-                                    // dbProvider.getDialogListSelectedCategories(
-                                    //     context,
-                                    //     provider.categoryList[index].dbId!);
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (context) => DialogPage(

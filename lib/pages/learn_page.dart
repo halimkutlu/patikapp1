@@ -57,8 +57,8 @@ class _LearnPageState extends State<LearnPage> {
                       var category = categoriesWithoutOrder[index];
                       return ListTile(
                         title: AutoSizeText(category.categoryAppLngName!),
-                        subtitle:
-                            AutoSizeText('Total Count: ${category.totalCount}'),
+                        subtitle: AutoSizeText(
+                            '${AppLocalizations.of(context).translate("171")} ${category.totalCount}'),
                       );
                     } else {
                       var categoryIndex = index - categoriesWithoutOrder.length;

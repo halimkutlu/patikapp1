@@ -16,8 +16,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-
-import '../models/language.model.dart';
+import 'package:patikmobile/models/language.model.dart';
 
 class SelectLearnLanguage extends StatefulWidget {
   final bool? noReturn;
@@ -80,7 +79,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                   footer: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Downloading Files',
+                      AppLocalizations.of(context).translate("172"),
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
@@ -193,17 +192,25 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                 CustomAlertDialogOnlyConfirm(
                                     _scaffoldKey.currentContext!, () {
                                   Navigator.pop(_scaffoldKey.currentContext!);
-                                }, "error".tr, status.message,
-                                    ArtSweetAlertType.danger, "ok".tr);
+                                },
+                                    AppLocalizations.of(context)
+                                        .translate("158"),
+                                    status.message,
+                                    ArtSweetAlertType.danger,
+                                    AppLocalizations.of(context)
+                                        .translate("159"));
                               }
 
                               isDownloading = false;
                             },
-                                "areYouSure".tr,
-                                "${AppLocalizations.of(context).translateLngName(language)} ${"choosenLearnLanguage".tr}",
+                                AppLocalizations.of(context).translate("160"),
+                                AppLocalizations.of(context)
+                                        .translateLngName(language) +
+                                    AppLocalizations.of(context)
+                                        .translate("161"),
                                 ArtSweetAlertType.question,
-                                "ok".tr,
-                                "no".tr);
+                                AppLocalizations.of(context).translate("162"),
+                                AppLocalizations.of(context).translate("163"));
                           }
                         },
                         child: Container(

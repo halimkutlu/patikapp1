@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/changePasswordProvider.dart';
@@ -39,11 +38,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                     style: TextStyle(fontSize: 3.h),
                   ),
                 ),
-                // Center(
-                //     child: Text(
-                //   "changePasswordDescription".tr,
-                //   style: TextStyle(fontSize: 1.5.h),
-                // )),
               ],
             ),
             Column(

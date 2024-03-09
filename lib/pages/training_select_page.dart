@@ -1,10 +1,9 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/training_select_names.dart';
-import 'package:patikmobile/pages/box_page.dart';
 import 'package:patikmobile/pages/games/fill_the_blank_game.dart';
 import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/pages/games/match_with_picture_game.dart';

@@ -6,9 +6,6 @@ import 'package:get/get.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
-import 'package:patikmobile/pages/dashboard.dart';
-import 'package:patikmobile/pages/learn_page.dart';
-import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
@@ -16,7 +13,6 @@ import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class SelectLanguage extends StatefulWidget {
@@ -70,7 +66,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                   footer: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Downloading Files',
+                      AppLocalizations.of(context).translate("172"),
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
@@ -160,15 +156,23 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                 CustomAlertDialogOnlyConfirm(
                                     _scaffoldKey.currentContext!, () {
                                   Navigator.pop(_scaffoldKey.currentContext!);
-                                }, "error".tr, status.message,
-                                    ArtSweetAlertType.danger, "ok".tr);
+                                },
+                                    AppLocalizations.of(context)
+                                        .translate("158"),
+                                    status.message,
+                                    ArtSweetAlertType.danger,
+                                    AppLocalizations.of(context)
+                                        .translate("159"));
                               }
                             },
-                                "areYouSure".tr,
-                                "${AppLocalizations.of(context).translateLngName(language)} ${"choosenLearnLanguage".tr}",
+                                AppLocalizations.of(context).translate("160"),
+                                AppLocalizations.of(context)
+                                        .translateLngName(language) +
+                                    AppLocalizations.of(context)
+                                        .translate("161"),
                                 ArtSweetAlertType.question,
-                                "ok".tr,
-                                "no".tr);
+                                AppLocalizations.of(context).translate("162"),
+                                AppLocalizations.of(context).translate("163"));
                           }
                         },
                         child: Container(

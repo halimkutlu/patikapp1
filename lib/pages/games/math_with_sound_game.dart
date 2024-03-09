@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers
 
 import 'dart:io';
-import 'dart:math';
-
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/models/training_select_names.dart';
@@ -15,7 +12,6 @@ import 'package:patikmobile/providers/games_providers/match_with_sound_game_prov
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/services/sound_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
-import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -86,29 +82,29 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
         });
       },
       child: Scaffold(
-         appBar: !Platform.isAndroid ? AppBar(
-           toolbarHeight: 3.1.h,
-        backgroundColor: MainColors.backgroundColor,
-        elevation: 0.0,
-        centerTitle: true,
-        leading: InkWell(
-          onTap: () async{
-          await askToGoMainMenu(func: () {
-          setState(() {
-            matchWithSoundGameProvide.resetData();
-            matchWithSoundGameProvide.setUISound = [];
-            matchWithSoundGameProvide.setUIWord = [];
-          });
-        });
-        
-        
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black54,
-          ),
-        ),
-      ): null,
+        appBar: !Platform.isAndroid
+            ? AppBar(
+                toolbarHeight: 3.1.h,
+                backgroundColor: MainColors.backgroundColor,
+                elevation: 0.0,
+                centerTitle: true,
+                leading: InkWell(
+                  onTap: () async {
+                    await askToGoMainMenu(func: () {
+                      setState(() {
+                        matchWithSoundGameProvide.resetData();
+                        matchWithSoundGameProvide.setUISound = [];
+                        matchWithSoundGameProvide.setUIWord = [];
+                      });
+                    });
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.black54,
+                  ),
+                ),
+              )
+            : null,
         backgroundColor: MainColors.backgroundColor,
         body: Consumer<MatchWithSoundGameProvide>(
           builder: (context, provider, child) {

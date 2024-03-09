@@ -5,7 +5,6 @@ import 'dart:io';
 import 'dart:math';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
@@ -481,8 +480,11 @@ class MovingSquaresGameProvide extends ChangeNotifier {
             MaterialPageRoute(builder: (context) => Dashboard(0)),
             (Route<dynamic> route) => false);
       });
-    }, "", AppLocalizations.of(context).translate("154"),
-        ArtSweetAlertType.success, "ok".tr);
+    },
+        "",
+        AppLocalizations.of(context).translate("154"),
+        ArtSweetAlertType.success,
+        AppLocalizations.of(context).translate("159"));
   }
 }
 

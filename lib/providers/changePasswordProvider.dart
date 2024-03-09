@@ -1,16 +1,11 @@
-// ignore_for_file: use_build_context_synchronously, prefer_final_fields
-
-import 'dart:async';
+// ignore_for_file: use_build_context_synchronously, prefer_final_fields, file_names
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:patikmobile/api/api_repository.dart';
-import 'package:patikmobile/api/static_variables.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/http_response.model.dart';
-import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangePasswordProvider extends ChangeNotifier {
   final apirepository = APIRepository();
@@ -36,13 +31,19 @@ class ChangePasswordProvider extends ChangeNotifier {
         _newPasswordAgain.text.isEmpty) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
-      }, "warning".tr, "changePasswordNotEmpty".tr, ArtSweetAlertType.info,
-          "ok".tr);
+      },
+          AppLocalizations.of(context).translate("164"),
+          AppLocalizations.of(context).translate("169"),
+          ArtSweetAlertType.info,
+          AppLocalizations.of(context).translate("159"));
     } else if (_newPassword.text != _newPasswordAgain.text) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
-      }, "warning".tr, "notSameWithNewPassword".tr, ArtSweetAlertType.info,
-          "ok".tr);
+      },
+          AppLocalizations.of(context).translate("164"),
+          AppLocalizations.of(context).translate("170"),
+          ArtSweetAlertType.info,
+          AppLocalizations.of(context).translate("159"));
     } else {
       _loading = true;
       httpSonucModel apiresult = await apirepository.post();
@@ -51,8 +52,11 @@ class ChangePasswordProvider extends ChangeNotifier {
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
-        }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
-            "ok".tr);
+        },
+            AppLocalizations.of(context).translate("164"),
+            apiresult.message.toString(),
+            ArtSweetAlertType.danger,
+            AppLocalizations.of(context).translate("159"));
       }
     }
 

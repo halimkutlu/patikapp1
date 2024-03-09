@@ -29,7 +29,7 @@ class Dashboard extends StatefulWidget {
 bool a = true;
 
 class _DashboardState extends State<Dashboard> {
-    List<WidgetsToImageController> controllers = [];
+  List<WidgetsToImageController> controllers = [];
 
   late DashboardProvider mainProvider;
   @override
@@ -52,7 +52,7 @@ class _DashboardState extends State<Dashboard> {
     super.dispose();
   }
 
-   Future<ShareResult> getCapture(WidgetsToImageController contrller) async {
+  Future<ShareResult> getCapture(WidgetsToImageController contrller) async {
     var capture = await contrller.capture();
     var xfiles = <XFile>[
       XFile.fromData(capture!,
@@ -64,7 +64,6 @@ class _DashboardState extends State<Dashboard> {
     return await Share.shareXFiles(xfiles,
         text: AppLocalizations.of(context).translate("157"));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -168,16 +167,6 @@ class _DashboardState extends State<Dashboard> {
                                               height: 0.10,
                                             ),
                                           ),
-                                          // TextSpan(
-                                          //   text: 'Ücretsiz sürüm',
-                                          //   style: TextStyle(
-                                          //     color: Color(0xFFE8233D),
-                                          //     fontSize: 14,
-                                          //     fontFamily: 'Roboto',
-                                          //     fontWeight: FontWeight.w400,
-                                          //     height: 0.10,
-                                          //   ),
-                                          // ),
                                         ],
                                       ),
                                       textAlign: TextAlign.center,

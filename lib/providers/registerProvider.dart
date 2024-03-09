@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_final_fields, use_build_context_synchronously
+// ignore_for_file: prefer_final_fields, use_build_context_synchronously, file_names
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/api/api_repository.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/pages/mailResponse.dart';
@@ -47,13 +48,19 @@ class RegisterProvider extends ChangeNotifier {
         _lastController.text.isEmpty) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
-      }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
-          "ok".tr);
+      },
+          AppLocalizations.of(context).translate("164"),
+          AppLocalizations.of(context).translate("169"),
+          ArtSweetAlertType.info,
+          AppLocalizations.of(context).translate("159"));
     } else if (!_usernameController.text.isEmail) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
-      }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
-          "ok".tr);
+      },
+          AppLocalizations.of(context).translate("164"),
+          AppLocalizations.of(context).translate("169"),
+          ArtSweetAlertType.info,
+          AppLocalizations.of(context).translate("159"));
     } else {
       //TODO API REGİSTER
       _loading = true;
@@ -72,7 +79,11 @@ class RegisterProvider extends ChangeNotifier {
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
-        }, "warning".tr, apiresult.message!, ArtSweetAlertType.info, "ok".tr);
+        },
+            AppLocalizations.of(context).translate("164"),
+            apiresult.message!,
+            ArtSweetAlertType.info,
+            AppLocalizations.of(context).translate("159"));
       }
 
       _loading = false;

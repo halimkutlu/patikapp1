@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, prefer_const_constructors
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
