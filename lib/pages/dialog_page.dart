@@ -35,6 +35,7 @@ class _DialogPageState extends State<DialogPage> {
   }
 
   Future<ShareResult> getCapture(WidgetsToImageController contrller) async {
+    final box = context.findRenderObject() as RenderBox?;
     var capture = await contrller.capture();
     var xfiles = <XFile>[
       XFile.fromData(capture!,
@@ -44,7 +45,8 @@ class _DialogPageState extends State<DialogPage> {
           lastModified: DateTime.now())
     ];
     return await Share.shareXFiles(xfiles,
-        text: AppLocalizations.of(context).translate("157"));
+        text: AppLocalizations.of(context).translate("157"),
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size);
   }
 
   @override
