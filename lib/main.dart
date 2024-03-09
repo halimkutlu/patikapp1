@@ -137,7 +137,7 @@ class _MyAppState extends State<MyApp> {
           //locale: const Locale('hy', 'HW'), //Get.locale,
           title: 'Flutter Demo',
           theme: ThemeData(
-            scaffoldBackgroundColor: MainColors.backgroundColor,
+            //scaffoldBackgroundColor: MainColors.backgroundColor,
             primarySwatch: Colors.blue,
           ),
           // Localization delegates

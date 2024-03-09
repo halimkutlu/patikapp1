@@ -11,47 +11,38 @@ import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
 
 class SplashScreenProvider extends ChangeNotifier {
+  Widget page = const IntroductionPage1();
+
   initData(BuildContext context) async {
-    Timer(const Duration(seconds: 3), () async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var introShowed = prefs.getBool("introShowed");
-      if (introShowed != true) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => IntroductionPage1()),
-            (Route<dynamic> route) => false);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var introShowed = prefs.getBool("introShowed");
+    // if (introShowed == true) {
+    //   Navigator.of(context).pushAndRemoveUntil(
+    //       MaterialPageRoute(builder: (context) => IntroductionPage1()),
+    //       (Route<dynamic> route) => false);
+    if (introShowed == true) {
+      String? token = prefs.getString("Token");
+      int? learningLanguageLCID = prefs.getInt(StorageProvider.learnLcidKey);
+      if ((token == null) || (learningLanguageLCID == null)) {
+        page = const Login();
       } else {
-        String? token = prefs.getString("Token");
-        int? learningLanguageLCID = prefs.getInt(StorageProvider.learnLcidKey);
-        if ((token == null) || (learningLanguageLCID == null)) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const Login()),
-              (Route<dynamic> route) => false);
-        } else {
-          var language = Languages.GetLngFromLCID(learningLanguageLCID);
-          var path = await DbProvider().getDbPath(lngName: language.Code);
-          var pathExist = await File(path).exists();
-          if (pathExist) {
-            var dbProvider = DbProvider();
-            FileDownloadStatus status =
-                await dbProvider.openDbConnection(language);
-            if (status.status) {
-              print("Db local storage üzerinden aktif");
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const Dashboard(0)),
-                  (Route<dynamic> route) => false);
-            }
-          } else {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const Login()),
-                (Route<dynamic> route) => false);
+        var language = Languages.GetLngFromLCID(learningLanguageLCID);
+        var path = await DbProvider().getDbPath(lngName: language.Code);
+        var pathExist = await File(path).exists();
+        if (pathExist) {
+          var dbProvider = DbProvider();
+          FileDownloadStatus status =
+              await dbProvider.openDbConnection(language);
+          if (status.status) {
+            print("Db local storage üzerinden aktif");
+            page = const Dashboard(0);
           }
+        } else {
+          page = const Login();
         }
       }
-    });
-
-    // var lang = prefs.getString("lang");
+    }
   }
 }

@@ -62,6 +62,7 @@ dependencies:
   share_plus: ^7.2.2
   widgets_to_image: ^0.0.2
   just_audio: ^0.9.36
+  lottie: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -118,6 +119,7 @@ flutter:
     - lib/assets/img/box.png
     - lib/assets/img/error_image.png
     - lib/assets/img/success_image.png
+    - lib/assets/splash_lottie.json
 
 
 
