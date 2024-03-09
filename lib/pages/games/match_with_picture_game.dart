@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
+import 'dart:io';
+
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -84,6 +86,27 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
         });
       },
       child: Scaffold(
+        appBar: !Platform.isAndroid ? AppBar(
+           toolbarHeight: 4.2.h,
+        backgroundColor: MainColors.backgroundColor,
+        elevation: 0.0,
+        centerTitle: true,
+        leading: InkWell(
+          onTap: () async{
+            await askToGoMainMenu(func: () {
+          setState(() {
+            matchWithPictureGameProvide.resetData();
+            matchWithPictureGameProvide.setUIimage = [];
+            matchWithPictureGameProvide.setUIWord = [];
+          });
+        });
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black54,
+          ),
+        ),
+      ): null,
         backgroundColor: MainColors.backgroundColor,
         body: Consumer<MatchWithPictureGameProvide>(
           builder: (context, provider, child) {

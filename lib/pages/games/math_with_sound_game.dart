@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers
 
+import 'dart:io';
 import 'dart:math';
 
 import 'package:art_sweetalert/art_sweetalert.dart';
@@ -85,6 +86,29 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
         });
       },
       child: Scaffold(
+         appBar: !Platform.isAndroid ? AppBar(
+           toolbarHeight: 3.1.h,
+        backgroundColor: MainColors.backgroundColor,
+        elevation: 0.0,
+        centerTitle: true,
+        leading: InkWell(
+          onTap: () async{
+          await askToGoMainMenu(func: () {
+          setState(() {
+            matchWithSoundGameProvide.resetData();
+            matchWithSoundGameProvide.setUISound = [];
+            matchWithSoundGameProvide.setUIWord = [];
+          });
+        });
+        
+        
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black54,
+          ),
+        ),
+      ): null,
         backgroundColor: MainColors.backgroundColor,
         body: Consumer<MatchWithSoundGameProvide>(
           builder: (context, provider, child) {
