@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_field
 
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/box_page.dart';
@@ -16,8 +18,10 @@ import 'package:patikmobile/widgets/box_widget.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:patikmobile/widgets/icon_list_item.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:widgets_to_image/widgets_to_image.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -51,7 +55,26 @@ class _MainPageState extends State<MainPage> {
     WidgetsBinding.instance.removeObserver(_lifecycleObserver!);
     super.dispose();
   }
+Future<ShareResult> getCapture(BuildContext context) async {
+  // Asset dosyasını alın
+  ByteData assetByteData = await rootBundle.load('lib/assets/img/logopatik.png');
 
+  // Asset dosyasını Uint8List'e dönüştürün
+  Uint8List imageData = assetByteData.buffer.asUint8List();
+
+  // Resmi paylaşma işlemine hazırlık yapın
+  var xfiles = <XFile>[
+    XFile.fromData(imageData,
+        length: 500,
+        mimeType: "image/png",
+        name: "dialog.png",
+        lastModified: DateTime.now())
+  ];
+
+  // Resmi paylaşın
+  return await Share.shareXFiles(xfiles,
+      text: AppLocalizations.of(context).translate("157"));
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -195,13 +218,18 @@ class _MainPageState extends State<MainPage> {
                 height: 3.4.h,
                 fit: BoxFit.fill,
               ),
-              Container(
-                width: 35.w,
-                child: AutoSizeText(
-                  AppLocalizations.of(context).translate("68"),
-                  minFontSize: 8,
-                  maxFontSize: 40,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+              InkWell(
+                onTap: () async{
+
+                },
+                child: Container(
+                  width: 35.w,
+                  child: AutoSizeText(
+                    AppLocalizations.of(context).translate("68"),
+                    minFontSize: 8,
+                    maxFontSize: 40,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               Image.asset(
@@ -218,16 +246,21 @@ class _MainPageState extends State<MainPage> {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CustomIconButton(
-              textColor: Colors.white,
-              colors: Colors.red,
-              icons: Icon(Icons.send),
-              name: AppLocalizations.of(context).translate("100"),
-              width: 0.3.w,
-              height: 3.0.h,
-              onTap: () {},
+          InkWell(
+      
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomIconButton(
+                textColor: Colors.white,
+                colors: Colors.red,
+                icons: Icon(Icons.send),
+                name: AppLocalizations.of(context).translate("100"),
+                width: 0.3.w,
+                height: 3.0.h,
+                onTap: () async{
+                     await getCapture(context);
+                },
+              ),
             ),
           ),
         ]),

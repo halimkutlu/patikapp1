@@ -14,7 +14,9 @@ import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:patikmobile/widgets/menu_item.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
+import 'package:widgets_to_image/widgets_to_image.dart';
 
 class Dashboard extends StatefulWidget {
   final int? selectedPageIndex;
@@ -27,6 +29,8 @@ class Dashboard extends StatefulWidget {
 bool a = true;
 
 class _DashboardState extends State<Dashboard> {
+    List<WidgetsToImageController> controllers = [];
+
   late DashboardProvider mainProvider;
   @override
   void initState() {
@@ -47,6 +51,20 @@ class _DashboardState extends State<Dashboard> {
   void dispose() {
     super.dispose();
   }
+
+   Future<ShareResult> getCapture(WidgetsToImageController contrller) async {
+    var capture = await contrller.capture();
+    var xfiles = <XFile>[
+      XFile.fromData(capture!,
+          length: capture!.length,
+          mimeType: "image/png",
+          name: "dialog.png",
+          lastModified: DateTime.now())
+    ];
+    return await Share.shareXFiles(xfiles,
+        text: AppLocalizations.of(context).translate("157"));
+  }
+
 
   @override
   Widget build(BuildContext context) {
