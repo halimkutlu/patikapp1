@@ -267,11 +267,6 @@ class LoginProvider extends ChangeNotifier {
           return processResult;
         } else {
           //EĞER DOSYA ÇIKARTMA İŞLEMİ BAŞARILI İSE
-          if (lernLng) {
-            StorageProvider.appLanguge = lcid;
-            SharedPreferences shrdp = await SharedPreferences.getInstance();
-            await shrdp.setInt(StorageProvider.appLcidKey, lcid.LCID);
-          }
           if (dbProvider.ifConnectionAlive()) dbProvider.closeDbConnection();
           FileDownloadStatus dbresult = await dbProvider.openDbConnection(lcid);
           if (dbresult.status) {

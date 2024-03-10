@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers
 
 import 'dart:io';
+import 'dart:math';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -29,6 +30,7 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
   BannerAd? _bannerAd;
 
   late MatchWithSoundGameProvide matchWithSoundGameProvide;
+  late AdProvider adProvider;
 
   @override
   void initState() {
@@ -38,27 +40,15 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
     matchWithSoundGameProvide.init(context, widget.playWith,
         trainingGame: widget.trainingGame!);
 
-    BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: AdRequest(),
-      size: AdSize.fullBanner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          ad.dispose();
-        },
-      ),
-    ).load();
+    adProvider = Provider.of<AdProvider>(context, listen: false);
+    adProvider.init(context, (ad) {
+      setState(() => _bannerAd = ad);
+    });
   }
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    if (_bannerAd != null) _bannerAd!.dispose();
     if (matchWithSoundGameProvide.interstitialAd != null) {
       matchWithSoundGameProvide.interstitialAd!.dispose();
     }
@@ -124,14 +114,10 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
               children: [
                 if (_bannerAd != null)
                   Positioned(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        width: _bannerAd!.size.width.toDouble() * 2,
-                        height: _bannerAd!.size.height.toDouble(),
-                        child: AdWidget(ad: _bannerAd!),
-                      ),
-                    ),
+                    bottom: 0,
+                    height: _bannerAd!.size.height.toDouble(),
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(child: AdWidget(ad: _bannerAd!)),
                   ),
                 Container(
                   child: Column(

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -55,6 +56,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
 
   late MovingSquaresGameProvide movingSquaresGameProvide;
   late List<AnimationController> _controllers;
+  late AdProvider adProvider;
   // late List<List<Offset>> squareOffsets;
   // animasyon hızı
   int durationSec = 40;
@@ -69,31 +71,15 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
 
     animationReload();
 
-    BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: AdRequest(),
-      size: AdSize.fullBanner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {
-            _bannerAd = ad as BannerAd;
-            if (_bannerAd?.size != null && _bannerAd!.size.height > 0) {
-              GameSizeClass.bottomMargin =
-                  GameSizeClass.Height - _bannerAd!.size.height;
-            }
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          ad.dispose();
-        },
-      ),
-    ).load();
+    adProvider = Provider.of<AdProvider>(context, listen: false);
+    adProvider.init(context, (ad) {
+      setState(() => _bannerAd = ad);
+    });
   }
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    if (_bannerAd != null) _bannerAd!.dispose();
     for (var element in _controllers) {
       element.dispose();
     }
@@ -224,39 +210,35 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
           });
         },
         child: Scaffold(
-          appBar: Platform.isAndroid ? AppBar(
-           toolbarHeight: 3.1.h,
-        backgroundColor: MainColors.backgroundColor,
-        elevation: 0.0,
-        centerTitle: true,
-        leading: InkWell(
-          onTap: () async{
-         await askToGoMainMenu(func: () {
-          setState(() {
-        
-          });
-        });
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black54,
-          ),
-        ),
-      ): null,
+          appBar: Platform.isAndroid
+              ? AppBar(
+                  toolbarHeight: 3.1.h,
+                  backgroundColor: MainColors.backgroundColor,
+                  elevation: 0.0,
+                  centerTitle: true,
+                  leading: InkWell(
+                    onTap: () async {
+                      await askToGoMainMenu(func: () {
+                        setState(() {});
+                      });
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black54,
+                    ),
+                  ),
+                )
+              : null,
           backgroundColor: MainColors.backgroundColor,
           body: Consumer<MovingSquaresGameProvide>(
             builder: (context, provider, child) {
               return Stack(children: [
                 if (_bannerAd != null)
                   Positioned(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        width: _bannerAd!.size.width.toDouble() * 2,
-                        height: _bannerAd!.size.height.toDouble(),
-                        child: AdWidget(ad: _bannerAd!),
-                      ),
-                    ),
+                    bottom: 0,
+                    height: _bannerAd!.size.height.toDouble(),
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(child: AdWidget(ad: _bannerAd!)),
                   ),
                 GestureDetector(
                   child: CustomPaint(

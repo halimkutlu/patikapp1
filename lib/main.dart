@@ -29,6 +29,7 @@ import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/providers/splashScreenProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/providers/trainingProvider.dart';
+import 'package:patikmobile/services/ad_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sizer/sizer.dart';
@@ -92,6 +93,7 @@ List<SingleChildWidget> providers = [
       create: (_) => MovingSquaresGameProvide()),
   ChangeNotifierProvider<DialogCategoriesProvider>(
       create: (_) => DialogCategoriesProvider()),
+  ChangeNotifierProvider<AdProvider>(create: (_) => AdProvider()),
 ];
 
 class MyApp extends StatefulWidget {

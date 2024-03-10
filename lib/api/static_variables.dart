@@ -3,6 +3,7 @@
 
 import 'dart:ui';
 
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/models/user_roles.dart';
 
 class StaticVariables {
@@ -15,6 +16,7 @@ class StaticVariables {
   static bool FirstTimeLogin = true;
   static String PhoneID = "";
   static int lngPlanType = LngPlanType.Free;
+  static AdSize adSize = AdSize(width: 0, height: 0);
 
   StaticVariables.reset() {
     token = "";

@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
@@ -28,10 +29,11 @@ class MultipleChoiceGame extends StatefulWidget {
 class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
   BannerAd? _bannerAd;
   late MultipleChoiceGameProvider multipleChoiceGameProvider;
+  late AdProvider adProvider;
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    if (_bannerAd != null) _bannerAd!.dispose();
     if (multipleChoiceGameProvider.interstitialAd != null) {
       multipleChoiceGameProvider.interstitialAd!.dispose();
     }
@@ -46,22 +48,10 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
     multipleChoiceGameProvider.init(context, widget.playWith,
         trainingGame: widget.trainingGame!);
 
-    BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: const AdRequest(),
-      size: AdSize.fullBanner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          ad.dispose();
-        },
-      ),
-    ).load();
+    adProvider = Provider.of<AdProvider>(context, listen: false);
+    adProvider.init(context, (ad) {
+      setState(() => _bannerAd = ad);
+    });
   }
 
   @override
@@ -81,26 +71,25 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
         });
       },
       child: Scaffold(
-        appBar: !Platform.isAndroid ? AppBar(
-           toolbarHeight: 3.1.h,
-        backgroundColor: MainColors.backgroundColor,
-        elevation: 0.0,
-        centerTitle: true,
-        leading: InkWell(
-          onTap: () async{
-         await askToGoMainMenu(func: () {
-          setState(() {
-      
-        
-          });
-        });
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black54,
-          ),
-        ),
-      ): null,
+          appBar: !Platform.isAndroid
+              ? AppBar(
+                  toolbarHeight: 3.1.h,
+                  backgroundColor: MainColors.backgroundColor,
+                  elevation: 0.0,
+                  centerTitle: true,
+                  leading: InkWell(
+                    onTap: () async {
+                      await askToGoMainMenu(func: () {
+                        setState(() {});
+                      });
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black54,
+                    ),
+                  ),
+                )
+              : null,
           backgroundColor: MainColors.backgroundColor,
           body: Consumer<MultipleChoiceGameProvider>(
               builder: (context, provider, child) {
@@ -112,14 +101,10 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
               children: [
                 if (_bannerAd != null)
                   Positioned(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        width: _bannerAd!.size.width.toDouble() * 2,
-                        height: _bannerAd!.size.height.toDouble(),
-                        child: AdWidget(ad: _bannerAd!),
-                      ),
-                    ),
+                    bottom: 0,
+                    height: _bannerAd!.size.height.toDouble(),
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(child: AdWidget(ad: _bannerAd!)),
                   ),
                 Column(
                   children: [

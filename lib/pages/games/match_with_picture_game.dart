@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, avoid_unnecessary_containers
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
   BannerAd? _bannerAd;
 
   late MatchWithPictureGameProvide matchWithPictureGameProvide;
+  late AdProvider adProvider;
 
   @override
   void initState() {
@@ -40,29 +42,15 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
     matchWithPictureGameProvide.init(context, widget.playWith,
         trainingGame: widget.trainingGame!);
 
-    BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: AdRequest(),
-      size: AdSize.fullBanner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          ad.dispose();
-        },
-      ),
-    ).load();
+    adProvider = Provider.of<AdProvider>(context, listen: false);
+    adProvider.init(context, (ad) {
+      setState(() => _bannerAd = ad);
+    });
   }
 
   @override
   void dispose() {
-    // TODO: Dispose a BannerAd object
-    _bannerAd?.dispose();
-    // TODO: Dispose an InterstitialAd object
+    if (_bannerAd != null) _bannerAd!.dispose();
     if (matchWithPictureGameProvide.interstitialAd != null) {
       matchWithPictureGameProvide.interstitialAd!.dispose();
     }
@@ -86,27 +74,29 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
         });
       },
       child: Scaffold(
-        appBar: !Platform.isAndroid ? AppBar(
-           toolbarHeight: 4.2.h,
-        backgroundColor: MainColors.backgroundColor,
-        elevation: 0.0,
-        centerTitle: true,
-        leading: InkWell(
-          onTap: () async{
-            await askToGoMainMenu(func: () {
-          setState(() {
-            matchWithPictureGameProvide.resetData();
-            matchWithPictureGameProvide.setUIimage = [];
-            matchWithPictureGameProvide.setUIWord = [];
-          });
-        });
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black54,
-          ),
-        ),
-      ): null,
+        appBar: !Platform.isAndroid
+            ? AppBar(
+                toolbarHeight: 4.2.h,
+                backgroundColor: MainColors.backgroundColor,
+                elevation: 0.0,
+                centerTitle: true,
+                leading: InkWell(
+                  onTap: () async {
+                    await askToGoMainMenu(func: () {
+                      setState(() {
+                        matchWithPictureGameProvide.resetData();
+                        matchWithPictureGameProvide.setUIimage = [];
+                        matchWithPictureGameProvide.setUIWord = [];
+                      });
+                    });
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.black54,
+                  ),
+                ),
+              )
+            : null,
         backgroundColor: MainColors.backgroundColor,
         body: Consumer<MatchWithPictureGameProvide>(
           builder: (context, provider, child) {
@@ -126,14 +116,10 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
               children: [
                 if (_bannerAd != null)
                   Positioned(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        width: _bannerAd!.size.width.toDouble() * 2,
-                        height: _bannerAd!.size.height.toDouble(),
-                        child: AdWidget(ad: _bannerAd!),
-                      ),
-                    ),
+                    bottom: 0,
+                    height: _bannerAd!.size.height.toDouble(),
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(child: AdWidget(ad: _bannerAd!)),
                   ),
                 Container(
                   child: Column(

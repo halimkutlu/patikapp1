@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_init_to_null
 
 import 'dart:async';
 import 'dart:io';
@@ -28,9 +28,10 @@ class SwipeCardGame extends StatefulWidget {
 }
 
 class _SwipeCardGameState extends State<SwipeCardGame> {
-  BannerAd? _bannerAd;
   bool firstLoad = true;
   late SwipeCardGameProvider swipeCardProvider;
+  BannerAd? _bannerAd;
+  late AdProvider adProvider;
 
   @override
   void initState() {
@@ -39,29 +40,15 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
         Provider.of<SwipeCardGameProvider>(context, listen: false);
     swipeCardProvider.init(widget.selectedCategoryInfo, context);
 
-    // TODO: Load a banner ad
-    BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: AdRequest(),
-      size: AdSize.fullBanner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          ad.dispose();
-        },
-      ),
-    ).load();
+    adProvider = Provider.of<AdProvider>(context, listen: false);
+    adProvider.init(context, (ad) {
+      setState(() => _bannerAd = ad);
+    });
   }
 
   @override
   void dispose() {
-    // TODO: Dispose a BannerAd object
-    _bannerAd?.dispose();
+    if (_bannerAd != null) _bannerAd!.dispose();
     super.dispose();
   }
 
@@ -80,26 +67,27 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
         });
       },
       child: Scaffold(
-        appBar: !Platform.isAndroid ? AppBar(
-           toolbarHeight: 3.1.h,
-        backgroundColor: MainColors.backgroundColor,
-        elevation: 0.0,
-        centerTitle: true,
-        leading: InkWell(
-          onTap: () async{
-           await askToGoMainMenu(func: () {
-          setState(() {
-            swipeCardProvider.resetData();
-          });
-        
-        });
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black54,
-          ),
-        ),
-      ): null,
+          appBar: !Platform.isAndroid
+              ? AppBar(
+                  toolbarHeight: 3.1.h,
+                  backgroundColor: MainColors.backgroundColor,
+                  elevation: 0.0,
+                  centerTitle: true,
+                  leading: InkWell(
+                    onTap: () async {
+                      await askToGoMainMenu(func: () {
+                        setState(() {
+                          swipeCardProvider.resetData();
+                        });
+                      });
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black54,
+                    ),
+                  ),
+                )
+              : null,
           backgroundColor: MainColors.backgroundColor,
           body: Consumer<SwipeCardGameProvider>(
               builder: (context, provider, child) {
@@ -109,6 +97,13 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
             }
             return Stack(
               children: [
+                if (_bannerAd != null)
+                  Positioned(
+                    bottom: 0,
+                    height: _bannerAd!.size.height.toDouble(),
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(child: AdWidget(ad: _bannerAd!)),
+                  ),
                 if (provider.wordsLoaded == true) ...[
                   CardSwiper(
                     onSwipe: (oncekiIndex, index, direction) {
@@ -302,24 +297,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                       );
                     },
                     isLoop: false,
-                  ),
-                  SafeArea(
-                    child: Stack(
-                      children: [
-                        Center(),
-                        // TODO: Display a banner when ready
-                      ],
-                    ),
-                  ),
-                  if (_bannerAd != null)
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        width: _bannerAd!.size.width.toDouble() * 2,
-                        height: _bannerAd!.size.height.toDouble(),
-                        child: AdWidget(ad: _bannerAd!),
-                      ),
-                    ),
+                  )
                 ]
               ],
             );

@@ -146,12 +146,8 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                           var lngCheck = await dbProvider
                               .checkLearnLanguage(language.LCID);
                           if (lngCheck) {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            prefs.setString(
-                                "LearnLanguageName", language.Name!);
-                            prefs.setInt(
-                                StorageProvider.learnLcidKey, language.LCID);
+                            StorageProvider.updateLearnLanguage(
+                                context, language);
                             await dbProvider.closeDbConnection();
                             await dbProvider.openDbConnection(language);
                             if (widget.noReturn == true) {
@@ -176,6 +172,9 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                   .startProcessOfDownloadLearnLanguage(
                                       language, false, onReceiveProgress);
                               if (status.status) {
+                                StorageProvider.updateLearnLanguage(
+                                    context, language);
+
                                 if (widget.noReturn == true) {
                                   Navigator.of(_scaffoldKey.currentContext!)
                                       .pushAndRemoveUntil(

@@ -1,4 +1,12 @@
+// ignore_for_file: unused_field, prefer_const_constructors
+
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:patikmobile/api/static_variables.dart';
+
+typedef BannerCallback = void Function(BannerAd ad);
 
 class AdHelper {
   static String get bannerAdUnitId {
@@ -30,5 +38,30 @@ class AdHelper {
     } else {
       throw UnsupportedError('Unsupported platform');
     }
+  }
+}
+
+class AdProvider extends ChangeNotifier {
+  init(BuildContext context, BannerCallback callback) async {
+    BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.fullBanner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          BannerAd bad = ad as BannerAd;
+          StaticVariables.adSize = bad.size;
+          callback(bad);
+        },
+        // onAdLoaded: (ad) {
+        //   bannerAd = ad as BannerAd;
+        //   bannerSize = bannerAd!.size;
+        // },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    ).load();
   }
 }

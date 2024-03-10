@@ -62,6 +62,12 @@ class StorageProvider {
     Get.updateLocale(Locale(locale.Code.split('-').first));
   }
 
+  static updateLearnLanguage(BuildContext context, Lcid locale) async {
+    SharedPreferences shrdp = await SharedPreferences.getInstance();
+    await shrdp.setInt(learnLcidKey, locale.LCID);
+    await shrdp.setString("LearnLanguageName", locale.Name!);
+  }
+
   static int getPrimaryRole(dynamic userRoles) {
     if (userRoles.contains(UserRole.admin)) {
       return UserRole.admin;
