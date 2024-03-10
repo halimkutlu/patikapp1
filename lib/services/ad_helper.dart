@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/api/static_variables.dart';
+import 'package:patikmobile/models/user_roles.dart';
 
 typedef BannerCallback = void Function(BannerAd ad);
 
@@ -43,6 +44,7 @@ class AdHelper {
 
 class AdProvider extends ChangeNotifier {
   init(BuildContext context, BannerCallback callback) async {
+    if (StaticVariables.lngPlanType == LngPlanType.Premium) return;
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
       request: AdRequest(),
@@ -53,12 +55,7 @@ class AdProvider extends ChangeNotifier {
           StaticVariables.adSize = bad.size;
           callback(bad);
         },
-        // onAdLoaded: (ad) {
-        //   bannerAd = ad as BannerAd;
-        //   bannerSize = bannerAd!.size;
-        // },
         onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
           ad.dispose();
         },
       ),

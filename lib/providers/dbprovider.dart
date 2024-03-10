@@ -143,7 +143,8 @@ class DbProvider extends ChangeNotifier {
     Directory dir = await getApplicationDocumentsDirectory();
     String sql = """
 Select w.*, (Select Count(*) from Words w1 where w1.Categories LIKE '%|' || w.Id || '|%') as CategoryWordCount,
-(Select count(*) from Words w2 where w2.IsCategoryName != 1) as TotalWordCount
+(Select count(*) from Words w2 where w2.IsCategoryName != 1) as TotalWordCount,
+(Select Count(*) from Words w3 where w3.IsCategoryName != 1 and w3.Categories LIKE '%|' || w.Id || '|%' and w3.Id IN (Select ws.WordId from WordStatistics ws)) as LearnedWordsCount
 from Words w where w.IsCategoryName = 1 """;
     var res = await database!.rawQuery(sql);
     var liste = res

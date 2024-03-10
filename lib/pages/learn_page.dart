@@ -96,8 +96,8 @@ class _LearnPageState extends State<LearnPage> {
                                     return categoryBox(
                                         horizontalCategory.categoryImage!,
                                         horizontalCategory.categoryAppLngName!,
+                                        horizontalCategory.learnedWordsCount!,
                                         horizontalCategory.categoryWordCount!,
-                                        horizontalCategory.totalCount!,
                                         horizontalCategory.orderColor!,
                                         horizontalCategory);
                                   } else {

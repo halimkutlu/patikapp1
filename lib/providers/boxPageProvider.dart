@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_final_fields, avoid_print
 import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';

@@ -28,9 +28,9 @@ class GameSizeClass {
   static double perMargin = 0;
   void Init() {
     // Aşağıda duracakları konum
-    bottomMargin = Height - 2.h;
+    bottomMargin = Height - StaticVariables.adSize.height.toDouble() - 25;
     // Kutu boyutu
-    boxSize = Size((Width - 5.h) / 2, Height / 10);
+    boxSize = Size((Width - 8.w) / 2, Height / 10);
 
     var margin = (Width - (boxSize.width * 2)) / 3;
     // ilk kutu left
@@ -64,6 +64,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
   void initState() {
     super.initState();
 
+    GameSizeClass().Init();
     movingSquaresGameProvide =
         Provider.of<MovingSquaresGameProvide>(context, listen: false);
     movingSquaresGameProvide.init(context, methodCallBack, methodCallBack2,
@@ -252,7 +253,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
                     top: 0,
                     child: Container(
                         width: StaticVariables.AppSize.width,
-                        height: GameSizeClass.boxSize.height / 1.2,
+                        height: GameSizeClass.boxSize.height / 2,
                         decoration:
                             BoxDecoration(color: MainColors.backgroundColor))),
                 if (provider.errorAccuried == true) ...[

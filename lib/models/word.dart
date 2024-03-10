@@ -106,6 +106,7 @@ File getCategoryImage(String path, String categoryId) => File(
 class WordListInformation {
   String? categoryName;
   int? categoryWordCount;
+  int? learnedWordsCount;
   int? totalCount;
   File? categoryImage;
   String? categoryOrderName;
@@ -118,6 +119,7 @@ class WordListInformation {
     this.categoryImage,
     this.categoryName,
     this.categoryWordCount,
+    this.learnedWordsCount,
     this.order,
     this.categoryOrderName,
     this.orderColor,
@@ -137,6 +139,7 @@ class WordListInformation {
           orderColor: StaticVariables
               .ColorList[(int.tryParse(json["Activities"]) ?? 0) - 1],
           totalCount: json["TotalWordCount"],
+          learnedWordsCount: json["LearnedWordsCount"],
           order: json["IsCategory"] != 1
               ? int.tryParse(json["Activities"]) ?? json["OrderId"]
               : null,
