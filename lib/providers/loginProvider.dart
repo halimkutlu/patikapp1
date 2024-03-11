@@ -218,11 +218,7 @@ class LoginProvider extends ChangeNotifier {
   }
 
   setUseLanguage(Lcid language, BuildContext context, bool dashboard) {
-    changeLanguage(language, context, dashboard);
-  }
-
-  changeLanguage(Lcid locale, BuildContext context, bool dashboard) {
-    StorageProvider.updateLanguage(context, locale);
+    StorageProvider.updateLanguage(context, language);
     notifyListeners();
     //Navigator.pop(context);
     CustomAlertDialogOnlyConfirm(context, () {

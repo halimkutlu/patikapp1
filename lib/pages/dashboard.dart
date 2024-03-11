@@ -26,8 +26,6 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
-bool a = true;
-
 class _DashboardState extends State<Dashboard> {
   List<WidgetsToImageController> controllers = [];
 

@@ -11,6 +11,7 @@ import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/box_page.dart';
 import 'package:patikmobile/pages/games/swipe_card_game.dart';
 import 'package:patikmobile/providers/categoriesProvider.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/box_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';

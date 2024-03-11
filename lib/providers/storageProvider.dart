@@ -1,6 +1,5 @@
 // ignore_for_file: file_names, prefer_const_constructors
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
@@ -45,10 +44,6 @@ class StorageProvider {
       learnlcid = shrdp.getInt(StorageProvider.learnLcidKey) ?? 0;
       if (learnlcid > 0) {
         StorageProvider.learnLanguge = Languages.GetLngFromLCID(learnlcid);
-        var rolesString = shrdp.getString("roles");
-        if (rolesString != null) {
-          List<dynamic> rolesList = jsonDecode(rolesString);
-        }
       }
     }
     return StorageProvider.learnLanguge;
@@ -56,6 +51,7 @@ class StorageProvider {
 
   static updateLanguage(BuildContext context, Lcid locale) async {
     SharedPreferences shrdp = await SharedPreferences.getInstance();
+    StorageProvider.appLanguge = locale;
     await shrdp.setInt(appLcidKey, locale.LCID);
     await shrdp.setString("AppLanguageName", locale.Name!);
     AppLocalizationsDelegate().load(const Locale('en'));
@@ -64,6 +60,7 @@ class StorageProvider {
 
   static updateLearnLanguage(BuildContext context, Lcid locale) async {
     SharedPreferences shrdp = await SharedPreferences.getInstance();
+    StorageProvider.learnLanguge = locale;
     await shrdp.setInt(learnLcidKey, locale.LCID);
     await shrdp.setString("LearnLanguageName", locale.Name!);
   }
