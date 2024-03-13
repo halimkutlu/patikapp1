@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -28,7 +27,7 @@ class GameSizeClass {
   static double perMargin = 0;
   void Init() {
     // Aşağıda duracakları konum
-    bottomMargin = Height - StaticVariables.adSize.height.toDouble() - 25;
+    bottomMargin = Height - StaticVariables.adSize.height.toDouble() - 30;
     // Kutu boyutu
     boxSize = Size((Width - 8.w) / 2, Height / 10);
 
@@ -193,7 +192,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
   void ShowSuccess(MovingSquaresGameProvide provider) {
     provider.successAnswer(provider.currentGameItems![provider.siradaki!], () {
       provider.setSuccessAccuried = false;
-      provider.boxDown();
+      provider.boxDown(true);
       methodCallBack();
     });
   }

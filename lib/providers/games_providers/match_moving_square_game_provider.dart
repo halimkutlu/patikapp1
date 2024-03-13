@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
+import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
@@ -66,6 +67,8 @@ class MovingSquaresGameProvide extends ChangeNotifier {
   int? _errorCount = 0;
   int? get errorCount => _errorCount;
 
+  int _roundSuccessCount = 0;
+
   int? _siradaki = 0;
   int? get siradaki => _siradaki;
 
@@ -115,6 +118,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     diffStatisticWords = [];
     _siradaki = 0;
     _errorCount = 0;
+    _roundSuccessCount = 0;
     buildContext = context;
     isTrainingGame = trainingGame;
     trainingGameIndex = 0;
@@ -337,8 +341,9 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
     if (_siradaki! > _wordListDbInformation!.length - 1) return;
     GameSizeClass.boxEndPosition = (GameSizeClass.bottomMargin -
-        ((GameSizeClass.boxSize.height * (_siradaki! + 1)) +
-            (_siradaki! * 2.h)));
+        ((GameSizeClass.boxSize.height *
+                (_siradaki! - _roundSuccessCount + 1)) +
+            ((_siradaki! - _roundSuccessCount) * 2.h)));
     //siradaki kutuların konumu değiştiriliyor
     for (int i = 0;
         i < _currentGameItems![_siradaki!].Wordoffsets!.length;
@@ -369,6 +374,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
         });
       } else {
         _roundCount++;
+        _roundSuccessCount = 0;
         if (_roundCount < maxRoundCount) {
           if (_errorCount! > 3) {
             if (_interstitialAd != null) {
@@ -383,6 +389,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
         } else {
           if (!isTrainingGame) {
             _roundCount = 0;
+            _roundSuccessCount = 0;
             await FilltheWordsInABox();
             await showSuccessPage(context);
           } else {
@@ -398,6 +405,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
               });
             } else {
               _roundCount = 0;
+              _roundSuccessCount = 0;
               _wordListDbInformation = _dividedList![trainingGameIndex];
               _wordsLoaded = true;
               notifyListeners();
@@ -432,13 +440,15 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     _errorCount = _errorCount! + 1;
   }
 
-  void boxDown() {
+  void boxDown([bool? success = false]) {
+    double pplus = 0;
+    if (success!) pplus = StaticVariables.AppSize.height * 2;
     _currentGameItems![_siradaki!].Wordoffsets![0] = Offset(
         _currentGameItems![_siradaki!].Wordoffsets![0].dx,
-        GameSizeClass.boxEndPosition);
+        GameSizeClass.boxEndPosition + pplus);
     _currentGameItems![_siradaki!].Wordoffsets![1] = Offset(
         _currentGameItems![_siradaki!].Wordoffsets![1].dx,
-        GameSizeClass.boxEndPosition);
+        GameSizeClass.boxEndPosition + pplus);
 
     notifyListeners();
   }
@@ -452,6 +462,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
   Future<void> successAnswer(GameItem gameItem, VoidCallback? callback) async {
     _successAccuried = true;
+    _roundSuccessCount = _roundSuccessCount + 1;
     notifyListeners();
 
     Timer(Duration(seconds: 1), callback!);

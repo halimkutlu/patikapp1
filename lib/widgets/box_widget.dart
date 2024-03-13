@@ -31,7 +31,6 @@ class _BoxWidgetState extends State<BoxWidget> {
       child: Column(
         children: [
           Container(
-            height: 3.h,
             width: 25.w,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(

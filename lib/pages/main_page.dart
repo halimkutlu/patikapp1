@@ -1,14 +1,12 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_field
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_field, use_build_context_synchronously
 
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/box_page.dart';
-import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/dialog_page.dart';
 import 'package:patikmobile/pages/learn_page.dart';
 import 'package:patikmobile/pages/training_page.dart';
@@ -21,7 +19,6 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
-import 'package:widgets_to_image/widgets_to_image.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -55,72 +52,73 @@ class _MainPageState extends State<MainPage> {
     WidgetsBinding.instance.removeObserver(_lifecycleObserver!);
     super.dispose();
   }
-Future<ShareResult> getCapture(BuildContext context) async {
-  // Asset dosyasını alın
-  ByteData assetByteData = await rootBundle.load('lib/assets/img/logopatik.png');
 
-  // Asset dosyasını Uint8List'e dönüştürün
-  Uint8List imageData = assetByteData.buffer.asUint8List();
+  Future<ShareResult> getCapture(BuildContext context) async {
+    // Asset dosyasını alın
+    ByteData assetByteData =
+        await rootBundle.load('lib/assets/img/logopatik.png');
 
-  // Resmi paylaşma işlemine hazırlık yapın
-  var xfiles = <XFile>[
-    XFile.fromData(imageData,
-        length: 500,
-        mimeType: "image/png",
-        name: "dialog.png",
-        lastModified: DateTime.now())
-  ];
+    // Asset dosyasını Uint8List'e dönüştürün
+    Uint8List imageData = assetByteData.buffer.asUint8List();
 
-  // Resmi paylaşın
-  return await Share.shareXFiles(xfiles,
-      text: AppLocalizations.of(context).translate("157"));
-}
+    // Resmi paylaşma işlemine hazırlık yapın
+    var xfiles = <XFile>[
+      XFile.fromData(imageData,
+          length: 500,
+          mimeType: "image/png",
+          name: "dialog.png",
+          lastModified: DateTime.now())
+    ];
+
+    // Resmi paylaşın
+    return await Share.shareXFiles(xfiles,
+        text: AppLocalizations.of(context).translate("157"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MainColors.backgroundColor,
       body: Column(children: [
         Center(
-          child: Text(
+          child: AutoSizeText(
             AppLocalizations.of(context).translate("96"),
-            style: TextStyle(fontSize: 4.h, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 5.w, fontWeight: FontWeight.bold),
           ),
         ),
-        Column(
-          children: [
-            IconListItem(
-                Text: AppLocalizations.of(context).translate("97"),
-                imageStr: 'lib/assets/img/graduate.png',
-                onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => LearnPage()));
-                }),
-            IconListItem(
-                Text: AppLocalizations.of(context).translate("98"),
-                imageStr: 'lib/assets/img/muscle.png',
-                onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => TrainingPage()));
-                }),
-            IconListItem(
-                Text: AppLocalizations.of(context).translate("99"),
-                imageStr: 'lib/assets/img/chat.png',
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DialogPage(
-                            dialogId: "-1",
-                          )));
-                }),
-            statusArea(),
-            brandArea(),
-            boxArea()
-          ],
-        )
+        IconListItem(
+            Text: AppLocalizations.of(context).translate("97"),
+            imageStr: 'lib/assets/img/graduate.png',
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => LearnPage()));
+            }),
+        IconListItem(
+            Text: AppLocalizations.of(context).translate("98"),
+            imageStr: 'lib/assets/img/muscle.png',
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => TrainingPage()));
+            }),
+        IconListItem(
+            Text: AppLocalizations.of(context).translate("99"),
+            imageStr: 'lib/assets/img/chat.png',
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DialogPage(
+                        dialogId: "-1",
+                      )));
+            }),
+        statusArea(),
+        brandArea(),
+        boxArea()
       ]),
     );
   }
 
   Widget statusArea() {
+    var g1 = AutoSizeGroup();
+    var g2 = AutoSizeGroup();
     return Padding(
       padding: EdgeInsets.only(
         top: 1.0.h,
@@ -133,25 +131,31 @@ Future<ShareResult> getCapture(BuildContext context) async {
             AppLocalizations.of(context).translate("64"),
             style: TextStyle(fontSize: 2.5.h),
           ),
-          Text(
+          AutoSizeText(
             AppLocalizations.of(context).translate("65"),
             style: TextStyle(fontSize: 2.5.h),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              AutoSizeText(
+                group: g1,
+                maxLines: 1,
                 AppLocalizations.of(context).translate("66", addRight: ""),
                 style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
               ),
-              Text(
+              AutoSizeText(
+                group: g1,
+                maxLines: 1,
                 appMinute.toString(),
                 style: TextStyle(
                     fontSize: 2.0.h,
                     color: Colors.red,
                     fontWeight: FontWeight.bold),
               ),
-              Text(
+              AutoSizeText(
+                group: g1,
+                maxLines: 1,
                 AppLocalizations.of(context).translate("63", addLeft: " "),
                 style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
               ),
@@ -160,11 +164,15 @@ Future<ShareResult> getCapture(BuildContext context) async {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              AutoSizeText(
+                group: g2,
+                maxLines: 1,
                 AppLocalizations.of(context).translate("67", addRight: " "),
                 style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
               ),
-              Text(
+              AutoSizeText(
+                group: g2,
+                maxLines: 1,
                 mainProvider.getLernedWordCount.toString(),
                 style: TextStyle(
                     fontSize: 2.0.h,
@@ -196,7 +204,7 @@ Future<ShareResult> getCapture(BuildContext context) async {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 2.w),
-                child: Text(
+                child: AutoSizeText(
                   "Patik",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 4.h),
                 ),
@@ -219,15 +227,14 @@ Future<ShareResult> getCapture(BuildContext context) async {
                 fit: BoxFit.fill,
               ),
               InkWell(
-                onTap: () async{
-
-                },
+                onTap: () async {},
                 child: Container(
                   width: 35.w,
                   child: AutoSizeText(
+                    maxLines: 1,
                     AppLocalizations.of(context).translate("68"),
                     minFontSize: 8,
-                    maxFontSize: 40,
+                    maxFontSize: 20,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -247,7 +254,6 @@ Future<ShareResult> getCapture(BuildContext context) async {
             ],
           ),
           InkWell(
-      
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: CustomIconButton(
@@ -257,8 +263,8 @@ Future<ShareResult> getCapture(BuildContext context) async {
                 name: AppLocalizations.of(context).translate("100"),
                 width: 0.3.w,
                 height: 3.0.h,
-                onTap: () async{
-                     await getCapture(context);
+                onTap: () async {
+                  await getCapture(context);
                 },
               ),
             ),
@@ -269,49 +275,46 @@ Future<ShareResult> getCapture(BuildContext context) async {
   }
 
   Widget boxArea() {
-    return Padding(
-      padding: EdgeInsets.all(0.2.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          BoxWidget(
-            text: AppLocalizations.of(context).translate("101"),
-            color: MainColors.boxColor1,
-            value: mainProvider.getLernedWordCount.toString(),
-            iconUrl: 'lib/assets/img/ilearned.png',
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => BoxPage(
-                        selectedBox: 1,
-                      )));
-            },
-          ),
-          BoxWidget(
-            text: AppLocalizations.of(context).translate("102"),
-            color: MainColors.boxColor2,
-            value: mainProvider.getRepeatedWordCount.toString(),
-            iconUrl: 'lib/assets/img/repeat.png',
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => BoxPage(
-                        selectedBox: 2,
-                      )));
-            },
-          ),
-          BoxWidget(
-            text: AppLocalizations.of(context).translate("103"),
-            color: MainColors.boxColor3,
-            value: mainProvider.getWorkHardCount.toString(),
-            iconUrl: 'lib/assets/img/sun.png',
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => BoxPage(
-                        selectedBox: 3,
-                      )));
-            },
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        BoxWidget(
+          text: AppLocalizations.of(context).translate("101"),
+          color: MainColors.boxColor1,
+          value: mainProvider.getLernedWordCount.toString(),
+          iconUrl: 'lib/assets/img/ilearned.png',
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => BoxPage(
+                      selectedBox: 1,
+                    )));
+          },
+        ),
+        BoxWidget(
+          text: AppLocalizations.of(context).translate("102"),
+          color: MainColors.boxColor2,
+          value: mainProvider.getRepeatedWordCount.toString(),
+          iconUrl: 'lib/assets/img/repeat.png',
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => BoxPage(
+                      selectedBox: 2,
+                    )));
+          },
+        ),
+        BoxWidget(
+          text: AppLocalizations.of(context).translate("103"),
+          color: MainColors.boxColor3,
+          value: mainProvider.getWorkHardCount.toString(),
+          iconUrl: 'lib/assets/img/sun.png',
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => BoxPage(
+                      selectedBox: 3,
+                    )));
+          },
+        ),
+      ],
     );
   }
 
