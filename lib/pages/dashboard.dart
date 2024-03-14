@@ -205,17 +205,6 @@ class _DashboardState extends State<Dashboard> {
                                 )));
                       }),
                   MenuItem(
-                      logo: 'lib/assets/img/internet.png',
-                      text: AppLocalizations.of(context).translate("74"),
-                      centerWidget: CustomIconButton(
-                        textInlinePadding: 5.w,
-                        //width: 1.w,
-                        height: 1.w,
-                        colors: Colors.red,
-                        name: AppLocalizations.of(context).translate("73"),
-                      ),
-                      onTap: () {}),
-                  MenuItem(
                       logo: 'lib/assets/img/key.png',
                       text: AppLocalizations.of(context).translate("75"),
                       centerWidget: Text(""),
