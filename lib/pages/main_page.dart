@@ -79,40 +79,43 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MainColors.backgroundColor,
-      body: Column(children: [
-        Center(
-          child: AutoSizeText(
-            AppLocalizations.of(context).translate("96"),
-            style: TextStyle(fontSize: 5.w, fontWeight: FontWeight.bold),
-          ),
-        ),
-        IconListItem(
-            Text: AppLocalizations.of(context).translate("97"),
-            imageStr: 'lib/assets/img/graduate.png',
-            onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => LearnPage()));
-            }),
-        IconListItem(
-            Text: AppLocalizations.of(context).translate("98"),
-            imageStr: 'lib/assets/img/muscle.png',
-            onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => TrainingPage()));
-            }),
-        IconListItem(
-            Text: AppLocalizations.of(context).translate("99"),
-            imageStr: 'lib/assets/img/chat.png',
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DialogPage(
-                        dialogId: "-1",
-                      )));
-            }),
-        statusArea(),
-        brandArea(),
-        boxArea()
-      ]),
+      body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: AutoSizeText(
+                AppLocalizations.of(context).translate("96"),
+                style: TextStyle(fontSize: 5.w, fontWeight: FontWeight.bold),
+              ),
+            ),
+            IconListItem(
+                Text: AppLocalizations.of(context).translate("97"),
+                imageStr: 'lib/assets/img/graduate.png',
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => LearnPage()));
+                }),
+            IconListItem(
+                Text: AppLocalizations.of(context).translate("98"),
+                imageStr: 'lib/assets/img/muscle.png',
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => TrainingPage()));
+                }),
+            IconListItem(
+                Text: AppLocalizations.of(context).translate("99"),
+                imageStr: 'lib/assets/img/chat.png',
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DialogPage(
+                            dialogId: "-1",
+                          )));
+                }),
+            statusArea(),
+            brandArea(),
+            boxArea()
+          ]),
     );
   }
 
