@@ -1,12 +1,10 @@
 // ignore_for_file: unused_local_variable, non_constant_identifier_names, avoid_function_literals_in_foreach_calls, unnecessary_null_comparison, prefer_const_constructors, unused_element, prefer_const_literals_to_create_immutables
 
 import 'dart:core';
-import 'dart:typed_data';
-
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:patikmobile/main.dart';
 import 'package:patikmobile/providers/games_providers/fill_the_blank_game.dart';
 import 'package:sizer/sizer.dart';
 
@@ -50,6 +48,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
 
   @override
   Widget build(BuildContext context) {
+    var g1 = AutoSizeGroup();
     return Stack(
       children: [
         if (widget.provider.processDone)
@@ -57,10 +56,10 @@ class _NumericKeypadState extends State<NumericKeypad> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                if (kDebugMode)
-                  Center(
-                      child: Text(
-                          '${widget.provider.word!} (release modda görülmeyecek)')),
+                // if (kDebugMode)
+                //   Center(
+                //       child: Text(
+                //           '${widget.provider.word!} (release modda görülmeyecek)')),
                 Container(
                   decoration: const BoxDecoration(
                     color: Color(0xffe8eaed),
@@ -85,17 +84,29 @@ class _NumericKeypadState extends State<NumericKeypad> {
                           ),
                         ),
                         Container(
-                          height: 6.h,
-                          width: 60.w,
-                          decoration: const BoxDecoration(
-                            color: Color.fromARGB(222, 255, 255, 255),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          child: Center(
-                              child: Text(widget.provider
-                                  .selectedWordTextEditingController!.text)),
-                        ),
+                            height: 6.h,
+                            width: 60.w,
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(222, 255, 255, 255),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AutoSizeText(group: g1, widget.provider.word!),
+                                AutoSizeText(
+                                    group: g1,
+                                    widget
+                                        .provider
+                                        .selectedWordTextEditingController!
+                                        .text,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20))
+                              ],
+                            )),
                       ],
                     ),
                   ),

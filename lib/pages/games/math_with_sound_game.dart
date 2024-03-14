@@ -239,15 +239,6 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  if (info.wordT?.isNotEmpty ?? false) ...[
-                    Text(
-                      info.wordT!,
-                      style: TextStyle(
-                        color: Colors.black45,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  ],
                   if (info.wordA?.isNotEmpty ?? false) ...[
                     Text(
                       info.wordA!,

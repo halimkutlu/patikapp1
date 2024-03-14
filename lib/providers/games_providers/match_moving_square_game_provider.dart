@@ -350,7 +350,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
         i++) {
       _currentGameItems![_siradaki!].Wordoffsets![i] = Offset(
           _currentGameItems![_siradaki!].Wordoffsets![i].dx,
-          _currentGameItems![_siradaki!].Wordoffsets![i].dy + 2);
+          _currentGameItems![_siradaki!].Wordoffsets![i].dy + 4);
     }
     //siradaki kutular belirlenen konuma geldiğinde bağlı animasyon dispose edilip varsa sıradaki çalıştırılıyor
     if (_currentGameItems![_siradaki!].Wordoffsets![0].dy >=
@@ -457,7 +457,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     _errorAccuried = true;
     notifyListeners();
 
-    Timer(Duration(seconds: 1), callback!);
+    Timer(Duration(milliseconds: 500), callback!);
   }
 
   Future<void> successAnswer(GameItem gameItem, VoidCallback? callback) async {
@@ -465,7 +465,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     _roundSuccessCount = _roundSuccessCount + 1;
     notifyListeners();
 
-    Timer(Duration(seconds: 1), callback!);
+    Timer(Duration(milliseconds: 500), callback!);
   }
 
   Future<void> FilltheWordsInABox() async {
