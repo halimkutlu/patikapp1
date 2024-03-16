@@ -14,6 +14,7 @@ import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
+import 'package:patikmobile/widgets/error_image.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -247,19 +248,7 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
     }).toList();
   }
 
-  Widget ErrorImage() {
-    return Container(
-      color: Color.fromARGB(42, 255, 255, 255),
-      child: Center(
-        child: Image.asset(
-          'lib/assets/img/error_image.png',
-          width: 42.w,
-          height: 20.h,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
+  
 
   Future<void> askToGoMainMenu({VoidCallback? func}) async {
     await CustomAlertDialog(context, () {

@@ -12,6 +12,8 @@ import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/multiple_choice_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
+import 'package:patikmobile/widgets/error_image.dart';
+import 'package:patikmobile/widgets/success.image.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
@@ -225,33 +227,7 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
     );
   }
 
-  Widget ErrorImage() {
-    return Container(
-      color: const Color.fromARGB(42, 255, 255, 255),
-      child: Center(
-        child: Image.asset(
-          'lib/assets/img/error_image.png',
-          width: 42.w,
-          height: 20.h,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
 
-  Widget SuccessImage() {
-    return Container(
-      color: const Color.fromARGB(42, 255, 255, 255),
-      child: Center(
-        child: Image.asset(
-          'lib/assets/img/success_image.png',
-          width: 42.w,
-          height: 20.h,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
 
   Future<void> askToGoMainMenu({VoidCallback? func}) async {
     await CustomAlertDialog(context, () {
