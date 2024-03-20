@@ -79,6 +79,7 @@ class DbProvider extends ChangeNotifier {
 
   Future<FileDownloadStatus> openDbConnection(Lcid lcid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList("selectedWords", []);
     FileDownloadStatus result = FileDownloadStatus();
     if (lcid.Code.isNotEmpty) {
       String dbPath = await getDbPath(lngName: lcid.Code);
@@ -411,6 +412,7 @@ class AppDbProvider extends ChangeNotifier {
 
   Future<FileDownloadStatus> openDbConnection(Lcid lcid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList("selectedWords", []);
     FileDownloadStatus result = FileDownloadStatus();
     if (lcid.Code.isNotEmpty) {
       String dbPath = await getDbPath();
