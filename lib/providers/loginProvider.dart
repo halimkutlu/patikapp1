@@ -23,7 +23,6 @@ import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginProvider extends ChangeNotifier {
   final apirepository = APIRepository();
@@ -72,9 +71,7 @@ class LoginProvider extends ChangeNotifier {
           ArtSweetAlertType.info,
           AppLocalizations.of(context).translate("159"));
     } else {
-      print("login provider girdi.");
       notifyListeners();
-      print("login provider girdi. : işlem başlıyor");
 
       UserResult apiresult = await apirepository.login(
           userName: _usernameController.text,
