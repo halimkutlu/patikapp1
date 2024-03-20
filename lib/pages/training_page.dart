@@ -64,6 +64,8 @@ class _TrainingPageState extends State<TrainingPage> {
 
   Widget CardList() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -92,15 +94,12 @@ class _TrainingPageState extends State<TrainingPage> {
           ],
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 11.0.w),
-              child: Card(
-                  Color(0xff998E00),
-                  AppLocalizations.of(context).translate("153"),
-                  trainingSelectNames.WordTetris),
-            ),
+            Card(
+                Color(0xff998E00),
+                AppLocalizations.of(context).translate("153"),
+                trainingSelectNames.WordTetris),
           ],
         )
       ],

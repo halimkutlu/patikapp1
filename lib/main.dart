@@ -5,9 +5,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
+import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/pages/splashScreen.dart';
 import 'package:patikmobile/providers/boxPageProvider.dart';
 import 'package:patikmobile/providers/categoriesProvider.dart';
@@ -32,6 +35,7 @@ import 'package:patikmobile/providers/trainingProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 //indirilen dilin kayıt edilmesi (tekrar uygulama açıldığında o dilden devam edicek)
@@ -53,6 +57,12 @@ void main() async {
     await Firebase.initializeApp();
   }
 
+  SharedPreferences shrdp = await SharedPreferences.getInstance();
+
+  var applcid = shrdp.getInt(StorageProvider.appLcidKey);
+  Lcid locale = Languages.GetLngFromLCID(applcid ?? 1033);
+  AppLocalizationsDelegate().load(const Locale('en'));
+  Get.updateLocale(Locale(locale.Code.split('-').first));
   runApp(MultiProvider(providers: providers, child: const MyApp()));
 }
 
@@ -137,7 +147,7 @@ class _MyAppState extends State<MyApp> {
           //locale: const Locale('hy', 'HW'), //Get.locale,
           title: 'Flutter Demo',
           theme: ThemeData(
-            //scaffoldBackgroundColor: MainColors.backgroundColor,
+            scaffoldBackgroundColor: MainColors.backgroundColor,
             primarySwatch: Colors.blue,
           ),
           // Localization delegates

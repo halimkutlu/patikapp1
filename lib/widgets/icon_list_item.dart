@@ -31,7 +31,7 @@ class _IconListItemState extends State<IconListItem> {
               border: Border.all(color: Colors.black, width: 0.1)),
           child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             Padding(
-              padding: EdgeInsets.only(left: 4.w),
+              padding: EdgeInsets.only(left: 4.w, right: 4.w),
               child: Image.asset(
                 widget.imageStr ?? 'lib/assets/graduate.png',
                 width: 5.5.w,

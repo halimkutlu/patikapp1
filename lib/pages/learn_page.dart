@@ -73,7 +73,10 @@ class _LearnPageState extends State<LearnPage> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      left: 8.0.w, top: 1.h, bottom: 0.h),
+                                      left: 8.0.w,
+                                      right: 8.0.w,
+                                      top: 1.h,
+                                      bottom: 0.h),
                                   child: Text(
                                     '${category.categoryOrderName}',
                                     style: TextStyle(

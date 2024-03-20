@@ -1,6 +1,4 @@
-// ignore_for_file: prefer_const_constructors, use_function_type_syntax_for_parameters, must_be_immutable
-
-import 'dart:async';
+// ignore_for_file: prefer_const_constructors, use_function_type_syntax_for_parameters, must_be_immutable, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
