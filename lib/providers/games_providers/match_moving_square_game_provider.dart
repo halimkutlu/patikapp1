@@ -163,7 +163,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     } else if (playWith == playWithEnum.workHardWords) {
       words = list.where((wordStat) => wordStat.workHard == 1).toList();
     } else if (playWith == playWithEnum.allWords) {
-      return allWords;
+      words = list.toList();
     }
 
     if (words.isNotEmpty) {

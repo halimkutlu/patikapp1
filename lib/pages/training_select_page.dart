@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, non_constant_identifier_names
 
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
@@ -11,6 +12,7 @@ import 'package:patikmobile/pages/games/math_with_sound_game.dart';
 import 'package:patikmobile/pages/games/multiple_choice_game.dart';
 import 'package:patikmobile/providers/trainingProvider.dart';
 import 'package:patikmobile/widgets/box_widget.dart';
+import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -141,7 +143,28 @@ class _TrainingSelectState extends State<TrainingSelect> {
 
   Widget HeaderPlayWithAllLang() {
     return InkWell(
-      onTap: () => playWithSelectedOptions(playWithEnum.allWords),
+      onTap: () async{
+
+        var totalWordCount = trainingProvider.getWorkHardCount + 
+        trainingProvider.getLernedWordCount + trainingProvider.getRepeatedWordCount;
+
+        if(totalWordCount >= 5 )
+        {
+                  playWithSelectedOptions(playWithEnum.allWords);}
+                  else{
+                    await CustomAlertDialogOnlyConfirm(context, () {
+          Navigator.pop(context);
+      },
+        "Uyarı",
+        "Bu oyun içerisinde herhangi bir kategoride henüz kelime öğrenmediniz.",
+        ArtSweetAlertType.warning,
+        "Tamam",
+        );
+      }
+                  },
+
+        
+
       child: Padding(
         padding: const EdgeInsets.all(38.0),
         child: Container(

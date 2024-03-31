@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,6 +16,8 @@ import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/widgets/customAlertDialog.dart';
+import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -76,9 +79,9 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
     _wordsLoaded = false;
     loadAd();
     if (!trainingGame) {
-      await startMultipleChoiceGame(null);
+      await startMultipleChoiceGame(null,context!);
     } else {
-      await startMultipleChoiceGame(playWith);
+      await startMultipleChoiceGame(playWith,context!);
     }
     await takeWord();
     notifyListeners();
@@ -118,12 +121,24 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
         ));
   }
 
-  Future<void> startMultipleChoiceGame(playWithEnum? playWith) async {
+  Future<void> startMultipleChoiceGame(playWithEnum? playWith, BuildContext context) async {
     //1. ADIM ==> Öncelikle bir önceki aşamada seçilen 5 kart local storage üzerinden getirilir.
     if (playWith == null) {
       comingWordListFromStorage = await getSavedWords();
     } else {
-      comingWordListFromStorage = await getTrainingWords(playWith);
+      comingWordListFromStorage = await getTrainingWords(playWith,context);
+      if(comingWordListFromStorage.isEmpty)
+      {
+         await CustomAlertDialogOnlyConfirm(context, () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+      },
+        "Uyarı",
+        "Bu oyun içerisinde herhangi bir kategoride henüz kelime öğrenmediniz.",
+        ArtSweetAlertType.warning,
+        "Tamam",
+        );
+      }
     }
     //2. ADIM ==> Seçilen kartların db verileri çekilir.
     await getWordsFileInformationFromStorage(comingWordListFromStorage);
@@ -132,7 +147,7 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getTrainingWords(playWithEnum playWith) async {
+  getTrainingWords(playWithEnum playWith,BuildContext context) async {
     DbProvider dbProvider = DbProvider();
     List<WordStatistics> words = [];
     List<Word> allWords =
@@ -146,7 +161,7 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
     } else if (playWith == playWithEnum.workHardWords) {
       words = list.where((wordStat) => wordStat.workHard == 1).toList();
     } else if (playWith == playWithEnum.allWords) {
-      return allWords;
+      words = list.toList();
     }
 
     if (words.isNotEmpty) {
@@ -159,9 +174,14 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
           result.add(word);
         }
       }
-
       result = await AppDbProvider().setWordAppLng(result);
       return result;
+    }
+    else
+    {
+          List<Word> result = [];
+       return result;
+
     }
   }
 
