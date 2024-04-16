@@ -290,7 +290,7 @@ class FillTheBlankGameProvider extends ChangeNotifier {
     _errorAccuried = true;
     notifyListeners();
 
-    Timer(Duration(seconds: 2), () async {
+    Timer(Duration(seconds: 1), () async {
       var word = comingWordListFromStorage
           .firstWhere((element) => element.id == _selectedWord!.id);
       word.errorCount = word.errorCount! + 1;

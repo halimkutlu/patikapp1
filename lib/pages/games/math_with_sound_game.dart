@@ -64,7 +64,7 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
         if (didPop) {
           return;
         }
-        await askToGoMainMenu(func: () {
+        await askToGoMainMenu(context, func: () {
           setState(() {
             matchWithSoundGameProvide.resetData();
             matchWithSoundGameProvide.setUISound = [];
@@ -81,7 +81,7 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
                 centerTitle: true,
                 leading: InkWell(
                   onTap: () async {
-                    await askToGoMainMenu(func: () {
+                    await askToGoMainMenu(context, func: () {
                       setState(() {
                         matchWithSoundGameProvide.resetData();
                         matchWithSoundGameProvide.setUISound = [];
@@ -254,23 +254,5 @@ class _MatchWithSoundGameState extends State<MatchWithSoundGame> {
         ),
       );
     }).toList();
-  }
-
-
-
-  Future<void> askToGoMainMenu({VoidCallback? func}) async {
-    await CustomAlertDialog(context, () {
-      if (func != null) {
-        func();
-      }
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Dashboard(0)),
-          (Route<dynamic> route) => false);
-    },
-        "Emin misiniz?",
-        "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
-        ArtSweetAlertType.question,
-        "Tamam",
-        "Geri");
   }
 }

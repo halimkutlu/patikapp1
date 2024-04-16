@@ -306,7 +306,7 @@ class MatchWithSoundGameProvide extends ChangeNotifier {
         _errorAccuried = true;
         notifyListeners();
 
-        Timer(Duration(seconds: 2), () {
+        Timer(Duration(seconds: 1), () {
           resetSelections();
         });
         return false;

@@ -42,6 +42,7 @@ class _BoxWidgetState extends State<BoxWidget> {
                 border: Border.all(width: 3, color: Colors.black38)),
             child: Center(
                 child: AutoSizeText(
+              maxLines: 1,
               widget.text,
               style: TextStyle(fontWeight: FontWeight.bold),
             )),

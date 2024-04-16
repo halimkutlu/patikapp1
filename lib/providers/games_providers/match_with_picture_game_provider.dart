@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors
+// ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors, non_constant_identifier_names
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -351,7 +351,7 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
         _errorAccuried = true;
         notifyListeners();
 
-        Timer(Duration(seconds: 2), () {
+        Timer(Duration(seconds: 1), () {
           resetSelections();
         });
         return false;

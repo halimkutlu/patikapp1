@@ -66,7 +66,7 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
         if (didPop) {
           return;
         }
-        await askToGoMainMenu(func: () {
+        await askToGoMainMenu(context, func: () {
           setState(() {
             matchWithPictureGameProvide.resetData();
             matchWithPictureGameProvide.setUIimage = [];
@@ -83,7 +83,7 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
                 centerTitle: true,
                 leading: InkWell(
                   onTap: () async {
-                    await askToGoMainMenu(func: () {
+                    await askToGoMainMenu(context, func: () {
                       setState(() {
                         matchWithPictureGameProvide.resetData();
                         matchWithPictureGameProvide.setUIimage = [];
@@ -246,23 +246,5 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
         ),
       );
     }).toList();
-  }
-
-  
-
-  Future<void> askToGoMainMenu({VoidCallback? func}) async {
-    await CustomAlertDialog(context, () {
-      if (func != null) {
-        func();
-      }
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Dashboard(0)),
-          (Route<dynamic> route) => false);
-    },
-        "Emin misiniz?",
-        "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
-        ArtSweetAlertType.question,
-        "Tamam",
-        "Geri");
   }
 }

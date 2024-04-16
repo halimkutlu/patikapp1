@@ -64,7 +64,7 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
         if (didPop) {
           return;
         }
-        await askToGoMainMenu(func: () {
+        await askToGoMainMenu(context, func: () {
           setState(() {
             // matchWithPictureGameProvide.resetData();
             // imageList = [];
@@ -81,11 +81,11 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
                   centerTitle: true,
                   leading: InkWell(
                     onTap: () async {
-                      await askToGoMainMenu(func: () {
+                      await askToGoMainMenu(context, func: () {
                         setState(() {});
                       });
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.arrow_back_ios,
                       color: Colors.black54,
                     ),
@@ -225,23 +225,5 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
             );
           })),
     );
-  }
-
-
-
-  Future<void> askToGoMainMenu({VoidCallback? func}) async {
-    await CustomAlertDialog(context, () {
-      if (func != null) {
-        func();
-      }
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Dashboard(0)),
-          (Route<dynamic> route) => false);
-    },
-        "Emin misiniz?",
-        "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
-        ArtSweetAlertType.question,
-        "Tamam",
-        "Geri");
   }
 }

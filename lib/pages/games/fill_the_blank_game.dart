@@ -59,7 +59,7 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
         if (didPop) {
           return;
         }
-        await askToGoMainMenu(func: () {
+        await askToGoMainMenu(context, func: () {
           setState(() {
             fillTheBlankGameProvide.resetData();
             // imageList = [];
@@ -76,7 +76,7 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
                   centerTitle: true,
                   leading: InkWell(
                     onTap: () async {
-                      await askToGoMainMenu(func: () {
+                      await askToGoMainMenu(context, func: () {
                         setState(() {
                           fillTheBlankGameProvide.resetData();
                         });
@@ -109,14 +109,7 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
                   Container(
                       child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(provider.selectedWordTextEditingController!.text,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
-                      NumericKeypad(provider: provider)
-                    ],
+                    children: [NumericKeypad(provider: provider)],
                   )),
                 if (provider.errorAccuried == true) ...[
                   Positioned(child: ErrorImage()),
@@ -125,23 +118,5 @@ class _FillTheBlankGameState extends State<FillTheBlankGame> {
             );
           })),
     );
-  }
-
-  
-
-  Future<void> askToGoMainMenu({VoidCallback? func}) async {
-    await CustomAlertDialog(context, () {
-      if (func != null) {
-        func();
-      }
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Dashboard(0)),
-          (Route<dynamic> route) => false);
-    },
-        "Emin misiniz?",
-        "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
-        ArtSweetAlertType.question,
-        "Tamam",
-        "Geri");
   }
 }

@@ -81,7 +81,6 @@ class _DashboardState extends State<Dashboard> {
         drawer: Drawer(
           backgroundColor: MainColors.backgroundColor,
           elevation: 1,
-
           width: double.infinity,
 
           // Add a ListView to the drawer. This ensures the user can scroll
@@ -94,10 +93,7 @@ class _DashboardState extends State<Dashboard> {
                 height: 80.w,
                 child: DrawerHeader(
                   decoration: BoxDecoration(
-                    border: Border(
-                      bottom: Divider.createBorderSide(context,
-                          color: Colors.black, width: 0.3),
-                    ),
+                    border: Border.all(color: Colors.transparent),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(200),
                         bottomRight: Radius.circular(200)),

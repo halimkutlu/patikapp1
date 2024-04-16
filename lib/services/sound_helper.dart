@@ -5,10 +5,10 @@ import 'dart:io';
 import 'package:just_audio/just_audio.dart';
 
 AudioPlayer player = AudioPlayer();
-Future<void> PlayAudio(String? audio) async {
+Future<void> PlayAudio(String? audio, [bool asset = false]) async {
   // Create a player
   try {
-    Platform.isIOS
+    Platform.isIOS || asset
         ? await player.setAsset(audio!)
         : await player.setFilePath(audio!);
     await player.play();

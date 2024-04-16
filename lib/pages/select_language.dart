@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, use_build_context_synchronously, unrelated_type_equality_checks
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:patikmobile/widgets/loading_bar.dart';
@@ -49,6 +50,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(context);
     final appDbProvider = Provider.of<AppDbProvider>(context);
+    Languages.LoadLngList(context);
     //late NavigatorState _navigator;
     return Scaffold(
       key: _scaffoldKey,
@@ -128,86 +130,125 @@ class _SelectLanguageState extends State<SelectLanguage> {
                     itemCount: Languages.LngList.length,
                     itemBuilder: (BuildContext context, int index) {
                       var language = Languages.LngList[index];
-                      return InkWell(
-                        onTap: () async {
-                          var lngCheck = await appDbProvider
-                              .checkAppLanguage(language.LCID);
-                          if (lngCheck) {
-                            loginProvider.setUseLanguage(
-                                language,
-                                _scaffoldKey.currentContext!,
-                                widget.dashboard ?? false);
-                            await appDbProvider.closeDbConnection();
-                            await appDbProvider.openDbConnection(language);
-                          } else {
-                            CustomAlertDialog(_scaffoldKey.currentContext!,
-                                () async {
-                              Navigator.pop(_scaffoldKey.currentContext!);
-                              isDownloading = true;
-                              StaticVariables.loading = true;
-                              FileDownloadStatus status = await loginProvider
-                                  .startProcessOfDownloadLearnLanguage(
-                                      language, true, onReceiveProgress);
-                              isDownloading = false;
-                              if (status.status) {
-                                loginProvider.setUseLanguage(
-                                    language,
-                                    _scaffoldKey.currentContext!,
-                                    widget.dashboard ?? false);
-                              } else {
-                                CustomAlertDialogOnlyConfirm(
-                                    _scaffoldKey.currentContext!, () {
-                                  Navigator.pop(_scaffoldKey.currentContext!);
-                                },
-                                    AppLocalizations.of(context)
-                                        .translate("158"),
-                                    status.message,
-                                    ArtSweetAlertType.danger,
-                                    AppLocalizations.of(context)
-                                        .translate("159"));
-                              }
-                            },
-                                AppLocalizations.of(context).translate("160"),
-                                AppLocalizations.of(context)
-                                        .translateLngName(language) +
-                                    AppLocalizations.of(context)
-                                        .translate("161"),
-                                ArtSweetAlertType.question,
-                                AppLocalizations.of(context).translate("162"),
-                                AppLocalizations.of(context).translate("163"));
-                          }
-                        },
-                        child: Container(
-                          width: 30.w,
-                          height: 5.h,
-                          margin: EdgeInsets.only(bottom: 2.h),
-                          decoration: ShapeDecoration(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                  width: 0.50, color: Color(0xFF7E7B7B)),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                AppLocalizations.of(context!)
-                                    .translateLngName(language),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Color(0xFF0F1011),
-                                  fontSize: 2.h,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0.06,
+                      return StorageProvider.learnLanguge!.LCID == language.LCID
+                          ? Container(
+                              width: 30.w,
+                              height: 5.h,
+                              margin: EdgeInsets.only(bottom: 2.h),
+                              decoration: ShapeDecoration(
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      width: 0.50, color: Color(0xFF7E7B7B)),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      );
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context!)
+                                        .translateLngName(language),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 143, 145, 148),
+                                      fontSize: 2.h,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w400,
+                                      height: 0.06,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : InkWell(
+                              onTap: () async {
+                                var lngCheck = await appDbProvider
+                                    .checkAppLanguage(language.LCID);
+                                if (lngCheck) {
+                                  loginProvider.setUseLanguage(
+                                      language,
+                                      _scaffoldKey.currentContext!,
+                                      widget.dashboard ?? false);
+                                  await appDbProvider.closeDbConnection();
+                                  await appDbProvider
+                                      .openDbConnection(language);
+                                } else {
+                                  CustomAlertDialog(
+                                      _scaffoldKey.currentContext!, () async {
+                                    Navigator.pop(_scaffoldKey.currentContext!);
+                                    isDownloading = true;
+                                    StaticVariables.loading = true;
+                                    FileDownloadStatus status =
+                                        await loginProvider
+                                            .startProcessOfDownloadLearnLanguage(
+                                                language,
+                                                true,
+                                                onReceiveProgress);
+                                    isDownloading = false;
+                                    if (status.status) {
+                                      loginProvider.setUseLanguage(
+                                          language,
+                                          _scaffoldKey.currentContext!,
+                                          widget.dashboard ?? false);
+                                    } else {
+                                      CustomAlertDialogOnlyConfirm(
+                                          _scaffoldKey.currentContext!, () {
+                                        Navigator.pop(
+                                            _scaffoldKey.currentContext!);
+                                      },
+                                          AppLocalizations.of(context)
+                                              .translate("158"),
+                                          status.message,
+                                          ArtSweetAlertType.danger,
+                                          AppLocalizations.of(context)
+                                              .translate("159"));
+                                    }
+                                  },
+                                      AppLocalizations.of(context)
+                                          .translate("160"),
+                                      AppLocalizations.of(context)
+                                              .translateLngName(language) +
+                                          AppLocalizations.of(context)
+                                              .translate("161"),
+                                      ArtSweetAlertType.question,
+                                      AppLocalizations.of(context)
+                                          .translate("162"),
+                                      AppLocalizations.of(context)
+                                          .translate("163"));
+                                }
+                              },
+                              child: Container(
+                                width: 30.w,
+                                height: 5.h,
+                                margin: EdgeInsets.only(bottom: 2.h),
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        width: 0.50, color: Color(0xFF7E7B7B)),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context!)
+                                          .translateLngName(language),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Color(0xFF0F1011),
+                                        fontSize: 2.h,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w400,
+                                        height: 0.06,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
                     },
                   ),
                 ),

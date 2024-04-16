@@ -12,9 +12,7 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (_prefs == null) {
-      _prefs = await SharedPreferences.getInstance();
-    }
+    _prefs ??= await SharedPreferences.getInstance();
 
     if (state == AppLifecycleState.resumed) {
       startTimer();
@@ -40,7 +38,6 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
   }
 
   void stopTimer() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     stopwatch.stop();
     timer?.cancel();
     // prefs.setInt("app_duration", stopwatch.elapsed.inMinutes);

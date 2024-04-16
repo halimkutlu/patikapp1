@@ -147,11 +147,10 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           //translations: LocaleString(),
           //locale: const Locale('hy', 'HW'), //Get.locale,
-          title: 'Flutter Demo',
+          title: 'Multilingual Patik',
           theme: ThemeData(
-            scaffoldBackgroundColor: MainColors.backgroundColor,
-            primarySwatch: Colors.blue,
-          ),
+              scaffoldBackgroundColor: MainColors.backgroundColor,
+              primarySwatch: Colors.blue),
           // Localization delegates
           localizationsDelegates: const [
             AppLocalizationsDelegate(),

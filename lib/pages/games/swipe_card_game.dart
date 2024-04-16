@@ -60,7 +60,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
         if (didPop) {
           return;
         }
-        await askToGoMainMenu(func: () {
+        await askToGoMainMenu(context, func: () {
           setState(() {
             swipeCardProvider.resetData();
           });
@@ -75,7 +75,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                   centerTitle: true,
                   leading: InkWell(
                     onTap: () async {
-                      await askToGoMainMenu(func: () {
+                      await askToGoMainMenu(context, func: () {
                         setState(() {
                           swipeCardProvider.resetData();
                         });
@@ -303,21 +303,5 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
             );
           })),
     );
-  }
-
-  Future<void> askToGoMainMenu({VoidCallback? func}) async {
-    await CustomAlertDialog(context, () {
-      if (func != null) {
-        func();
-      }
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Dashboard(0)),
-          (Route<dynamic> route) => false);
-    },
-        "Emin misiniz?",
-        "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
-        ArtSweetAlertType.question,
-        "Tamam",
-        "Geri");
   }
 }

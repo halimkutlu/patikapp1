@@ -122,6 +122,8 @@ flutter:
     - lib/assets/img/success_image.png
     - lib/assets/splash_lottie.json
     - lib/assets/img/logopatik.png
+    - lib/assets/sound/error.mp3
+    - lib/assets/sound/success.mp3
 
 
      #- lib/db/tr-TR.db

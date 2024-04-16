@@ -207,7 +207,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
           if (didPop) {
             return;
           }
-          await askToGoMainMenu(func: () {
+          await askToGoMainMenu(context, func: () {
             setState(() {});
           });
         },
@@ -220,7 +220,7 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
                   centerTitle: true,
                   leading: InkWell(
                     onTap: () async {
-                      await askToGoMainMenu(func: () {
+                      await askToGoMainMenu(context, func: () {
                         setState(() {});
                       });
                     },
@@ -267,26 +267,6 @@ class _MovingSquaresGame extends State<MovingSquaresGame>
             },
           ),
         ));
-  }
-
- 
-
- 
-
-  Future<void> askToGoMainMenu({VoidCallback? func}) async {
-    await CustomAlertDialog(context, () {
-      if (func != null) {
-        func();
-      }
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Dashboard(0)),
-          (Route<dynamic> route) => false);
-    },
-        "Emin misiniz?",
-        "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
-        ArtSweetAlertType.question,
-        "Tamam",
-        "Geri");
   }
 }
 

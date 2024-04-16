@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -16,7 +15,6 @@ import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
-import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -66,7 +64,6 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
 
   bool isTrainingGame = false;
   int trainingGameIndex = 0;
-  List<List<WordListDBInformation>>? _dividedList = [];
   List<WordListDBInformation>? _trainingWordListDbInformation;
   List<WordListDBInformation>? get trainingWordListDbInformation =>
       _trainingWordListDbInformation;
@@ -79,9 +76,9 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
     _wordsLoaded = false;
     loadAd();
     if (!trainingGame) {
-      await startMultipleChoiceGame(null,context!);
+      await startMultipleChoiceGame(null, context!);
     } else {
-      await startMultipleChoiceGame(playWith,context!);
+      await startMultipleChoiceGame(playWith, context!);
     }
     await takeWord();
     notifyListeners();
@@ -121,22 +118,24 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
         ));
   }
 
-  Future<void> startMultipleChoiceGame(playWithEnum? playWith, BuildContext context) async {
+  Future<void> startMultipleChoiceGame(
+      playWithEnum? playWith, BuildContext context) async {
     //1. ADIM ==> Öncelikle bir önceki aşamada seçilen 5 kart local storage üzerinden getirilir.
     if (playWith == null) {
       comingWordListFromStorage = await getSavedWords();
     } else {
-      comingWordListFromStorage = await getTrainingWords(playWith,context);
-      if(comingWordListFromStorage.isEmpty)
-      {
-         await CustomAlertDialogOnlyConfirm(context, () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-      },
-        "Uyarı",
-        "Bu oyun içerisinde herhangi bir kategoride henüz kelime öğrenmediniz.",
-        ArtSweetAlertType.warning,
-        "Tamam",
+      comingWordListFromStorage = await getTrainingWords(playWith, context);
+      if (comingWordListFromStorage.isEmpty) {
+        await CustomAlertDialogOnlyConfirm(
+          context,
+          () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          "Uyarı",
+          "Bu oyun içerisinde herhangi bir kategoride henüz kelime öğrenmediniz.",
+          ArtSweetAlertType.warning,
+          "Tamam",
         );
       }
     }
@@ -147,7 +146,7 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getTrainingWords(playWithEnum playWith,BuildContext context) async {
+  getTrainingWords(playWithEnum playWith, BuildContext context) async {
     DbProvider dbProvider = DbProvider();
     List<WordStatistics> words = [];
     List<Word> allWords =
@@ -176,12 +175,9 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
       }
       result = await AppDbProvider().setWordAppLng(result);
       return result;
-    }
-    else
-    {
-          List<Word> result = [];
-       return result;
-
+    } else {
+      List<Word> result = [];
+      return result;
     }
   }
 
@@ -335,7 +331,7 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
       _errorAccuried = true;
       notifyListeners();
 
-      Timer(Duration(seconds: 2), () async {
+      Timer(Duration(seconds: 1), () async {
         var word = comingWordListFromStorage
             .firstWhere((element) => element.id == _selectedWord!.id);
         word.errorCount = word.errorCount! + 1;
