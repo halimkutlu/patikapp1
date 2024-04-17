@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:sizer/sizer.dart';
@@ -35,13 +36,14 @@ class _IconListItemState extends State<IconListItem> {
               child: Image.asset(
                 widget.imageStr ?? 'lib/assets/graduate.png',
                 width: 5.5.w,
-                height: 3.h,
+                height: 5.5.w,
                 fit: BoxFit.fill,
               ),
             ),
             Padding(
               padding: EdgeInsets.only(left: 4.w),
-              child: Text(
+              child: AutoSizeText(
+                maxLines: 1,
                 widget.Text ?? AppLocalizations.of(context).translate("97"),
                 style: TextStyle(fontSize: 2.1.h, fontWeight: FontWeight.w500),
               ),

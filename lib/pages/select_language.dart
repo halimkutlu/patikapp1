@@ -53,6 +53,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
     Languages.LoadLngList(context);
     //late NavigatorState _navigator;
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 216, 199, 48),
       key: _scaffoldKey,
       body: Stack(children: [
         if (isDownloading) ...[

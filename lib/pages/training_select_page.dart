@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, non_constant_identifier_names
 
 import 'package:art_sweetalert/art_sweetalert.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
@@ -99,7 +100,8 @@ class _TrainingSelectState extends State<TrainingSelect> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
+                child: AutoSizeText(
+                  maxLines: 1,
                   name,
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -129,7 +131,8 @@ class _TrainingSelectState extends State<TrainingSelect> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
+                child: AutoSizeText(
+                  maxLines: 1,
                   AppLocalizations.of(context).translate("155"),
                   style: TextStyle(fontSize: 2.1.h),
                 ),
@@ -143,28 +146,26 @@ class _TrainingSelectState extends State<TrainingSelect> {
 
   Widget HeaderPlayWithAllLang() {
     return InkWell(
-      onTap: () async{
+      onTap: () async {
+        var totalWordCount = trainingProvider.getWorkHardCount +
+            trainingProvider.getLernedWordCount +
+            trainingProvider.getRepeatedWordCount;
 
-        var totalWordCount = trainingProvider.getWorkHardCount + 
-        trainingProvider.getLernedWordCount + trainingProvider.getRepeatedWordCount;
-
-        if(totalWordCount >= 5 )
-        {
-                  playWithSelectedOptions(playWithEnum.allWords);}
-                  else{
-                    await CustomAlertDialogOnlyConfirm(context, () {
-          Navigator.pop(context);
+        if (totalWordCount >= 5) {
+          playWithSelectedOptions(playWithEnum.allWords);
+        } else {
+          await CustomAlertDialogOnlyConfirm(
+            context,
+            () {
+              Navigator.pop(context);
+            },
+            "Uyarı",
+            "Bu oyun içerisinde herhangi bir kategoride henüz kelime öğrenmediniz.",
+            ArtSweetAlertType.warning,
+            "Tamam",
+          );
+        }
       },
-        "Uyarı",
-        "Bu oyun içerisinde herhangi bir kategoride henüz kelime öğrenmediniz.",
-        ArtSweetAlertType.warning,
-        "Tamam",
-        );
-      }
-                  },
-
-        
-
       child: Padding(
         padding: const EdgeInsets.all(38.0),
         child: Container(
@@ -178,7 +179,8 @@ class _TrainingSelectState extends State<TrainingSelect> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: AutoSizeText(
+                    maxLines: 1,
                     AppLocalizations.of(context).translate("156"),
                     style: TextStyle(fontSize: 2.1.h),
                   ),

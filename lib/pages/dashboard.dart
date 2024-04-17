@@ -110,11 +110,13 @@ class _DashboardState extends State<Dashboard> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
+                                iconSize: 40,
                                 icon: Icon(Icons.chevron_left_outlined)),
                             IconButton(
                                 onPressed: () {
                                   loginProvider.logout(context);
                                 },
+                                iconSize: 30,
                                 icon: Icon(Icons.logout))
                           ],
                         ),
@@ -256,7 +258,7 @@ class _DashboardState extends State<Dashboard> {
                 icon: Image.asset(
                   'lib/assets/img/graduate.png',
                   width: 5.5.w,
-                  height: 2.4.h,
+                  height: 5.5.w,
                   fit: BoxFit.cover,
                 ),
                 label: AppLocalizations.of(context).translate("105"),
@@ -265,7 +267,7 @@ class _DashboardState extends State<Dashboard> {
                 icon: Image.asset(
                   'lib/assets/img/muscle.png',
                   width: 5.5.w,
-                  height: 2.4.h,
+                  height: 5.5.w,
                   fit: BoxFit.cover,
                 ),
                 label: AppLocalizations.of(context).translate("106"),
@@ -274,7 +276,7 @@ class _DashboardState extends State<Dashboard> {
                 icon: Image.asset(
                   'lib/assets/img/chat.png',
                   width: 5.5.w,
-                  height: 2.4.h,
+                  height: 5.5.w,
                   fit: BoxFit.cover,
                 ),
                 label: AppLocalizations.of(context).translate("99"),

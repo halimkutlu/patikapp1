@@ -131,10 +131,14 @@ class _MainPageState extends State<MainPage> {
       child: Column(
         children: [
           AutoSizeText(
+            maxLines: 1,
+            textAlign: TextAlign.center,
             AppLocalizations.of(context).translate("64"),
             style: TextStyle(fontSize: 2.5.h),
           ),
           AutoSizeText(
+            maxLines: 1,
+            textAlign: TextAlign.center,
             AppLocalizations.of(context).translate("65"),
             style: TextStyle(fontSize: 2.5.h),
           ),
@@ -143,13 +147,15 @@ class _MainPageState extends State<MainPage> {
             children: [
               AutoSizeText(
                 group: g1,
-                maxLines: 1,
+                maxLines: 2,
+                textAlign: TextAlign.center,
                 AppLocalizations.of(context).translate("66", addRight: ""),
                 style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
               ),
               AutoSizeText(
                 group: g1,
-                maxLines: 1,
+                maxLines: 2,
+                textAlign: TextAlign.center,
                 appMinute.toString(),
                 style: TextStyle(
                     fontSize: 2.0.h,
@@ -158,7 +164,8 @@ class _MainPageState extends State<MainPage> {
               ),
               AutoSizeText(
                 group: g1,
-                maxLines: 1,
+                maxLines: 2,
+                textAlign: TextAlign.center,
                 AppLocalizations.of(context).translate("63", addLeft: " "),
                 style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
               ),
@@ -170,12 +177,14 @@ class _MainPageState extends State<MainPage> {
               AutoSizeText(
                 group: g2,
                 maxLines: 1,
+                textAlign: TextAlign.center,
                 AppLocalizations.of(context).translate("67", addRight: " "),
                 style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
               ),
               AutoSizeText(
                 group: g2,
                 maxLines: 1,
+                textAlign: TextAlign.center,
                 mainProvider.getLernedWordCount.toString(),
                 style: TextStyle(
                     fontSize: 2.0.h,
@@ -202,7 +211,7 @@ class _MainPageState extends State<MainPage> {
               Image.asset(
                 'lib/assets/img/bicyle.png',
                 width: 9.w,
-                height: 4.h,
+                height: 9.w,
                 fit: BoxFit.fill,
               ),
               Padding(
@@ -220,13 +229,13 @@ class _MainPageState extends State<MainPage> {
               Image.asset(
                 'lib/assets/img/twitter.png',
                 width: 6.w,
-                height: 3.4.h,
+                height: 6.w,
                 fit: BoxFit.fill,
               ),
               Image.asset(
                 'lib/assets/img/facebook.png',
                 width: 6.w,
-                height: 3.4.h,
+                height: 6.w,
                 fit: BoxFit.fill,
               ),
               InkWell(
@@ -245,13 +254,13 @@ class _MainPageState extends State<MainPage> {
               Image.asset(
                 'lib/assets/img/instagram.png',
                 width: 6.w,
-                height: 3.4.h,
+                height: 6.w,
                 fit: BoxFit.fill,
               ),
               Image.asset(
                 'lib/assets/img/whatsapp.png',
                 width: 6.w,
-                height: 3.4.h,
+                height: 6.w,
                 fit: BoxFit.fill,
               ),
             ],

@@ -97,6 +97,8 @@ class MovingSquaresGameProvide extends ChangeNotifier {
 
   VoidCallback? callback2;
 
+  int speed = 4;
+
   //ANTREMAN
   bool isTrainingGame = false;
   int trainingGameIndex = 0;
@@ -113,6 +115,9 @@ class MovingSquaresGameProvide extends ChangeNotifier {
       VoidCallback? _callback,
       playWithEnum? playWith,
       bool trainingGame = false]) async {
+    if (Platform.isAndroid) {
+      speed = 3;
+    }
     GameSizeClass().Init();
     _roundCount = 0;
     diffStatisticWords = [];
@@ -350,7 +355,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
         i++) {
       _currentGameItems![_siradaki!].Wordoffsets![i] = Offset(
           _currentGameItems![_siradaki!].Wordoffsets![i].dx,
-          _currentGameItems![_siradaki!].Wordoffsets![i].dy + 4);
+          _currentGameItems![_siradaki!].Wordoffsets![i].dy + speed);
     }
     //siradaki kutular belirlenen konuma geldiğinde bağlı animasyon dispose edilip varsa sıradaki çalıştırılıyor
     if (_currentGameItems![_siradaki!].Wordoffsets![0].dy >=

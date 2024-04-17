@@ -63,6 +63,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
     if (Languages.LngList.isEmpty) loginProvider.getLearnLanguage(context);
     Languages.LoadLngList(context);
     return Scaffold(
+      backgroundColor: Color.fromRGBO(248, 187, 195, 1),
       key: _scaffoldKey,
       body: Stack(children: [
         if (isDownloading) ...[

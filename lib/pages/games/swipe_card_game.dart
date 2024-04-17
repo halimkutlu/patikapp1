@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:art_sweetalert/art_sweetalert.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -221,7 +222,8 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [
-                                          Text(
+                                          AutoSizeText(
+                                            maxLines: 2,
                                             AppLocalizations.of(context)
                                                 .translate("137"),
                                           ),

@@ -65,7 +65,7 @@ class _BoxWidgetState extends State<BoxWidget> {
                   child: Image.asset(
                     widget.iconUrl,
                     width: 6.w,
-                    height: 3.h,
+                    height: 6.w,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -75,6 +75,7 @@ class _BoxWidgetState extends State<BoxWidget> {
                     color: Colors.white,
                     child: Center(
                         child: AutoSizeText(
+                      maxLines: 1,
                       widget.value,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )),
