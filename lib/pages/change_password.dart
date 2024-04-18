@@ -79,7 +79,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             CustomIconButton(
               textColor: Colors.black,
               colors: MainColors.primaryColor,
-              icons: Icon(Icons.send),
+              //icons: Icon(Icons.send),
               name: AppLocalizations.of(context).translate("90"),
               width: 0.3.w,
               height: 2.8.h,

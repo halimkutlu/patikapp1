@@ -12,6 +12,7 @@
     <application
         android:label="Patik"
         android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <meta-data

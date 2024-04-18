@@ -80,7 +80,7 @@ class _RegisterState extends State<Register> {
                 child: CustomIconButton(
                   textColor: Colors.black,
                   colors: MainColors.primaryColor,
-                  icons: Icon(Icons.send),
+                  //icons: Icon(Icons.send),
                   name: AppLocalizations.of(context).translate("15"),
                   width: 0.3.w,
                   height: 2.5.h,

@@ -44,6 +44,8 @@ class _BoxWidgetState extends State<BoxWidget> {
                 child: AutoSizeText(
               maxLines: 1,
               widget.text,
+              minFontSize: 6,
+              maxFontSize: 12,
               style: TextStyle(fontWeight: FontWeight.bold),
             )),
           ),

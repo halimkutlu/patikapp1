@@ -71,7 +71,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Container(
-                          height: 6.h,
+                          height: 20.w,
                           width: 20.w,
                           decoration: const BoxDecoration(
                             color: Color.fromARGB(222, 255, 255, 255),
@@ -80,7 +80,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
                           ),
                           child: SvgPicture.memory(
                             widget.provider.image!,
-                            height: 19.h,
+                            fit: BoxFit.fill,
                           ),
                         ),
                         Container(
@@ -95,13 +95,17 @@ class _NumericKeypadState extends State<NumericKeypad> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                AutoSizeText(group: g1, widget.provider.word!),
+                                AutoSizeText(
+                                    group: g1,
+                                    widget.provider.word!,
+                                    maxLines: 1),
                                 AutoSizeText(
                                     group: g1,
                                     widget
                                         .provider
                                         .selectedWordTextEditingController!
                                         .text,
+                                    maxLines: 1,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20))
@@ -246,7 +250,8 @@ class _NumericKeypadState extends State<NumericKeypad> {
               Positioned(
                   top: 0,
                   right: 0,
-                  child: Text(
+                  child: AutoSizeText(
+                    maxLines: 1,
                     count > 1 ? count.toString() : "",
                     textAlign: TextAlign.right,
                     style: TextStyle(
@@ -259,7 +264,8 @@ class _NumericKeypadState extends State<NumericKeypad> {
                   )),
               Align(
                 alignment: Alignment.center,
-                child: Text(
+                child: AutoSizeText(
+                  maxLines: 1,
                   textAlign: TextAlign.center,
                   isDisabled(buttonIndex, text, count) ? "" : text!,
                   style: TextStyle(

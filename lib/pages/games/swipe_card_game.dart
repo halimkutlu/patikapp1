@@ -214,85 +214,85 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                   ),
                                 ],
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(8.0.w),
-                                child: !provider
-                                        .wordListDbInformation![index].lastCard!
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          AutoSizeText(
-                                            maxLines: 2,
-                                            AppLocalizations.of(context)
-                                                .translate("137"),
-                                          ),
-                                          Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: InkWell(
-                                                onTap: () async {
-                                                  DbProvider db = DbProvider();
-                                                  if (provider
-                                                          .wordListDbInformation![
-                                                              index]
-                                                          .isAddedToWorkHard !=
-                                                      true) {
-                                                    var status = await db
-                                                        .addToWorkHardBox(provider
-                                                            .wordListDbInformation![
-                                                                index]
-                                                            .id!);
-                                                    if (status == true) {
-                                                      setState(() {
-                                                        provider
-                                                            .wordListDbInformation![
-                                                                index]
-                                                            .isAddedToWorkHard = true;
-                                                      });
-                                                    }
-                                                  } else {
-                                                    //remove
-                                                    var status = await db
-                                                        .updateWorkHard(provider
-                                                            .wordListDbInformation![
-                                                                index]
-                                                            .id!);
-                                                    if (status == true) {
-                                                      setState(() {
-                                                        provider
-                                                            .wordListDbInformation![
-                                                                index]
-                                                            .isAddedToWorkHard = false;
-                                                      });
-                                                    }
-                                                  }
-                                                },
-                                                child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 8.0),
-                                                    child: Icon(
-                                                      provider
-                                                                  .wordListDbInformation![
-                                                                      index]
-                                                                  .isAddedToWorkHard ==
-                                                              true
-                                                          ? Icons
-                                                              .check_circle_outline
-                                                          : Icons
-                                                              .add_circle_outline_outlined,
-                                                      color: provider
-                                                                  .wordListDbInformation![
-                                                                      index]
-                                                                  .isAddedToWorkHard ==
-                                                              true
-                                                          ? Colors.green
-                                                          : Colors.red,
-                                                    )),
-                                              )),
-                                        ],
-                                      )
-                                    : Container(),
-                              ),
+                              // Padding(
+                              //   padding: EdgeInsets.all(8.0.w),
+                              //   child: !provider
+                              //           .wordListDbInformation![index].lastCard!
+                              //       ? Row(
+                              //           mainAxisAlignment:
+                              //               MainAxisAlignment.end,
+                              //           children: [
+                              //             AutoSizeText(
+                              //               maxLines: 2,
+                              //               AppLocalizations.of(context)
+                              //                   .translate("137"),
+                              //             ),
+                              //             Padding(
+                              //                 padding: EdgeInsets.all(8.0),
+                              //                 child: InkWell(
+                              //                   onTap: () async {
+                              //                     DbProvider db = DbProvider();
+                              //                     if (provider
+                              //                             .wordListDbInformation![
+                              //                                 index]
+                              //                             .isAddedToWorkHard !=
+                              //                         true) {
+                              //                       var status = await db
+                              //                           .addToWorkHardBox(provider
+                              //                               .wordListDbInformation![
+                              //                                   index]
+                              //                               .id!);
+                              //                       if (status == true) {
+                              //                         setState(() {
+                              //                           provider
+                              //                               .wordListDbInformation![
+                              //                                   index]
+                              //                               .isAddedToWorkHard = true;
+                              //                         });
+                              //                       }
+                              //                     } else {
+                              //                       //remove
+                              //                       var status = await db
+                              //                           .updateWorkHard(provider
+                              //                               .wordListDbInformation![
+                              //                                   index]
+                              //                               .id!);
+                              //                       if (status == true) {
+                              //                         setState(() {
+                              //                           provider
+                              //                               .wordListDbInformation![
+                              //                                   index]
+                              //                               .isAddedToWorkHard = false;
+                              //                         });
+                              //                       }
+                              //                     }
+                              //                   },
+                              //                   child: Padding(
+                              //                       padding: EdgeInsets.only(
+                              //                           left: 8.0),
+                              //                       child: Icon(
+                              //                         provider
+                              //                                     .wordListDbInformation![
+                              //                                         index]
+                              //                                     .isAddedToWorkHard ==
+                              //                                 true
+                              //                             ? Icons
+                              //                                 .check_circle_outline
+                              //                             : Icons
+                              //                                 .add_circle_outline_outlined,
+                              //                         color: provider
+                              //                                     .wordListDbInformation![
+                              //                                         index]
+                              //                                     .isAddedToWorkHard ==
+                              //                                 true
+                              //                             ? Colors.green
+                              //                             : Colors.red,
+                              //                       )),
+                              //                 )),
+                              //           ],
+                              //         )
+                              //       : Container(),
+                              // ),
                             ],
                           ),
                         ),

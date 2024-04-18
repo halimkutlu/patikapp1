@@ -142,54 +142,42 @@ class _MainPageState extends State<MainPage> {
             AppLocalizations.of(context).translate("65"),
             style: TextStyle(fontSize: 2.5.h),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AutoSizeText(
-                group: g1,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                AppLocalizations.of(context).translate("66", addRight: ""),
-                style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
-              ),
-              AutoSizeText(
-                group: g1,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                appMinute.toString(),
-                style: TextStyle(
-                    fontSize: 2.0.h,
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold),
-              ),
-              AutoSizeText(
-                group: g1,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                AppLocalizations.of(context).translate("63", addLeft: " "),
-                style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
-              ),
-            ],
+          FittedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AutoSizeText(
+                  group: g1,
+                  AppLocalizations.of(context).translate("66", addRight: ""),
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                AutoSizeText(
+                  group: g1,
+                  appMinute.toString(),
+                  style:
+                      TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+                AutoSizeText(
+                  group: g1,
+                  AppLocalizations.of(context).translate("63", addLeft: " "),
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AutoSizeText(
-                group: g2,
-                maxLines: 1,
-                textAlign: TextAlign.center,
+                group: g1,
                 AppLocalizations.of(context).translate("67", addRight: " "),
-                style: TextStyle(fontSize: 1.7.h, fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               AutoSizeText(
-                group: g2,
-                maxLines: 1,
-                textAlign: TextAlign.center,
+                group: g1,
                 mainProvider.getLernedWordCount.toString(),
-                style: TextStyle(
-                    fontSize: 2.0.h,
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold),
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -271,7 +259,7 @@ class _MainPageState extends State<MainPage> {
               child: CustomIconButton(
                 textColor: Colors.white,
                 colors: Colors.red,
-                icons: Icon(Icons.send),
+                //icons: Icon(Icons.send),
                 name: AppLocalizations.of(context).translate("100"),
                 width: 0.3.w,
                 height: 3.0.h,

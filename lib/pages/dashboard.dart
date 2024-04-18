@@ -90,7 +90,7 @@ class _DashboardState extends State<Dashboard> {
             // Important: Remove any padding from the ListView.
             children: [
               SizedBox(
-                height: 80.w,
+                height: 83.w,
                 child: DrawerHeader(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.transparent),
@@ -161,9 +161,8 @@ class _DashboardState extends State<Dashboard> {
                                         mainProvider.roleid)),
                             CustomIconButton(
                               textSize: 20,
-                              height: 6.w,
+                              height: 8.w,
                               textInlinePadding: 3.w,
-                              width: 0.5.w,
                               colors: Colors.red,
                               name:
                                   AppLocalizations.of(context).translate("73"),

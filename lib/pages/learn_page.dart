@@ -165,53 +165,50 @@ class _LearnPageState extends State<LearnPage> {
                 child: image != null
                     ? SvgPicture.file(
                         image,
-                        height: 4.h,
+                        height: 7.w,
                       )
                     : Icon(Icons.developer_board),
               ),
               Center(
                 child: AutoSizeText(
+                  maxLines: 3,
                   textAlign: TextAlign.center,
                   name,
                   style: TextStyle(
-                    fontSize: 1.h,
+                    fontSize: 1.w,
                     fontWeight: FontWeight.bold,
                     color: Color(color),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AutoSizeText(
-                        wordCount.toString(),
-                        style: TextStyle(
-                          fontSize: 1.3.h,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                      AutoSizeText(
-                        " / ",
-                        style: TextStyle(
-                          fontSize: 1.3.h,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      AutoSizeText(
-                        totalCount.toString(),
-                        style: TextStyle(
-                          fontSize: 1.3.h,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AutoSizeText(
+                    wordCount.toString(),
+                    style: TextStyle(
+                      fontSize: 1.w,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
                   ),
-                ),
+                  AutoSizeText(
+                    " / ",
+                    style: TextStyle(
+                      fontSize: 1.w,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  AutoSizeText(
+                    totalCount.toString(),
+                    style: TextStyle(
+                      fontSize: 1.w,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

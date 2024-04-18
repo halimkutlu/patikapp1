@@ -60,7 +60,7 @@ class _MailResponseState extends State<MailResponse> {
                 child: CustomIconButton(
                   textColor: Colors.black,
                   colors: MainColors.primaryColor,
-                  icons: Icon(Icons.arrow_back_ios_new),
+                  //icons: Icon(Icons.arrow_back_ios_new),
                   name: AppLocalizations.of(context).translate("7"),
                   width: 0.3.w,
                   height: 2.5.h,

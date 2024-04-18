@@ -76,7 +76,8 @@ class _LoginState extends State<Login> {
                   child: CustomIconButton(
                     textColor: Colors.black,
                     colors: MainColors.primaryColor,
-                    icons: Icon(Icons.send),
+                    //leftIcon: Icon(Icons.send),
+                    //rightIcon: Icon(Icons.send),
                     name: AppLocalizations.of(context).translate("7"),
                     width: 0.283.w,
                     height: 3.2.h,
@@ -115,7 +116,7 @@ class _LoginState extends State<Login> {
                   child: CustomIconButton(
                     textColor: Colors.black,
                     colors: Colors.white,
-                    icons: Icon(Icons.invert_colors),
+                    //icons: Icon(Icons.invert_colors),
                     name: AppLocalizations.of(context).translate("13"),
                     width: 0.3.w,
                     height: 3.4.h,

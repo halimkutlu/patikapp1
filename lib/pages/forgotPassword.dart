@@ -70,7 +70,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 child: CustomIconButton(
                   textColor: Colors.black,
                   colors: MainColors.primaryColor,
-                  icons: Icon(Icons.send),
+                  //icons: Icon(Icons.send),
                   name: AppLocalizations.of(context).translate("21"),
                   width: 0.3.w,
                   height: 2.5.h,

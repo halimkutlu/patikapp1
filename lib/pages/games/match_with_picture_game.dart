@@ -111,7 +111,8 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
               matchWithPictureGameProvide.setUIWord =
                   List.from(provider.wordListDbInformation!);
               matchWithPictureGameProvide.UIimageList.shuffle();
-              matchWithPictureGameProvide.UIwordList.shuffle();
+              kelimeListesiniSirala(matchWithPictureGameProvide
+                  .UIimageList); // kelime, kelimeye ait resim ile yan yana gelmesin
             }
             return Stack(
               children: [
@@ -155,6 +156,16 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
         ),
       ),
     );
+  }
+
+  void kelimeListesiniSirala(List<WordListDBInformation> resimListesi) {
+    matchWithPictureGameProvide.UIwordList.shuffle();
+    for (int i = 0; i < resimListesi.length; i++) {
+      if (resimListesi[i] == matchWithPictureGameProvide.UIwordList[i]) {
+        kelimeListesiniSirala(resimListesi);
+        break;
+      }
+    }
   }
 
   List<Widget> _buildImageWidgets(
