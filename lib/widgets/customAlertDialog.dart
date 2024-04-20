@@ -35,7 +35,7 @@ Future<void> askToGoMainMenu(BuildContext context, {VoidCallback? func}) async {
       func();
     }
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => Dashboard(0)),
+        MaterialPageRoute(builder: (context) => Dashboard(1)),
         (Route<dynamic> route) => false);
   },
       "Emin misiniz?",

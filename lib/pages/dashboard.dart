@@ -37,7 +37,8 @@ class _DashboardState extends State<Dashboard> {
     mainProvider = Provider.of<DashboardProvider>(context, listen: false);
     mainProvider.init();
     if (widget.selectedPageIndex != null && widget.selectedPageIndex! > 0) {
-      mainProvider.changeTab(0);
+      Future.delayed(Duration(seconds: 1),
+          () => mainProvider.changeTab(widget.selectedPageIndex!));
     }
   }
 
