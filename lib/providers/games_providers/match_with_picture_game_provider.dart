@@ -313,7 +313,7 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
         //ANTREMAN BİTMİŞTİR
         Timer(Duration(milliseconds: 100), () {
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => Dashboard(0)),
+              MaterialPageRoute(builder: (context) => Dashboard(1)),
               (Route<dynamic> route) => false);
         });
       } else {

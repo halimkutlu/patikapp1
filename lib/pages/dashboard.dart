@@ -37,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
     mainProvider = Provider.of<DashboardProvider>(context, listen: false);
     mainProvider.init();
     if (widget.selectedPageIndex != null && widget.selectedPageIndex! > 0) {
-      Future.delayed(Duration(seconds: 1),
+      Future.delayed(Duration(milliseconds: 500),
           () => mainProvider.changeTab(widget.selectedPageIndex!));
     }
   }
@@ -90,9 +90,9 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             // Important: Remove any padding from the ListView.
             children: [
-             SizedBox(            
+              SizedBox(
                 child: Container(
-                    decoration: BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border.all(color: Colors.transparent),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(200),
@@ -100,81 +100,81 @@ class _DashboardState extends State<Dashboard> {
                     color: MainColors.primaryColor,
                   ),
                   child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 8.h),
-                            child: Container(
-                              color: MainColors.primaryColor,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      iconSize: 40,
-                                      icon: Icon(Icons.chevron_left_outlined)),
-                                  IconButton(
-                                      onPressed: () {
-                                        loginProvider.logout(context);
-                                      },
-                                      iconSize: 30,
-                                      icon: Icon(Icons.logout))
-                                ],
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.h),
+                        child: Container(
+                          color: MainColors.primaryColor,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  iconSize: 40,
+                                  icon: Icon(Icons.chevron_left_outlined)),
+                              IconButton(
+                                  onPressed: () {
+                                    loginProvider.logout(context);
+                                  },
+                                  iconSize: 30,
+                                  icon: Icon(Icons.logout))
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        transform: Matrix4.translationValues(0.0, -50.0, 0.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 20.w,
+                              decoration: const ShapeDecoration(
+                                color: Color(0xFFD7D6D6),
+                                shape: OvalBorder(),
+                              ),
+                              child: Image.asset(
+                                'lib/assets/img/avatar.png',
+                                width: 10.w,
                               ),
                             ),
-                          ),
-                          Container(
-                            transform: Matrix4.translationValues(0.0, -50.0, 0.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 20.w,
-                                  decoration: const ShapeDecoration(
-                                    color: Color(0xFFD7D6D6),
-                                    shape: OvalBorder(),
-                                  ),
-                                  child: Image.asset(
-                                    'lib/assets/img/avatar.png',
-                                    width: 10.w,
-                                  ),
-                                ),
-                                AutoSizeText(mainProvider.userName),
-                                AutoSizeText(
-                                  maxLines: 1,
-                                  mainProvider.nameLastname,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                mainProvider.roleid == UserRole.free
-                                    ? AutoSizeText(
-                                        maxLines: 1,
-                                        AppLocalizations.of(context)
-                                            .translate("72"),
-                                        style: TextStyle(
-                                          color: Color(0xFF605E5E),
-                                          fontSize: 14,
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w500,
-                                        ))
-                                    : AutoSizeText(
-                                        maxLines: 1,
-                                        UserRole.getRoleDescriptionFromId(
-                                            mainProvider.roleid)),
-                                CustomIconButton(
-                                  textSize: 20,
-                                  height: 8.w,
-                                  textInlinePadding: 3.w,
-                                  colors: Colors.red,
-                                  name:
-                                      AppLocalizations.of(context).translate("73"),
-                                )
-                              ],
+                            AutoSizeText(mainProvider.userName),
+                            AutoSizeText(
+                              maxLines: 1,
+                              mainProvider.nameLastname,
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        ],
+                            mainProvider.roleid == UserRole.free
+                                ? AutoSizeText(
+                                    maxLines: 1,
+                                    AppLocalizations.of(context)
+                                        .translate("72"),
+                                    style: TextStyle(
+                                      color: Color(0xFF605E5E),
+                                      fontSize: 14,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w500,
+                                    ))
+                                : AutoSizeText(
+                                    maxLines: 1,
+                                    UserRole.getRoleDescriptionFromId(
+                                        mainProvider.roleid)),
+                            CustomIconButton(
+                              textSize: 20,
+                              height: 8.w,
+                              textInlinePadding: 3.w,
+                              colors: Colors.red,
+                              name:
+                                  AppLocalizations.of(context).translate("73"),
+                            )
+                          ],
+                        ),
                       ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(

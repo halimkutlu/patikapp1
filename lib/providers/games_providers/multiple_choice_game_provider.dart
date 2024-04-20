@@ -288,7 +288,7 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
         //ANTREMAN BİTMİŞTİR
         Timer(Duration(milliseconds: 100), () {
           Navigator.of(buildContext!).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => Dashboard(0)),
+              MaterialPageRoute(builder: (context) => Dashboard(1)),
               (Route<dynamic> route) => false);
         });
       }
@@ -323,7 +323,7 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
       // Diğer işlemler
       _successAccuried = true;
       notifyListeners();
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       await takeWord();
       _successAccuried = false;
       notifyListeners();

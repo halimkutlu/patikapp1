@@ -405,7 +405,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
               //ANTREMAN BİTMİŞTİR
               Timer(Duration(milliseconds: 100), () {
                 Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => Dashboard(0)),
+                    MaterialPageRoute(builder: (context) => Dashboard(1)),
                     (Route<dynamic> route) => false);
               });
             } else {
@@ -493,7 +493,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     await CustomAlertDialogOnlyConfirm(context, () {
       Timer(Duration(milliseconds: 100), () {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Dashboard(0)),
+            MaterialPageRoute(builder: (context) => Dashboard(1)),
             (Route<dynamic> route) => false);
       });
     },
