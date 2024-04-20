@@ -46,6 +46,7 @@ class _TrainingSelectState extends State<TrainingSelect> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MainColors.backgroundColor,
+        appBar: AppBar(backgroundColor: MainColors.backgroundColor,),
         body: Consumer<TrainingProvider>(builder: (context, provider, child) {
           if (!provider.wordsLoaded!) {
             // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster

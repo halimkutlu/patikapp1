@@ -83,7 +83,9 @@ class _DialogPageState extends State<DialogPage> {
                                     decoration: BoxDecoration(
                                         color:
                                             Color.fromARGB(238, 255, 255, 255),
-                                   
+                                        border: Border.all(color: Colors.black,
+                                        width: 0.1
+                                        ),
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(10))),
                                     child: Row(
