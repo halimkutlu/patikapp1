@@ -89,10 +89,9 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             // Important: Remove any padding from the ListView.
             children: [
-              SizedBox(
-                height: 83.w,
-                child: DrawerHeader(
-                  decoration: BoxDecoration(
+             SizedBox(            
+                child: Container(
+                    decoration: BoxDecoration(
                     border: Border.all(color: Colors.transparent),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(200),
@@ -100,78 +99,81 @@ class _DashboardState extends State<Dashboard> {
                     color: MainColors.primaryColor,
                   ),
                   child: Column(
-                    children: [
-                      Container(
-                        color: MainColors.primaryColor,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                iconSize: 40,
-                                icon: Icon(Icons.chevron_left_outlined)),
-                            IconButton(
-                                onPressed: () {
-                                  loginProvider.logout(context);
-                                },
-                                iconSize: 30,
-                                icon: Icon(Icons.logout))
-                          ],
-                        ),
-                      ),
-                      Container(
-                        transform: Matrix4.translationValues(0.0, -50.0, 0.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 20.w,
-                              decoration: const ShapeDecoration(
-                                color: Color(0xFFD7D6D6),
-                                shape: OvalBorder(),
-                              ),
-                              child: Image.asset(
-                                'lib/assets/img/avatar.png',
-                                width: 10.w,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 8.h),
+                            child: Container(
+                              color: MainColors.primaryColor,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      iconSize: 40,
+                                      icon: Icon(Icons.chevron_left_outlined)),
+                                  IconButton(
+                                      onPressed: () {
+                                        loginProvider.logout(context);
+                                      },
+                                      iconSize: 30,
+                                      icon: Icon(Icons.logout))
+                                ],
                               ),
                             ),
-                            AutoSizeText(mainProvider.userName),
-                            AutoSizeText(
-                              maxLines: 1,
-                              mainProvider.nameLastname,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Container(
+                            transform: Matrix4.translationValues(0.0, -50.0, 0.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 20.w,
+                                  decoration: const ShapeDecoration(
+                                    color: Color(0xFFD7D6D6),
+                                    shape: OvalBorder(),
+                                  ),
+                                  child: Image.asset(
+                                    'lib/assets/img/avatar.png',
+                                    width: 10.w,
+                                  ),
+                                ),
+                                AutoSizeText(mainProvider.userName),
+                                AutoSizeText(
+                                  maxLines: 1,
+                                  mainProvider.nameLastname,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                mainProvider.roleid == UserRole.free
+                                    ? AutoSizeText(
+                                        maxLines: 1,
+                                        AppLocalizations.of(context)
+                                            .translate("72"),
+                                        style: TextStyle(
+                                          color: Color(0xFF605E5E),
+                                          fontSize: 14,
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.w500,
+                                        ))
+                                    : AutoSizeText(
+                                        maxLines: 1,
+                                        UserRole.getRoleDescriptionFromId(
+                                            mainProvider.roleid)),
+                                CustomIconButton(
+                                  textSize: 20,
+                                  height: 8.w,
+                                  textInlinePadding: 3.w,
+                                  colors: Colors.red,
+                                  name:
+                                      AppLocalizations.of(context).translate("73"),
+                                )
+                              ],
                             ),
-                            mainProvider.roleid == UserRole.free
-                                ? AutoSizeText(
-                                    maxLines: 1,
-                                    AppLocalizations.of(context)
-                                        .translate("72"),
-                                    style: TextStyle(
-                                      color: Color(0xFF605E5E),
-                                      fontSize: 14,
-                                      fontFamily: 'Roboto',
-                                      fontWeight: FontWeight.w500,
-                                    ))
-                                : AutoSizeText(
-                                    maxLines: 1,
-                                    UserRole.getRoleDescriptionFromId(
-                                        mainProvider.roleid)),
-                            CustomIconButton(
-                              textSize: 20,
-                              height: 8.w,
-                              textInlinePadding: 3.w,
-                              colors: Colors.red,
-                              name:
-                                  AppLocalizations.of(context).translate("73"),
-                            )
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
                 ),
               ),
               Expanded(

@@ -83,17 +83,7 @@ class _DialogPageState extends State<DialogPage> {
                                     decoration: BoxDecoration(
                                         color:
                                             Color.fromARGB(238, 255, 255, 255),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                                0.5), // Gölge rengi ve opaklık
-                                            spreadRadius: 1, // Yayılma alanı
-                                            blurRadius:
-                                                1, // Bulanıklık yarıçapı
-                                            offset: const Offset(
-                                                0, 1), // Gölge offset
-                                          ),
-                                        ],
+                                   
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(10))),
                                     child: Row(
