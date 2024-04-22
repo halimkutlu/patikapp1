@@ -172,100 +172,102 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                 ],
                               ),
                             )
-                          : InkWell(
-                              onTap: () async {
-                                var lngCheck = await dbProvider
-                                    .checkLearnLanguage(language.LCID);
-                                if (lngCheck) {
-                                  StorageProvider.updateLearnLanguage(
-                                      context, language);
-                                  await dbProvider.closeDbConnection();
-                                  await dbProvider.openDbConnection(language);
-                                  if (widget.noReturn == true) {
-                                    Navigator.of(_scaffoldKey.currentContext!)
-                                        .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Dashboard(0)),
-                                            (Route<dynamic> route) => false);
-                                  } else {
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                Dashboard(0)));
-                                  }
-                                } else {
-                                  CustomAlertDialog(
-                                      _scaffoldKey.currentContext!, () async {
-                                    Navigator.pop(_scaffoldKey.currentContext!);
-                                    isDownloading = true;
-                                    StaticVariables.loading = true;
-
-                                    FileDownloadStatus status =
-                                        await loginProvider
-                                            .startProcessOfDownloadLearnLanguage(
-                                                language,
-                                                false,
-                                                onReceiveProgress);
-                                    if (status.status) {
-                                      StorageProvider.updateLearnLanguage(
-                                          context, language);
-
-                                      if (widget.noReturn == true) {
-                                        Navigator.of(
-                                                _scaffoldKey.currentContext!)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Dashboard(0)),
-                                                (Route<dynamic> route) =>
-                                                    false);
-                                      } else {
-                                        Navigator.of(
-                                                _scaffoldKey.currentContext!)
-                                            .pushReplacement(MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Dashboard(0)));
-                                      }
-                                    } else {
-                                      CustomAlertDialogOnlyConfirm(
-                                          _scaffoldKey.currentContext!, () {
-                                        Navigator.pop(
-                                            _scaffoldKey.currentContext!);
-                                      },
-                                          AppLocalizations.of(context)
-                                              .translate("158"),
-                                          status.message,
-                                          ArtSweetAlertType.danger,
-                                          AppLocalizations.of(context)
-                                              .translate("159"));
-                                    }
-
-                                    isDownloading = false;
-                                  },
-                                      AppLocalizations.of(context)
-                                          .translate("160"),
-                                      AppLocalizations.of(context)
-                                              .translateLngName(language) +
-                                          AppLocalizations.of(context)
-                                              .translate("161"),
-                                      ArtSweetAlertType.question,
-                                      AppLocalizations.of(context)
-                                          .translate("162"),
-                                      AppLocalizations.of(context)
-                                          .translate("163"));
-                                }
-                              },
-                              child: Container(
-                                width: 30.w,
-                                height: 5.h,
-                                margin: EdgeInsets.only(bottom: 2.h),
-                                decoration: ShapeDecoration(
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                        width: 0.50, color: Color(0xFF7E7B7B)),
-                                  ),
+                          : Container(
+                              width: 30.w,
+                              height: 5.h,
+                              margin: EdgeInsets.only(bottom: 2.h),
+                              decoration: ShapeDecoration(
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      width: 0.50, color: Color(0xFF7E7B7B)),
                                 ),
+                              ),
+                              child: InkWell(
+                                onTap: () async {
+                                  var lngCheck = await dbProvider
+                                      .checkLearnLanguage(language.LCID);
+                                  if (lngCheck) {
+                                    StorageProvider.updateLearnLanguage(
+                                        context, language);
+                                    await dbProvider.closeDbConnection();
+                                    await dbProvider.openDbConnection(language);
+                                    if (widget.noReturn == true) {
+                                      Navigator.of(_scaffoldKey.currentContext!)
+                                          .pushAndRemoveUntil(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Dashboard(0)),
+                                              (Route<dynamic> route) => false);
+                                    } else {
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Dashboard(0)));
+                                    }
+                                  } else {
+                                    CustomAlertDialog(
+                                        _scaffoldKey.currentContext!, () async {
+                                      Navigator.pop(
+                                          _scaffoldKey.currentContext!);
+                                      isDownloading = true;
+                                      StaticVariables.loading = true;
+
+                                      FileDownloadStatus status =
+                                          await loginProvider
+                                              .startProcessOfDownloadLearnLanguage(
+                                                  language,
+                                                  false,
+                                                  onReceiveProgress);
+                                      if (status.status) {
+                                        StorageProvider.updateLearnLanguage(
+                                            context, language);
+
+                                        if (widget.noReturn == true) {
+                                          Navigator.of(
+                                                  _scaffoldKey.currentContext!)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Dashboard(0)),
+                                                  (Route<dynamic> route) =>
+                                                      false);
+                                        } else {
+                                          Navigator.of(
+                                                  _scaffoldKey.currentContext!)
+                                              .pushReplacement(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Dashboard(0)));
+                                        }
+                                      } else {
+                                        CustomAlertDialogOnlyConfirm(
+                                            _scaffoldKey.currentContext!, () {
+                                          Navigator.pop(
+                                              _scaffoldKey.currentContext!);
+                                        },
+                                            AppLocalizations.of(context)
+                                                .translate("158"),
+                                            status.message,
+                                            ArtSweetAlertType.danger,
+                                            AppLocalizations.of(context)
+                                                .translate("159"));
+                                      }
+
+                                      isDownloading = false;
+                                    },
+                                        AppLocalizations.of(context)
+                                            .translate("160"),
+                                        AppLocalizations.of(context)
+                                                .translateLngName(language) +
+                                            AppLocalizations.of(context)
+                                                .translate("161"),
+                                        ArtSweetAlertType.question,
+                                        AppLocalizations.of(context)
+                                            .translate("162"),
+                                        AppLocalizations.of(context)
+                                            .translate("163"));
+                                  }
+                                },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -285,8 +287,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                     ),
                                   ],
                                 ),
-                              ),
-                            );
+                              ));
                     },
                   ),
                 ),
