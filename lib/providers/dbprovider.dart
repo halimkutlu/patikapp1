@@ -1,9 +1,10 @@
-// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_function_literals_in_foreach_calls, curly_braces_in_flow_control_structures, unused_local_variable, avoid_print, prefer_interpolation_to_compose_strings
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_function_literals_in_foreach_calls, curly_braces_in_flow_control_structures, unused_local_variable, avoid_print, prefer_interpolation_to_compose_strings, null_argument_to_non_null_type, avoid_init_to_null
 
 import 'dart:async';
 import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/dialog.dart' as dialog;
 import 'package:patikmobile/models/information.dart';
@@ -15,12 +16,34 @@ import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqflite.dart' as db;
 import 'package:flutter_bcrypt/flutter_bcrypt.dart';
+import 'package:sqflite/sqlite_api.dart';
+
+class DbClass {
+  late db.Database? database;
+  late bool open;
+  DbClass(this.open, {this.database});
+}
+
+Future<DbClass> openDatabase(String path) async {
+  final file = File(path);
+  DbClass sonuc = DbClass(false);
+  if (!file.existsSync()) {
+    await Get.defaultDialog(title: "Error", middleText: "Db file not found");
+    return sonuc;
+  }
+  try {
+    db.Database dbase = await db.openDatabase(path);
+    sonuc = DbClass(dbase.isOpen, database: dbase);
+  } catch (e) {
+    await Get.defaultDialog(title: "Error", middleText: e.toString());
+  }
+  return sonuc;
+}
 
 class DbProvider extends ChangeNotifier {
-  static Database? database;
-  bool? checkInformation;
+  static db.Database? database;
 
   runProcess(String filename) async {
     FileDownloadStatus result = FileDownloadStatus();
@@ -66,12 +89,13 @@ class DbProvider extends ChangeNotifier {
   }
 
   Future<bool> reOpenDbConnection() async {
-    if (database != null && database!.isOpen) return true;
+    if (database != null && (database?.isOpen ?? false)) return true;
     if (StorageProvider.learnLanguge!.Code.isNotEmpty) {
-      String dbPath = await getDbPath();
-      if (database == null || !database!.isOpen) {
-        database = await openDatabase(dbPath);
-        return database!.isOpen;
+      if (!(database?.isOpen ?? false)) {
+        String dbPath = await getDbPath();
+        var dbase = await openDatabase(dbPath);
+        database = dbase.database;
+        return dbase.open;
       }
     }
     return false;
@@ -82,13 +106,11 @@ class DbProvider extends ChangeNotifier {
     prefs.setStringList("selectedWords", []);
     FileDownloadStatus result = FileDownloadStatus();
     if (lcid.Code.isNotEmpty) {
-      String dbPath = await getDbPath(lngName: lcid.Code);
-      if (database == null || !database!.isOpen) {
-        database = await openDatabase(dbPath);
-        checkInformation = true;
-      }
-      if (database!.isOpen) {
-        if (checkInformation == true) {
+      if (!(database?.isOpen ?? false)) {
+        String dbPath = await getDbPath(lngName: lcid.Code);
+        var dbase = await openDatabase(dbPath);
+        database = dbase.database;
+        if (dbase.open) {
           Information infrm = await getInformation();
           String hash = infrm.lngHash!;
           StaticVariables.lngPlanType = infrm.lngPlanType!;
@@ -97,9 +119,9 @@ class DbProvider extends ChangeNotifier {
               await FlutterBcrypt.verify(password: phoneId, hash: hash);
           if (result.status)
             prefs.setInt(StorageProvider.learnLcidKey, lcid.LCID);
-        } else
-          result.status = true;
-      }
+        }
+      } else
+        result.status = true;
     }
     return result;
   }
@@ -111,18 +133,20 @@ class DbProvider extends ChangeNotifier {
     }
 
     Directory dir = await getApplicationDocumentsDirectory();
-    final patikAppDir = Directory('${dir.path}/$lngName').path;
-    String dbPath = File('$patikAppDir/$lngName.db').path;
-
-    return dbPath;
+    final directory = Directory('${dir.path}/$lngName');
+    if (directory.existsSync()) {
+      final file = File('${directory.path}/$lngName.db');
+      if (file.existsSync()) return file.path;
+    }
+    return "";
   }
 
   ifConnectionAlive() {
-    return database != null ? database!.isOpen : false;
+    return database?.isOpen ?? false;
   }
 
   Future<void> closeDbConnection() async {
-    if (database != null && database!.isOpen) await database!.close();
+    if (database?.isOpen ?? false) await database!.close();
   }
 
   Future<List<Word>> getWordList({bool withoutCategoryName = false}) async {
@@ -399,13 +423,12 @@ class AppDbProvider extends ChangeNotifier {
   bool? checkInformation;
 
   Future<bool> reOpenDbConnection() async {
-    if (database != null && database!.isOpen) return true;
+    if (database?.isOpen ?? false) return true;
     if (StorageProvider.appLanguge!.Code.isNotEmpty) {
       String dbPath = await getDbPath();
-      if (database == null || !database!.isOpen) {
-        database = await openDatabase(dbPath);
-        return database!.isOpen;
-      }
+      var dbase = await openDatabase(dbPath);
+      database = dbase.database;
+      return dbase.open;
     }
     return false;
   }
@@ -415,13 +438,11 @@ class AppDbProvider extends ChangeNotifier {
     prefs.setStringList("selectedWords", []);
     FileDownloadStatus result = FileDownloadStatus();
     if (lcid.Code.isNotEmpty) {
-      String dbPath = await getDbPath();
-      if (database == null || !database!.isOpen) {
-        database = await openDatabase(dbPath);
-        checkInformation = true;
-      }
-      if (database!.isOpen) {
-        if (checkInformation == true) {
+      if (!(database?.isOpen ?? false)) {
+        String dbPath = await getDbPath();
+        var dbase = await openDatabase(dbPath);
+        database = dbase.database;
+        if (dbase.open) {
           Information infrm = await getInformation();
           String hash = infrm.lngHash!;
           String phoneId = DeviceProvider.getPhoneId();
@@ -429,9 +450,9 @@ class AppDbProvider extends ChangeNotifier {
               await FlutterBcrypt.verify(password: phoneId, hash: hash);
           if (result.status)
             prefs.setInt(StorageProvider.appLcidKey, lcid.LCID);
-        } else
-          result.status = true;
-      }
+        }
+      } else
+        result.status = true;
     }
     return result;
   }
@@ -450,11 +471,11 @@ class AppDbProvider extends ChangeNotifier {
   }
 
   ifConnectionAlive() {
-    return database != null ? database!.isOpen : false;
+    return database?.isOpen ?? false;
   }
 
   Future<void> closeDbConnection() async {
-    if (database != null && database!.isOpen) await database!.close();
+    if (database?.isOpen ?? false) await database!.close();
   }
 
   Future<List<Word>> setWordAppLng(List<Word> liste) async {

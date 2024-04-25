@@ -5,8 +5,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:widgets_to_image/widgets_to_image.dart';
 
 class Dialog {
   int? id;
