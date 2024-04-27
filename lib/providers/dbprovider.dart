@@ -6,6 +6,7 @@ import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/api/static_variables.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/dialog.dart' as dialog;
 import 'package:patikmobile/models/information.dart';
 import 'package:patikmobile/models/language.model.dart';
@@ -45,7 +46,7 @@ Future<DbClass> openDatabase(String path) async {
 class DbProvider extends ChangeNotifier {
   static db.Database? database;
 
-  runProcess(String filename) async {
+  runProcess(BuildContext context, String filename) async {
     FileDownloadStatus result = FileDownloadStatus();
     result.status = false;
     result.message = "";
@@ -74,8 +75,7 @@ class DbProvider extends ChangeNotifier {
             ..writeAsBytesSync(file.content);
         }
       } catch (e) {
-        result.message =
-            "İndirme işlemleri sırasında bir hata oluştu. Lütfen tekrar deneyiniz";
+        result.message = AppLocalizations.of(context).translate("177");
         print(e);
         return result;
       } finally {
@@ -83,7 +83,7 @@ class DbProvider extends ChangeNotifier {
       }
 
       result.status = true;
-      result.message = "İndirme işlemi başarılı";
+      result.message = AppLocalizations.of(context).translate("176");
       return result;
     }
   }

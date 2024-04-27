@@ -2,6 +2,7 @@ import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 
 CustomAlertDialog(
@@ -38,9 +39,9 @@ Future<void> askToGoMainMenu(BuildContext context, {VoidCallback? func}) async {
         MaterialPageRoute(builder: (context) => Dashboard(1)),
         (Route<dynamic> route) => false);
   },
-      "Emin misiniz?",
-      "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
+      AppLocalizations.of(context).translate("160"),
+      AppLocalizations.of(context).translate("179"),
       ArtSweetAlertType.question,
-      "Tamam",
-      "Geri");
+      AppLocalizations.of(context).translate("159"),
+      AppLocalizations.of(context).translate("180"));
 }

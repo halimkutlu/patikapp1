@@ -23,7 +23,7 @@ class CustomIconButton extends StatelessWidget {
   CustomIconButton({
     Key? key,
     this.onTap,
-    this.name = "İsim",
+    this.name = "",
     this.textOutSpace_top = 70,
     this.textOutSpace_bottom = 100,
     this.textOutSpace_left = 100,

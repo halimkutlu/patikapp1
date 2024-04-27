@@ -46,7 +46,9 @@ class _TrainingSelectState extends State<TrainingSelect> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: MainColors.backgroundColor,
-        appBar: AppBar(backgroundColor: MainColors.backgroundColor,),
+        appBar: AppBar(
+          backgroundColor: MainColors.backgroundColor,
+        ),
         body: Consumer<TrainingProvider>(builder: (context, provider, child) {
           if (!provider.wordsLoaded!) {
             // Eğer kelimeler yüklenmediyse bir yükleniyor ekranı göster
@@ -160,10 +162,10 @@ class _TrainingSelectState extends State<TrainingSelect> {
             () {
               Navigator.pop(context);
             },
-            "Uyarı",
-            "Bu oyun içerisinde herhangi bir kategoride henüz kelime öğrenmediniz.",
+            AppLocalizations.of(context).translate("164"),
+            AppLocalizations.of(context).translate("175"),
             ArtSweetAlertType.warning,
-            "Tamam",
+            AppLocalizations.of(context).translate("159"),
           );
         }
       },

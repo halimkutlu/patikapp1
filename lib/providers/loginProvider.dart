@@ -57,8 +57,12 @@ class LoginProvider extends ChangeNotifier {
       apirepository.removeToken();
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
-    }, AppLocalizations.of(context).translate("81"), "",
-        ArtSweetAlertType.question, "Evet", "Hayır");
+    },
+        AppLocalizations.of(context).translate("81"),
+        "",
+        ArtSweetAlertType.question,
+        AppLocalizations.of(context).translate("162"),
+        AppLocalizations.of(context).translate("163"));
   }
 
   void login(BuildContext context) async {
@@ -236,8 +240,11 @@ class LoginProvider extends ChangeNotifier {
         AppLocalizations.of(context).translate("159"));
   }
 
-  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(Lcid lcid,
-      bool lernLng, void Function(int, int)? onReceiveProgress) async {
+  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
+      BuildContext context,
+      Lcid lcid,
+      bool lernLng,
+      void Function(int, int)? onReceiveProgress) async {
     DbProvider dbProvider = DbProvider();
     FileDownloadStatus processResult = FileDownloadStatus();
     processResult.status = false;
@@ -247,13 +254,13 @@ class LoginProvider extends ChangeNotifier {
 
       //DOSYA İNDİRME İŞLEMİ YAPILIR.
       FileDownloadStatus resultDownloadFile = await downloadFile(
-          "GetLngFileStream",
-          lcid: lcid.LCID,
-          onReceiveProgress: onReceiveProgress);
+          "GetLngFileStream", context,
+          lcid: lcid.LCID, onReceiveProgress: onReceiveProgress);
 
       if (resultDownloadFile.status) {
         //DOSYA İNDRİME İŞLEMİ BAŞARILI İSE DOSYAYI CACHEDEN ALARAK TELEFONA ÇIKARTMA İŞLEMİ YAPILIR
-        FileDownloadStatus result = await dbProvider.runProcess(lcid.Code);
+        FileDownloadStatus result =
+            await dbProvider.runProcess(context, lcid.Code);
         if (result.status == false) {
           notifyListeners();
           processResult.status = false;

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:sizer/sizer.dart';
 
 class Loading extends StatefulWidget {
@@ -49,7 +50,7 @@ class _LoadingState extends State<Loading> {
                     strokeWidth: 1,
                   ),
                 ),
-                Text("Lütfen bekleyiniz")
+                Text(AppLocalizations.of(context).translate("181"))
               ],
             ),
           ));

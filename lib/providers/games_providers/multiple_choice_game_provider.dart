@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
@@ -132,10 +133,10 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
             Navigator.pop(context);
             Navigator.pop(context);
           },
-          "Uyarı",
-          "Bu oyun içerisinde herhangi bir kategoride henüz kelime öğrenmediniz.",
+          AppLocalizations.of(context).translate("164"),
+          AppLocalizations.of(context).translate("175"),
           ArtSweetAlertType.warning,
-          "Tamam",
+          AppLocalizations.of(context).translate("159"),
         );
       }
     }

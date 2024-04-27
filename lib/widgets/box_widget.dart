@@ -32,6 +32,7 @@ class _BoxWidgetState extends State<BoxWidget> {
         children: [
           Container(
             width: 25.w,
+            height: 7.w,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10),
@@ -50,7 +51,7 @@ class _BoxWidgetState extends State<BoxWidget> {
             )),
           ),
           Container(
-            height: 8.h,
+            height: 17.w,
             width: 23.w,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
