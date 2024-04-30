@@ -126,8 +126,8 @@ class _LearnPageState extends State<LearnPage> {
     );
   }
 
-  Widget categoryBox(File image, String name, int wordCount, int totalCount,
-      int color, WordListInformation horizontalCategory) {
+  Widget categoryBox(String imagePath, String name, int wordCount,
+      int totalCount, int color, WordListInformation horizontalCategory) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
@@ -161,9 +161,9 @@ class _LearnPageState extends State<LearnPage> {
                 padding: EdgeInsets.all(0),
               ),
               Center(
-                child: image != null
-                    ? SvgPicture.file(
-                        image,
+                child: imagePath != null
+                    ? SvgPicture.asset(
+                        imagePath,
                         height: 7.w,
                       )
                     : Icon(Icons.developer_board),

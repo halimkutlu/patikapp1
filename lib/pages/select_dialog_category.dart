@@ -143,7 +143,7 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                                           Container(
                                             decoration: BoxDecoration(
                                                 image: DecorationImage(
-                                                    image: FileImage(provider
+                                                    image: AssetImage(provider
                                                         .categoryList[index]
                                                         .categoryBackgroundImage!),
                                                     fit: BoxFit.cover)),
@@ -155,7 +155,7 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    SvgPicture.file(provider
+                                                    SvgPicture.asset(provider
                                                         .categoryList[index]
                                                         .categoryIcon!),
                                                     AutoSizeText(

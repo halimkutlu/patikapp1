@@ -100,15 +100,15 @@ Map<String, String> categoryImageMap = {
   "-27": "950"
 };
 
-File getCategoryImage(String path, String categoryId) => File(
-    '$path/${StorageProvider.learnLanguge!.Code}/${StorageProvider.learnLanguge!.Code}_${categoryImageMap[categoryId]}.svg');
+// File getCategoryImage(String path, String categoryId) => File(
+//     '$path/${StorageProvider.learnLanguge!.Code}/${StorageProvider.learnLanguge!.Code}_${categoryImageMap[categoryId]}.svg');
 
 class WordListInformation {
   String? categoryName;
   int? categoryWordCount;
   int? learnedWordsCount;
   int? totalCount;
-  File? categoryImage;
+  String? categoryImage;
   String? categoryOrderName;
   int? order;
   int? orderColor;
@@ -128,8 +128,8 @@ class WordListInformation {
     this.categoryAppLngName = "",
   });
 
-  factory WordListInformation.fromMap(String path, Map<String, dynamic> json,
-          BuildContext context, bool isCategory) =>
+  factory WordListInformation.fromMap(
+          Map<String, dynamic> json, BuildContext context, bool isCategory) =>
       WordListInformation(
           dbId: json["Id"].toString(),
           categoryName: json["Word"],
@@ -146,7 +146,7 @@ class WordListInformation {
           categoryAppLngName: "",
           categoryImage: !isCategory
               ? null
-              : getCategoryImage(path, json["Id"].toString()));
+              : "assets/wordImages/wrd_${categoryImageMap[json["Id"].toString()]}.svg");
 
   static getCategoryOrderName(BuildContext context, String activities) {
     var key = "107";

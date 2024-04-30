@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_final_fields, avoid_print
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
@@ -131,15 +132,14 @@ class BoxPageProvider extends ChangeNotifier {
 
     if (selectedCategoryWords!.isNotEmpty) {
       for (var x in selectedCategoryWords) {
-        final wordImage = await File(
-                '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg')
-            .readAsBytes();
+        final wordImage =
+            await rootBundle.load('assets/wordImages/wrd_${x.id}.svg');
         final wordSound =
             '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3';
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
-            imageBytes: wordImage,
+            imageBytes: wordImage?.buffer?.asUint8List(),
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,

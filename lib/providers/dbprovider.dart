@@ -172,9 +172,8 @@ Select w.*, (Select Count(*) from Words w1 where w1.Categories LIKE '%|' || w.Id
 (Select Count(*) from Words w3 where w3.IsCategoryName != 1 and w3.Categories LIKE '%|' || w.Id || '|%' and w3.Id IN (Select ws.WordId from WordStatistics ws)) as LearnedWordsCount
 from Words w where w.IsCategoryName = 1 """;
     var res = await database!.rawQuery(sql);
-    var liste = res
-        .map((e) => WordListInformation.fromMap(dir.path, e, context, true))
-        .toList();
+    var liste =
+        res.map((e) => WordListInformation.fromMap(e, context, true)).toList();
     return await AppDbProvider().setCategoryAppLng(liste);
   }
 
@@ -190,7 +189,7 @@ Select w.*, (Select Count(*) from Dialogs w1 where w1.Categories LIKE '%|' || w.
 from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     var res = await database!.rawQuery(sql);
     var liste = res
-        .map((e) => dialog.DialogListInformation.fromMap(dir.path, e, context))
+        .map((e) => dialog.DialogListInformation.fromMap(e, context))
         .toList();
     return await AppDbProvider().setDialogCategoryAppLng(liste);
   }
