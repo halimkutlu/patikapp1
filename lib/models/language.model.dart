@@ -1,7 +1,10 @@
 // ignore_for_file: non_constant_identifier_names, avoid_function_literals_in_foreach_calls
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
+import 'package:patikmobile/providers/storageProvider.dart';
 
 extension StringExtension on String {
   String trReplace() => replaceAll("İ", "I")
@@ -73,7 +76,16 @@ class Languages {
     LngList.sort((a, b) => a.Name!.trReplace().compareTo(b.Name!.trReplace()));
   }
 
-  static Lcid GetLngFromCode(String code) {
+  static Lcid GetLng() {
+    String code = "en-US";
+    if (StorageProvider.appLanguge != null) {
+      code = StorageProvider.appLanguge!.Code;
+    } else {
+      String phoneCode = Platform.localeName.replaceAll("_", "-");
+      if (Languages.LngList.any((element) => element.Code == phoneCode)) {
+        code = phoneCode;
+      }
+    }
     return LngList.firstWhere((element) => element.Code == code);
   }
 

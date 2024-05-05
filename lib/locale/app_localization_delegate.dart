@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
@@ -43,6 +45,11 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   // Method to load the localized strings for a locale
   @override
   Future<AppLocalizations> load(Locale locale) async {
+    var phoneLng = Platform.localeName.split("_");
+    locale = Locale(phoneLng[0], phoneLng[1]);
+    if (!isSupported(locale)) {
+      locale = const Locale("en");
+    }
     SharedPreferences shrdp = await SharedPreferences.getInstance();
     int llcid = shrdp.getInt(StorageProvider.appLcidKey) ??
         Languages.GetLCIDFromCode(
