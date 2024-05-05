@@ -11,6 +11,7 @@ import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/multiple_choice_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/error_image.dart';
 import 'package:patikmobile/widgets/success.image.dart';
@@ -130,10 +131,9 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
                             ],
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(20))),
-                        child: SvgPicture.memory(
-                          provider.selectedWord!.imageBytes!,
-                          height: 15.h,
-                        ),
+                        child: getWordImage(
+                            provider.selectedWord!.id.toString(), false,
+                            height: 15.h),
                       ),
                     )),
                     Center(

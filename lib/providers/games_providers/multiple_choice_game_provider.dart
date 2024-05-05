@@ -17,8 +17,10 @@ import 'package:patikmobile/pages/games/match_moving_square_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MultipleChoiceGameProvider extends ChangeNotifier {
@@ -222,14 +224,12 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
 
     if (selectedCategoryWords!.isNotEmpty) {
       for (var x in selectedCategoryWords) {
-        final wordImage =
-            await rootBundle.load('assets/wordImages/wrd_${x.id}.svg');
         final wordSound =
             '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3';
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
-            imageBytes: wordImage?.buffer?.asUint8List(),
+            image: getWordImage(x.id.toString(), false, height: 7.w),
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,
@@ -271,8 +271,6 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
     _errorCount = 0;
     _wordsLoaded = false;
 
-    WordListDBInformation? takenWord;
-    WordListDBInformation word = WordListDBInformation();
     if (_wordListDbInformation!.isNotEmpty) {
       print(_selectedWord);
       _selectedWord = _wordListDbInformation!.removeAt(0);

@@ -15,7 +15,9 @@ import 'package:patikmobile/pages/games/math_with_sound_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MatchWithPictureGameProvide extends ChangeNotifier {
@@ -210,14 +212,12 @@ class MatchWithPictureGameProvide extends ChangeNotifier {
 
     if (selectedCategoryWords!.isNotEmpty) {
       for (var x in selectedCategoryWords) {
-        final wordImage =
-            await rootBundle.load('assets/wordImages/wrd_${x.id}.svg');
         final wordSound =
             '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3';
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
-            imageBytes: wordImage?.buffer?.asUint8List(),
+            image: getWordImage(x.id.toString(), false, height: 7.w),
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,

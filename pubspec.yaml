@@ -92,7 +92,7 @@ flutter:
   assets:
     - assets/wordImages/
     - assets/dialogImages/
-    - assets/categoryImages/
+    - assets/dialogBackgroundImages/
     - assets/icon/icon.png
     - assets/icon/icon_ios.png
     - lib/assets/locales/

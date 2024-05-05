@@ -15,8 +15,10 @@ import 'package:patikmobile/pages/games/multiple_choice_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:patikmobile/widgets/keyboard_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 import 'package:sqflite/sqflite.dart';
 
 class FillTheBlankGameProvider extends ChangeNotifier {
@@ -163,8 +165,6 @@ class FillTheBlankGameProvider extends ChangeNotifier {
     _selectedWordTextEditingController = TextEditingController();
     _errorCount = 0;
     _wordsLoaded = false;
-    WordListDBInformation? takenWord;
-    WordListDBInformation word = WordListDBInformation();
     if (_wordListDbInformation!.isNotEmpty) {
       print(_selectedWord);
       _selectedWord = _wordListDbInformation!.removeAt(0);
@@ -226,10 +226,8 @@ class FillTheBlankGameProvider extends ChangeNotifier {
 
     if (selectedCategoryWords!.isNotEmpty) {
       for (var x in selectedCategoryWords) {
-        final wordImage =
-            await rootBundle.load('assets/wordImages/wrd_${x.id}.svg');
         WordListDBInformation wordInfo = WordListDBInformation(
-            imageBytes: wordImage?.buffer?.asUint8List(),
+            image: getWordImage(x.id.toString(), false, height: 7.w),
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,
@@ -329,7 +327,6 @@ class FillTheBlankGameProvider extends ChangeNotifier {
     processDone = false;
     await takeWord();
     if (_selectedWord != null) {
-      _image = _selectedWord!.imageBytes;
       _word = _selectedWord!.word;
       final clearWord = word?.replaceAll(" ", "");
 

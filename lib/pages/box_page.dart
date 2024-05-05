@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/boxPageProvider.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:patikmobile/services/sound_helper.dart';
 import 'package:patikmobile/widgets/box_widget.dart';
 import 'package:provider/provider.dart';
@@ -140,10 +141,9 @@ class _BoxPageState extends State<BoxPage> {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(left: 4.w),
-                                    child: SvgPicture.memory(
-                                      item.imageBytes!,
-                                      height: 4.h,
-                                    ),
+                                    child: getWordImage(
+                                        item.id.toString(), false,
+                                        height: 4.h),
                                   ),
                                   item.wordA != null
                                       ? Column(

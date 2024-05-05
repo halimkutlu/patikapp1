@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names, unnecessary_null_comparison
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -126,8 +127,8 @@ class _LearnPageState extends State<LearnPage> {
     );
   }
 
-  Widget categoryBox(String imagePath, String name, int wordCount,
-      int totalCount, int color, WordListInformation horizontalCategory) {
+  Widget categoryBox(Widget image, String name, int wordCount, int totalCount,
+      int color, WordListInformation horizontalCategory) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
@@ -161,12 +162,7 @@ class _LearnPageState extends State<LearnPage> {
                 padding: EdgeInsets.all(0),
               ),
               Center(
-                child: imagePath != null
-                    ? SvgPicture.asset(
-                        imagePath,
-                        height: 7.w,
-                      )
-                    : Icon(Icons.developer_board),
+                child: image,
               ),
               Center(
                 child: AutoSizeText(

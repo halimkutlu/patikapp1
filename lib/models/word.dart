@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
+import 'package:patikmobile/services/image_helper.dart';
+import 'package:sizer/sizer.dart';
 
 class Word {
   int? id;
@@ -70,36 +72,6 @@ class Word {
   }
 }
 
-Map<String, String> categoryImageMap = {
-  "-1": "1",
-  "-2": "12",
-  "-3": "64",
-  "-4": "78",
-  "-5": "98",
-  "-6": "119",
-  "-7": "133",
-  "-8": "158",
-  "-9": "185",
-  "-10": "218",
-  "-11": "253",
-  "-12": "299",
-  "-13": "335",
-  "-14": "365",
-  "-15": "423",
-  "-16": "463",
-  "-17": "506",
-  "-18": "553",
-  "-19": "563",
-  "-20": "688",
-  "-21": "718",
-  "-22": "740",
-  "-23": "762",
-  "-24": "809",
-  "-25": "827",
-  "-26": "850",
-  "-27": "950"
-};
-
 // File getCategoryImage(String path, String categoryId) => File(
 //     '$path/${StorageProvider.learnLanguge!.Code}/${StorageProvider.learnLanguge!.Code}_${categoryImageMap[categoryId]}.svg');
 
@@ -108,7 +80,7 @@ class WordListInformation {
   int? categoryWordCount;
   int? learnedWordsCount;
   int? totalCount;
-  String? categoryImage;
+  Widget? categoryImage;
   String? categoryOrderName;
   int? order;
   int? orderColor;
@@ -146,7 +118,8 @@ class WordListInformation {
           categoryAppLngName: "",
           categoryImage: !isCategory
               ? null
-              : "assets/wordImages/wrd_${categoryImageMap[json["Id"].toString()]}.svg");
+              : getWordImage(categoryImageMap[json["Id"].toString()]!, false,
+                  height: 7.w));
 
   static getCategoryOrderName(BuildContext context, String activities) {
     var key = "107";
@@ -165,7 +138,7 @@ class WordListDBInformation {
   String? wordA;
   String? wordT;
   String? audio;
-  Uint8List? imageBytes;
+  Widget? image;
   int? id;
   String? wordAppLng;
   bool? isAddedToWorkHard = false;
@@ -183,7 +156,7 @@ class WordListDBInformation {
 
   WordListDBInformation(
       {this.audio,
-      this.imageBytes,
+      this.image,
       this.word,
       this.wordA,
       this.wordT,
@@ -191,9 +164,4 @@ class WordListDBInformation {
       this.isAddedToWorkHard,
       this.lastCard = false,
       this.wordAppLng = ""});
-
-  WordListDBInformation.fromMap(Word w)
-      : word = w.word,
-        wordA = w.wordA,
-        wordT = w.wordT;
 }

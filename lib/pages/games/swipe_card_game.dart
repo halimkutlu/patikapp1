@@ -14,6 +14,7 @@ import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:patikmobile/services/sound_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:provider/provider.dart';
@@ -195,11 +196,12 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                 children: [
                                   !provider.wordListDbInformation![index]
                                           .lastCard!
-                                      ? SvgPicture.memory(
-                                          provider.wordListDbInformation![index]
-                                              .imageBytes!,
-                                          height: 19.h,
-                                        )
+                                      ? getWordImage(
+                                          provider
+                                              .wordListDbInformation![index].id
+                                              .toString(),
+                                          false,
+                                          height: 19.h)
                                       : Container(),
                                   Padding(
                                     padding: EdgeInsets.all(4.0.h),

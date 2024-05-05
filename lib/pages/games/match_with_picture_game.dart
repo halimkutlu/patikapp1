@@ -13,6 +13,7 @@ import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/error_image.dart';
 import 'package:provider/provider.dart';
@@ -204,10 +205,7 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
                           ? Colors.orange
                           : Colors.white,
             ),
-            child: SvgPicture.memory(
-              info.imageBytes!,
-              height: 19.h,
-            ),
+            child: getWordImage(info.id.toString(), false, height: 19.h),
           ),
         ),
       );

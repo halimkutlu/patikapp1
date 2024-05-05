@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/user_roles.dart';
@@ -12,10 +13,14 @@ class StorageProvider {
   static String learnLcidKey = "learnlcid";
   static Lcid? appLanguge;
   static Lcid? learnLanguge;
+  static String? learnLanguageDir;
+  static String? appDir;
 
   static load() async {
     await StorageProvider.getAppLanguage();
     await StorageProvider.getLearnLanguage();
+    var dir = await getApplicationDocumentsDirectory();
+    appDir = dir.path;
   }
 
   static getAppLanguage() async {
@@ -46,6 +51,7 @@ class StorageProvider {
         StorageProvider.learnLanguge = Languages.GetLngFromLCID(learnlcid);
       }
     }
+    learnLanguageDir = "$appDir/${StorageProvider.learnLanguge?.Code}";
     return StorageProvider.learnLanguge;
   }
 

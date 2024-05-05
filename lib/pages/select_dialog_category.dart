@@ -8,6 +8,7 @@ import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/dialog_page.dart';
 import 'package:patikmobile/providers/dialogCategoriesProvider.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -143,9 +144,11 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                                           Container(
                                             decoration: BoxDecoration(
                                                 image: DecorationImage(
-                                                    image: AssetImage(provider
-                                                        .categoryList[index]
-                                                        .categoryBackgroundImage!),
+                                                    image: getDialogBackground(
+                                                        provider
+                                                            .categoryList[index]
+                                                            .dbId!,
+                                                        false),
                                                     fit: BoxFit.cover)),
                                             padding: const EdgeInsets.all(10),
 
@@ -155,9 +158,11 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    SvgPicture.asset(provider
-                                                        .categoryList[index]
-                                                        .categoryIcon!),
+                                                    getDialogImage(
+                                                        provider
+                                                            .categoryList[index]
+                                                            .dbId!,
+                                                        false),
                                                     AutoSizeText(
                                                       provider
                                                           .categoryList[index]
