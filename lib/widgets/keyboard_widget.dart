@@ -4,8 +4,8 @@ import 'dart:core';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:patikmobile/providers/games_providers/fill_the_blank_game.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:sizer/sizer.dart';
 
 class KeyCharInformation {
@@ -78,10 +78,10 @@ class _NumericKeypadState extends State<NumericKeypad> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
                           ),
-                          child: SvgPicture.memory(
-                            widget.provider.image!,
-                            fit: BoxFit.fill,
-                          ),
+                          child: getWordImage(
+                              widget.provider.selectedWord!.id.toString(),
+                              false,
+                              boxFit: BoxFit.fill),
                         ),
                         Container(
                             height: 6.h,

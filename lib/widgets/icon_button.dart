@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, prefer_const_constructors_in_immutables, non_constant_identifier_names
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 
 class CustomIconButton extends StatelessWidget {
   final VoidCallback? onTap;

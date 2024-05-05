@@ -1,14 +1,9 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'dart:io';
-import 'dart:math';
-
-import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/models/training_select_names.dart';
-import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/multiple_choice_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/services/image_helper.dart';

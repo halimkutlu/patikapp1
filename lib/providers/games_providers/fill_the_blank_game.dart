@@ -1,9 +1,7 @@
 // ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
@@ -316,9 +314,6 @@ class FillTheBlankGameProvider extends ChangeNotifier {
 
   String? _word = "";
   String? get word => _word;
-
-  Uint8List? _image = Uint8List(0);
-  Uint8List? get image => _image;
 
   void startProcedures() async {
     _selectedWordTextEditingController = TextEditingController();

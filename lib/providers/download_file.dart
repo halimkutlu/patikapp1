@@ -9,8 +9,8 @@ import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../api/api_urls.dart';
-import '../models/language.model.dart';
+import 'package:patikmobile/api/api_urls.dart';
+import 'package:patikmobile/models/language.model.dart';
 
 Future<bool> getPermissions() async {
   bool gotPermissions = false;

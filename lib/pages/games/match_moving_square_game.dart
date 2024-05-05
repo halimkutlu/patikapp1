@@ -1,14 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:async';
 import 'dart:io';
-import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/models/training_select_names.dart';
-import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_moving_square_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/services/sound_helper.dart';

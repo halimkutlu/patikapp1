@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 
 Map<String, String> categoryImageMap = {
@@ -39,19 +36,18 @@ Map<String, String> categoryImageMap = {
 };
 
 Widget getWordImage(String id, bool lngPathImage,
-    {double? height, double? width}) {
+    {double? height, double? width, BoxFit? boxFit = BoxFit.contain}) {
   Widget result = Icon(Icons.developer_board);
   if (lngPathImage) {
     var file = File('${StorageProvider.learnLanguageDir}/wrd_$id.svg');
     if (file.existsSync()) {
-      result = SvgPicture.file(file, height: height, width: width);
+      result =
+          SvgPicture.file(file, height: height, width: width, fit: boxFit!);
     }
+  } else {
+    result = SvgPicture.asset('assets/wordImages/wrd_$id.svg',
+        height: height, width: width, fit: boxFit!);
   }
-
-  result = Image.asset('assets/wordImages/wrd_$id.svg',
-      height: height,
-      width: width,
-      errorBuilder: (ctx, error, stackTrace) => Icon(Icons.developer_board));
 
   return result;
 }
@@ -64,12 +60,10 @@ Widget getDialogImage(String id, bool lngPathImage,
     if (file.existsSync()) {
       result = SvgPicture.file(file, height: height, width: width);
     }
+  } else {
+    result = SvgPicture.asset('assets/dialogImages/di$id.svg',
+        height: height, width: width);
   }
-
-  result = Image.asset('assets/dialogImages/di$id.svg',
-      height: height,
-      width: width,
-      errorBuilder: (ctx, error, stackTrace) => Icon(Icons.developer_board));
 
   return result;
 }

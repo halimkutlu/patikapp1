@@ -1,13 +1,9 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
-import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/services/image_helper.dart';
 import 'package:sizer/sizer.dart';
 

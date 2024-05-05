@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
 import 'package:patikmobile/models/language.model.dart';
@@ -17,10 +16,10 @@ class StorageProvider {
   static String? appDir;
 
   static load() async {
-    await StorageProvider.getAppLanguage();
-    await StorageProvider.getLearnLanguage();
     var dir = await getApplicationDocumentsDirectory();
     appDir = dir.path;
+    await StorageProvider.getAppLanguage();
+    await StorageProvider.getLearnLanguage();
   }
 
   static getAppLanguage() async {
@@ -61,7 +60,6 @@ class StorageProvider {
     await shrdp.setInt(appLcidKey, locale.LCID);
     await shrdp.setString("AppLanguageName", locale.Name!);
     AppLocalizationsDelegate().load(const Locale('en'));
-    Get.updateLocale(Locale(locale.Code.split('-').first));
   }
 
   static updateLearnLanguage(BuildContext context, Lcid locale) async {

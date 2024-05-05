@@ -64,7 +64,6 @@ void main() async {
   var applcid = shrdp.getInt(StorageProvider.appLcidKey);
   Lcid locale = Languages.GetLngFromLCID(applcid ?? 1033);
   AppLocalizationsDelegate().load(const Locale('en'));
-  Get.updateLocale(Locale(locale.Code.split('-').first));
   runApp(MultiProvider(providers: providers, child: const MyApp()));
 }
 

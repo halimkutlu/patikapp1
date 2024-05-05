@@ -1,12 +1,10 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, non_constant_identifier_names
 
 import 'dart:io';
-import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/models/training_select_names.dart';
-import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/fill_the_blank_game.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';

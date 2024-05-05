@@ -1,14 +1,11 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers
 
 import 'dart:io';
-import 'dart:math';
-import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/models/training_select_names.dart';
 import 'package:patikmobile/models/word.dart';
-import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/providers/games_providers/match_with_sound_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
 import 'package:patikmobile/services/sound_helper.dart';

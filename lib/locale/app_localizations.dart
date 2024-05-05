@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:patikmobile/models/language.model.dart';
 
 class AppLocalizations {
@@ -41,7 +42,7 @@ class AppLocalizations {
     _localizedStrings = jsonMap.map((key, value) {
       return MapEntry(key, value.toString());
     });
-
+    Get.updateLocale(Locale(lng!.split("-").first));
     // Return true when loading is done
     return true;
   }

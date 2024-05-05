@@ -1,5 +1,6 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:art_sweetalert/art_sweetalert.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
