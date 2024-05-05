@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:patikmobile/models/language.model.dart';
 
 class AppLocalizations {
+  static AppLocalizations? staticAppLocalizations;
   // The locale for which the app is localized
   final Lcid locale;
   // Map to hold the localized strings
@@ -14,9 +16,16 @@ class AppLocalizations {
 
   // Method to get the current instance of AppLocalizations
   static AppLocalizations of(BuildContext context) {
-    // Try to get the localization for the current context, if not available, default to English
-    return Localizations.of<AppLocalizations>(context, AppLocalizations) ??
-        AppLocalizations(Languages.GetLngFromCode("en-US"));
+    try {
+      var loc = Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+          AppLocalizations(Languages.GetLng());
+      if (loc._localizedStrings.isNotEmpty) {
+        staticAppLocalizations = loc;
+      }
+      return loc;
+    } catch (e) {
+      return staticAppLocalizations!;
+    }
   }
 
   // Method to load the localized strings
