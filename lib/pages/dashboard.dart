@@ -7,6 +7,7 @@ import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/about_app.dart';
 import 'package:patikmobile/pages/change_password.dart';
 import 'package:patikmobile/pages/feedback.dart';
+import 'package:patikmobile/pages/remove_ads.dart';
 import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
@@ -163,6 +164,9 @@ class _DashboardState extends State<Dashboard> {
                                     UserRole.getRoleDescriptionFromId(
                                         mainProvider.roleid)),
                             CustomIconButton(
+                              onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => RemoveAds())),
                               textSize: 20,
                               height: 8.w,
                               textInlinePadding: 3.w,

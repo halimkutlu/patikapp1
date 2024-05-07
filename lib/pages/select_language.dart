@@ -205,6 +205,10 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                               language,
                                               _scaffoldKey.currentContext!,
                                               widget.dashboard ?? false);
+                                          await appDbProvider
+                                              .closeDbConnection();
+                                          await appDbProvider
+                                              .openDbConnection(language);
                                         } else {
                                           CustomAlertDialogOnlyConfirm(
                                               _scaffoldKey.currentContext!, () {

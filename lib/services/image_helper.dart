@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 
@@ -73,4 +74,18 @@ ImageProvider getDialogBackground(String id, bool lngPathImage) {
     return FileImage(File('${StorageProvider.learnLanguageDir}/di$id.png'));
   }
   return AssetImage('assets/dialogBackgroundImages/di$id.png');
+}
+
+Future<Uint8List> getCategoryImageBytes(String id, bool lngPathImage) async {
+  Uint8List result = Uint8List(0);
+  if (lngPathImage) {
+    var file = File('${StorageProvider.learnLanguageDir}/di$id.svg');
+    if (file.existsSync()) {
+      result = file.readAsBytesSync();
+    }
+  } else {
+    var file = await rootBundle.load('assets/dialogImages/di$id.svg');
+    result = file.buffer.asUint8List();
+  }
+  return result;
 }
