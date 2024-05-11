@@ -1,21 +1,18 @@
 // ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
-
-import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/word.dart';
-import 'package:patikmobile/models/word_statistics.dart';
+import 'package:patikmobile/pages/box_page.dart';
 import 'package:patikmobile/pages/games/match_with_picture_game.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
-import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SwipeCardGameProvider extends ChangeNotifier {
@@ -64,11 +61,11 @@ class SwipeCardGameProvider extends ChangeNotifier {
       notifyListeners();
     }
     if (_selectedCategoryWords!.isEmpty) {
-      CustomAlertDialogOnlyConfirm(context, () {
-        Navigator.pop(context);
-        Navigator.pop(context);
-      }, "warning".tr, "Kategoriye ait kelime bulunamadı",
-          ArtSweetAlertType.info, "ok".tr);
+      Navigator.pop(context);
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              BoxPage(selectedBox: 0, completedGame: true, dbId: dbId)));
     } else {
       //ADIM 3 ==> Seçilen 5 kelimeyi kayıt altında tut! (Diğer oyunlar için kullanacağız)
       await saveSelectedWords(_selectedCategoryWords!);
@@ -99,30 +96,8 @@ class SwipeCardGameProvider extends ChangeNotifier {
 
   Future<List<Word>> getCategoriesWordsFromDB(
       String? dbId, DbProvider dbProvider) async {
-    List<Word> allWords =
-        await dbProvider.getWordList(withoutCategoryName: true);
-
-    List<WordStatistics> allWordStatistics =
-        await dbProvider.getWordStatisticsList();
-
-    if (allWords.isNotEmpty) {
-      // Rastgele sıralama işlemi
-      Random random = Random();
-      allWords.shuffle(random);
-
-      // allWordStatistics içindeki WordId'leri al
-      Set<int> existingWordIds =
-          allWordStatistics.map((statistics) => statistics.wordId!).toSet();
-
-      // allWords içinde allWordStatistics'te bulunmayan WordId'lere sahip kelimeleri filtrele
-      _selectedCategoryWords = allWords
-          .where(
-            (word) =>
-                word.categories == dbId && !existingWordIds.contains(word.id),
-          )
-          .take(5)
-          .toList();
-    }
+    _selectedCategoryWords = await dbProvider.getRandomWordList(
+        dbId: dbId, withoutCategoryName: true);
 
     return _selectedCategoryWords!;
   }
@@ -135,32 +110,35 @@ class SwipeCardGameProvider extends ChangeNotifier {
 
     if (selectedCategoryWords!.isNotEmpty) {
       for (var x in selectedCategoryWords) {
-        final wordImage = await File(
-                '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg')
-            .readAsBytes();
         final wordSound =
             '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3';
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
-            imageBytes: wordImage,
+            image: getWordImage(x.id.toString(), x.imgLngPath, height: 7.w),
+            imgLngPath: x.imgLngPath,
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,
-            id: x.id);
+            id: x.id,
+            wordAppLng: x.wordAppLng);
 
         _wordListDbInformation!.add(wordInfo);
       }
-      WordListDBInformation lastCard = WordListDBInformation(
-        lastCard: true,
-        word: "Tüm kartları öğrendiniz",
-      );
-      _wordListDbInformation!.add(lastCard);
+      // WordListDBInformation lastCard = WordListDBInformation(
+      //   lastCard: true,
+      //   word: "Tüm kartları öğrendiniz",
+      // );
+      // _wordListDbInformation!.add(lastCard);
     }
     print(_wordListDbInformation);
   }
 
   Future<String> getCurrentLanguageAsString() async {
+    if (StorageProvider.learnLanguge != null) {
+      return StorageProvider.learnLanguge!.Code;
+    }
+
     int? language;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     language = prefs.getInt(StorageProvider.learnLcidKey);

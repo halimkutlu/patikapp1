@@ -5,3 +5,5 @@ enum trainingSelectNames {
   FiveOptions,
   WordTetris
 }
+
+enum playWithEnum { learnedWords, repeatedWords, workHardWords, allWords }

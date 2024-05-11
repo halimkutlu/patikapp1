@@ -1,22 +1,28 @@
 // ignore_for_file: unused_local_variable, prefer_const_constructors
 
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
-import 'package:patikmobile/pages/introductionPages/introductionPage1.dart';
+import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/pages/splashScreen.dart';
 import 'package:patikmobile/providers/boxPageProvider.dart';
 import 'package:patikmobile/providers/categoriesProvider.dart';
 import 'package:patikmobile/providers/changePasswordProvider.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
+import 'package:patikmobile/providers/dialogCategoriesProvider.dart';
+import 'package:patikmobile/providers/games_providers/fill_the_blank_game.dart';
+import 'package:patikmobile/providers/games_providers/match_moving_square_game_provider.dart';
 import 'package:patikmobile/providers/games_providers/match_with_picture_game_provider.dart';
+import 'package:patikmobile/providers/games_providers/match_with_sound_game_provider.dart';
+import 'package:patikmobile/providers/games_providers/multiple_choice_game_provider.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/providers/introductionPageProvider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
@@ -26,9 +32,10 @@ import 'package:patikmobile/providers/registerProvider.dart';
 import 'package:patikmobile/providers/splashScreenProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/providers/trainingProvider.dart';
-import 'package:patikmobile/widgets/keyboard_widget.dart';
+import 'package:patikmobile/services/ad_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 //indirilen dilin kayıt edilmesi (tekrar uygulama açıldığında o dilden devam edicek)
@@ -40,15 +47,21 @@ void main() async {
   if (Platform.isAndroid) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        apiKey: 'AIzaSyBFDNgEQpj6uQg_cIGYzUIBM3p7cEijcog',
-        appId: '1:587524623446:android:4673d988efc27735a57ff7',
+        apiKey: 'AIzaSyCIxSGHTmGLmrOy7xYLzSSY4j1MujNR1XA',
+        appId: '1:799969018625:android:3cd8551608a3b49e6cd100',
         messagingSenderId: '',
-        projectId: 'patikmobile',
+        projectId: 'patik',
       ),
     );
   } else {
     await Firebase.initializeApp();
   }
+
+  SharedPreferences shrdp = await SharedPreferences.getInstance();
+
+  var applcid = shrdp.getInt(StorageProvider.appLcidKey);
+  Lcid locale = Languages.GetLngFromLCID(applcid ?? 1033);
+  AppLocalizationsDelegate().load(const Locale('en'));
   runApp(MultiProvider(providers: providers, child: const MyApp()));
 }
 
@@ -78,6 +91,18 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<BoxPageProvider>(create: (_) => BoxPageProvider()),
   ChangeNotifierProvider<MatchWithPictureGameProvide>(
       create: (_) => MatchWithPictureGameProvide()),
+  ChangeNotifierProvider<MatchWithSoundGameProvide>(
+      create: (_) => MatchWithSoundGameProvide()),
+  ChangeNotifierProvider<FillTheBlankGameProvider>(
+      create: (_) => FillTheBlankGameProvider()),
+  ChangeNotifierProvider<AppDbProvider>(create: (_) => AppDbProvider()),
+  ChangeNotifierProvider<MultipleChoiceGameProvider>(
+      create: (_) => MultipleChoiceGameProvider()),
+  ChangeNotifierProvider<MovingSquaresGameProvide>(
+      create: (_) => MovingSquaresGameProvide()),
+  ChangeNotifierProvider<DialogCategoriesProvider>(
+      create: (_) => DialogCategoriesProvider()),
+  ChangeNotifierProvider<AdProvider>(create: (_) => AdProvider()),
 ];
 
 class MyApp extends StatefulWidget {
@@ -93,21 +118,36 @@ class _MyAppState extends State<MyApp> {
     StorageProvider.load();
     DeviceProvider.getPhoneId();
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    DeviceProvider.Init(context);
     TextEditingController textController = TextEditingController();
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           //translations: LocaleString(),
           //locale: const Locale('hy', 'HW'), //Get.locale,
-          title: 'Flutter Demo',
+          title: 'Multilingual Patik',
           theme: ThemeData(
-            scaffoldBackgroundColor: MainColors.backgroundColor,
-            primarySwatch: Colors.blue,
-          ),
+              scaffoldBackgroundColor: MainColors.backgroundColor,
+              primarySwatch: Colors.blue),
           // Localization delegates
           localizationsDelegates: const [
             AppLocalizationsDelegate(),

@@ -1,10 +1,18 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, non_constant_identifier_names
 
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
 
 class DeviceProvider {
+  static void Init(BuildContext context) {
+    StaticVariables.AppSize = Size(
+        MediaQuery.of(context).size.width,
+        MediaQuery.of(context).size.height -
+            MediaQuery.of(context).padding.top);
+  }
+
   static String getPhoneId() {
     if (StaticVariables.PhoneID.isEmpty) {
       var deviceInfo = DeviceInfoPlugin();

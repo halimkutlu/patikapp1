@@ -1,4 +1,5 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields, unused_element
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields, unused_element, use_build_context_synchronously
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
@@ -6,6 +7,7 @@ import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/about_app.dart';
 import 'package:patikmobile/pages/change_password.dart';
 import 'package:patikmobile/pages/feedback.dart';
+import 'package:patikmobile/pages/remove_ads.dart';
 import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
@@ -14,7 +16,9 @@ import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
 import 'package:patikmobile/widgets/menu_item.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
+import 'package:widgets_to_image/widgets_to_image.dart';
 
 class Dashboard extends StatefulWidget {
   final int? selectedPageIndex;
@@ -24,9 +28,9 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
-bool a = true;
-
 class _DashboardState extends State<Dashboard> {
+  List<WidgetsToImageController> controllers = [];
+
   late DashboardProvider mainProvider;
   @override
   void initState() {
@@ -34,7 +38,8 @@ class _DashboardState extends State<Dashboard> {
     mainProvider = Provider.of<DashboardProvider>(context, listen: false);
     mainProvider.init();
     if (widget.selectedPageIndex != null && widget.selectedPageIndex! > 0) {
-      mainProvider.changeTab(0);
+      Future.delayed(Duration(milliseconds: 500),
+          () => mainProvider.changeTab(widget.selectedPageIndex!));
     }
   }
 
@@ -46,6 +51,19 @@ class _DashboardState extends State<Dashboard> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<ShareResult> getCapture(WidgetsToImageController contrller) async {
+    var capture = await contrller.capture();
+    var xfiles = <XFile>[
+      XFile.fromData(capture!,
+          length: capture!.length,
+          mimeType: "image/png",
+          name: "dialog.png",
+          lastModified: DateTime.now())
+    ];
+    return await Share.shareXFiles(xfiles,
+        text: AppLocalizations.of(context).translate("157"));
   }
 
   @override
@@ -65,7 +83,6 @@ class _DashboardState extends State<Dashboard> {
         drawer: Drawer(
           backgroundColor: MainColors.backgroundColor,
           elevation: 1,
-
           width: double.infinity,
 
           // Add a ListView to the drawer. This ensures the user can scroll
@@ -75,104 +92,84 @@ class _DashboardState extends State<Dashboard> {
             // Important: Remove any padding from the ListView.
             children: [
               SizedBox(
-                height: 43.h,
-                child: DrawerHeader(
+                child: Container(
                   decoration: BoxDecoration(
-                    border: Border(
-                      bottom: Divider.createBorderSide(context,
-                          color: Colors.black, width: 0.3),
-                    ),
+                    border: Border.all(color: Colors.transparent),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(200),
                         bottomRight: Radius.circular(200)),
                     color: MainColors.primaryColor,
                   ),
-                  child: Center(
-                      child: Column(
+                  child: Column(
                     children: [
-                      Container(
-                        color: MainColors.primaryColor,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: Icon(Icons.chevron_left_outlined)),
-                            IconButton(
-                                onPressed: () {
-                                  loginProvider.logout(context);
-                                },
-                                icon: Icon(Icons.logout))
-                          ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.h),
+                        child: Container(
+                          color: MainColors.primaryColor,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  iconSize: 40,
+                                  icon: Icon(Icons.chevron_left_outlined)),
+                              IconButton(
+                                  onPressed: () {
+                                    loginProvider.logout(context);
+                                  },
+                                  iconSize: 30,
+                                  icon: Icon(Icons.logout))
+                            ],
+                          ),
                         ),
                       ),
                       Container(
-                        transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+                        transform: Matrix4.translationValues(0.0, -50.0, 0.0),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              height: 10.h,
-                              width: 25.w,
+                              width: 20.w,
                               decoration: const ShapeDecoration(
                                 color: Color(0xFFD7D6D6),
                                 shape: OvalBorder(),
                               ),
                               child: Image.asset(
                                 'lib/assets/img/avatar.png',
-                                height: 10.h,
                                 width: 10.w,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(child: Text(mainProvider.userName)),
-                            ),
-                            Center(
-                                child: Text(
+                            AutoSizeText(mainProvider.userName),
+                            AutoSizeText(
+                              maxLines: 1,
                               mainProvider.nameLastname,
                               style: TextStyle(fontWeight: FontWeight.bold),
-                            )),
-                            Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Center(
-                                  child: mainProvider.roleid == UserRole.free
-                                      ? Text.rich(
-                                          TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: 'Sınırlı kullanım ',
-                                                style: TextStyle(
-                                                  color: Color(0xFF605E5E),
-                                                  fontSize: 14,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 0.10,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: 'Ücretsiz sürüm',
-                                                style: TextStyle(
-                                                  color: Color(0xFFE8233D),
-                                                  fontSize: 14,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 0.10,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        )
-                                      : Text(UserRole.getRoleDescriptionFromId(
-                                          mainProvider.roleid)),
-                                )),
+                            ),
+                            mainProvider.roleid == UserRole.free
+                                ? AutoSizeText(
+                                    maxLines: 1,
+                                    AppLocalizations.of(context)
+                                        .translate("72"),
+                                    style: TextStyle(
+                                      color: Color(0xFF605E5E),
+                                      fontSize: 14,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w500,
+                                    ))
+                                : AutoSizeText(
+                                    maxLines: 1,
+                                    UserRole.getRoleDescriptionFromId(
+                                        mainProvider.roleid)),
                             CustomIconButton(
+                              onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => RemoveAds())),
                               textSize: 20,
-                              height: 2.7.h,
-                              textInlinePadding: 3.h,
-                              width: 0.3.h,
+                              height: 8.w,
+                              textInlinePadding: 3.w,
                               colors: Colors.red,
                               name:
                                   AppLocalizations.of(context).translate("73"),
@@ -181,7 +178,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                     ],
-                  )),
+                  ),
                 ),
               ),
               Expanded(
@@ -212,20 +209,8 @@ class _DashboardState extends State<Dashboard> {
                                 )));
                       }),
                   MenuItem(
-                      logo: 'lib/assets/img/internet.png',
-                      text: AppLocalizations.of(context).translate("74"),
-                      centerWidget: CustomIconButton(
-                        textSize: 10,
-                        textInlinePadding: 3.0.h,
-                        width: 0.5.h,
-                        height: 0.5.h,
-                        colors: Colors.red,
-                        name: AppLocalizations.of(context).translate("73"),
-                      ),
-                      onTap: () {}),
-                  MenuItem(
                       logo: 'lib/assets/img/key.png',
-                      text: AppLocalizations.of(context).translate("22"),
+                      text: AppLocalizations.of(context).translate("75"),
                       centerWidget: Text(""),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -257,6 +242,7 @@ class _DashboardState extends State<Dashboard> {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => AboutApp()));
                       }),
+                  Padding(padding: EdgeInsets.only(bottom: 10))
                 ],
               ))
             ],
@@ -278,7 +264,7 @@ class _DashboardState extends State<Dashboard> {
                 icon: Image.asset(
                   'lib/assets/img/graduate.png',
                   width: 5.5.w,
-                  height: 2.4.h,
+                  height: 5.5.w,
                   fit: BoxFit.cover,
                 ),
                 label: AppLocalizations.of(context).translate("105"),
@@ -287,7 +273,7 @@ class _DashboardState extends State<Dashboard> {
                 icon: Image.asset(
                   'lib/assets/img/muscle.png',
                   width: 5.5.w,
-                  height: 2.4.h,
+                  height: 5.5.w,
                   fit: BoxFit.cover,
                 ),
                 label: AppLocalizations.of(context).translate("106"),
@@ -296,7 +282,7 @@ class _DashboardState extends State<Dashboard> {
                 icon: Image.asset(
                   'lib/assets/img/chat.png',
                   width: 5.5.w,
-                  height: 2.4.h,
+                  height: 5.5.w,
                   fit: BoxFit.cover,
                 ),
                 label: AppLocalizations.of(context).translate("99"),

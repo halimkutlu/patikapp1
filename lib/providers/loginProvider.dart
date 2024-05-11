@@ -57,20 +57,25 @@ class LoginProvider extends ChangeNotifier {
       apirepository.removeToken();
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
-    }, AppLocalizations.of(context).translate("81"), "logoutMessage".tr,
-        ArtSweetAlertType.question, "yes".tr, "no".tr);
+    },
+        AppLocalizations.of(context).translate("81"),
+        "",
+        ArtSweetAlertType.question,
+        AppLocalizations.of(context).translate("162"),
+        AppLocalizations.of(context).translate("163"));
   }
 
   void login(BuildContext context) async {
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
-      }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
-          "ok".tr);
+      },
+          AppLocalizations.of(context).translate("164"),
+          AppLocalizations.of(context).translate("169"),
+          ArtSweetAlertType.info,
+          AppLocalizations.of(context).translate("159"));
     } else {
-      print("login provider girdi.");
       notifyListeners();
-      print("login provider girdi. : işlem başlıyor");
 
       UserResult apiresult = await apirepository.login(
           userName: _usernameController.text,
@@ -83,7 +88,7 @@ class LoginProvider extends ChangeNotifier {
             StorageProvider.learnLanguge!.LCID > 0) {
           DbProvider dbProvider = DbProvider();
           bool isLanguageExist = await dbProvider
-              .checkLanguage(StorageProvider.learnLanguge!.LCID);
+              .checkLearnLanguage(StorageProvider.learnLanguge!.LCID);
 
           if (isLanguageExist)
             Navigator.of(context).push(
@@ -98,8 +103,11 @@ class LoginProvider extends ChangeNotifier {
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
-        }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
-            "ok".tr);
+        },
+            AppLocalizations.of(context).translate("164"),
+            apiresult.message.toString(),
+            ArtSweetAlertType.danger,
+            AppLocalizations.of(context).translate("159"));
       }
       notifyListeners();
     }
@@ -122,17 +130,22 @@ class LoginProvider extends ChangeNotifier {
           await _auth.signInWithCredential(credential);
       final User? user = authResult.user;
 
-      if (user == null || user.uid.isEmpty || user.email!.isEmpty) {
+      if (user == null || user.uid.isEmpty) {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
-        }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
-            "ok".tr);
+        },
+            AppLocalizations.of(context).translate("164"),
+            AppLocalizations.of(context).translate("169"),
+            ArtSweetAlertType.info,
+            AppLocalizations.of(context).translate("159"));
 
         return;
       }
 
+      var email = user.email ?? user.providerData[0].email;
+
       UserResult apiresult = await apirepository.login(
-          userName: user.email,
+          userName: email,
           password: user.uid,
           rememberMe: false,
           Uid: user.uid,
@@ -149,8 +162,11 @@ class LoginProvider extends ChangeNotifier {
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
-        }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
-            "ok".tr);
+        },
+            AppLocalizations.of(context).translate("164"),
+            apiresult.message.toString(),
+            ArtSweetAlertType.danger,
+            AppLocalizations.of(context).translate("159"));
       }
       notifyListeners();
     } catch (error) {
@@ -162,8 +178,11 @@ class LoginProvider extends ChangeNotifier {
     if (!forgotMailController.text.isEmail) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
-      }, "warning".tr, "userpasswordNotEmpty".tr, ArtSweetAlertType.info,
-          "ok".tr);
+      },
+          AppLocalizations.of(context).translate("164"),
+          AppLocalizations.of(context).translate("169"),
+          ArtSweetAlertType.info,
+          AppLocalizations.of(context).translate("159"));
     } else {
       notifyListeners();
       httpSonucModel apiresult = await apirepository.post(
@@ -175,8 +194,11 @@ class LoginProvider extends ChangeNotifier {
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
-        }, "warning".tr, apiresult.message.toString(), ArtSweetAlertType.danger,
-            "ok".tr);
+        },
+            AppLocalizations.of(context).translate("164"),
+            apiresult.message.toString(),
+            ArtSweetAlertType.danger,
+            AppLocalizations.of(context).translate("159"));
       }
       notifyListeners();
     }
@@ -194,28 +216,12 @@ class LoginProvider extends ChangeNotifier {
       Languages.fromJson(lngList.data);
       notifyListeners();
     }
-    // else {
-    //   CustomAlertDialogOnlyConfirm(context, () {
-    //     Navigator.pop(context);
-    //   }, "error".tr, "errorAccured".tr, ArtSweetAlertType.info, "ok".tr);
-    // }
   }
 
   setUseLanguage(Lcid language, BuildContext context, bool dashboard) {
-    CustomAlertDialog(context, () {
-      changeLanguage(language, context, dashboard);
-    },
-        "areYouSure".tr,
-        "${"applicationLanguage".tr} ${language.Name!} ${"applicationLanguage2".tr}",
-        ArtSweetAlertType.question,
-        "yes".tr,
-        "no".tr);
-  }
-
-  changeLanguage(Lcid locale, BuildContext context, bool dashboard) {
-    StorageProvider.updateLanguage(context, locale);
+    StorageProvider.updateLanguage(context, language);
     notifyListeners();
-    Navigator.pop(context);
+    //Navigator.pop(context);
     CustomAlertDialogOnlyConfirm(context, () {
       if (dashboard) {
         Navigator.pop(context);
@@ -227,11 +233,18 @@ class LoginProvider extends ChangeNotifier {
       }
 
       notifyListeners();
-    }, "success".tr, "langSuccess".tr, ArtSweetAlertType.success, "ok".tr);
+    },
+        AppLocalizations.of(context).translate("164"),
+        AppLocalizations.of(context).translate("168"),
+        ArtSweetAlertType.success,
+        AppLocalizations.of(context).translate("159"));
   }
 
   Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
-      Lcid lcid, void Function(int, int)? onReceiveProgress) async {
+      BuildContext context,
+      Lcid lcid,
+      bool lernLng,
+      void Function(int, int)? onReceiveProgress) async {
     DbProvider dbProvider = DbProvider();
     FileDownloadStatus processResult = FileDownloadStatus();
     processResult.status = false;
@@ -241,13 +254,13 @@ class LoginProvider extends ChangeNotifier {
 
       //DOSYA İNDİRME İŞLEMİ YAPILIR.
       FileDownloadStatus resultDownloadFile = await downloadFile(
-          "GetLngFileStream",
-          lcid: lcid.LCID,
-          onReceiveProgress: onReceiveProgress);
+          "GetLngFileStream", context,
+          lcid: lcid.LCID, onReceiveProgress: onReceiveProgress);
 
       if (resultDownloadFile.status) {
         //DOSYA İNDRİME İŞLEMİ BAŞARILI İSE DOSYAYI CACHEDEN ALARAK TELEFONA ÇIKARTMA İŞLEMİ YAPILIR
-        FileDownloadStatus result = await dbProvider.runProcess(lcid.Code);
+        FileDownloadStatus result =
+            await dbProvider.runProcess(context, lcid.Code);
         if (result.status == false) {
           notifyListeners();
           processResult.status = false;

@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/feedbackSuccess.dart';
@@ -27,8 +26,8 @@ class _FeedbackPage extends State<FeedbackPage> {
           Padding(
             padding: EdgeInsets.all(4.0.h),
             child: Text(
-              "FeedbackDescription".tr,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              AppLocalizations.of(context).translate("80"),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 2.7.h),
               textAlign: TextAlign.justify,
             ),
           ),
@@ -47,7 +46,7 @@ class _FeedbackPage extends State<FeedbackPage> {
           CustomIconButton(
             textColor: Colors.black,
             colors: MainColors.primaryColor,
-            icons: Icon(Icons.send),
+            //icons: Icon(Icons.send),
             name: AppLocalizations.of(context).translate("21"),
             width: 0.3.w,
             height: 2.5.h,

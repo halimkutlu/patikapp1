@@ -1,5 +1,7 @@
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, non_constant_identifier_names
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/training_select_page.dart';
@@ -19,6 +21,8 @@ class _TrainingPageState extends State<TrainingPage> {
     return Scaffold(
         backgroundColor: MainColors.backgroundColor,
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [Header(), CardList()],
         ));
   }
@@ -38,18 +42,17 @@ class _TrainingPageState extends State<TrainingPage> {
               Center(
                 child: Container(
                   width: 6.w,
-                  height: 3.h,
+                  height: 6.w,
                   child: Image.asset(
                     'lib/assets/img/muscle.png',
-                    width: 600.0,
-                    height: 240.0,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
+                child: AutoSizeText(
+                  maxLines: 1,
                   AppLocalizations.of(context).translate("98"),
                   style: TextStyle(fontSize: 2.1.h),
                 ),
@@ -63,6 +66,8 @@ class _TrainingPageState extends State<TrainingPage> {
 
   Widget CardList() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -91,15 +96,12 @@ class _TrainingPageState extends State<TrainingPage> {
           ],
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 11.0.w),
-              child: Card(
-                  Color(0xff998E00),
-                  AppLocalizations.of(context).translate("153"),
-                  trainingSelectNames.WordTetris),
-            ),
+            Card(
+                Color(0xff998E00),
+                AppLocalizations.of(context).translate("153"),
+                trainingSelectNames.WordTetris),
           ],
         )
       ],
@@ -119,8 +121,8 @@ class _TrainingPageState extends State<TrainingPage> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-          height: 13.h,
-          width: 35.w,
+          height: 30.w,
+          width: 40.w,
           decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -131,11 +133,9 @@ class _TrainingPageState extends State<TrainingPage> {
                 Center(
                   child: Container(
                     width: 6.w,
-                    height: 3.h,
+                    height: 6.w,
                     child: Image.asset(
                       'lib/assets/img/muscle.png',
-                      width: 600.0,
-                      height: 240.0,
                       color: Colors.white,
                       fit: BoxFit.cover,
                     ),
@@ -143,7 +143,8 @@ class _TrainingPageState extends State<TrainingPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: AutoSizeText(
+                    maxLines: 2,
                     name,
                     textAlign: TextAlign.center,
                     style: TextStyle(

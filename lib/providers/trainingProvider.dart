@@ -18,6 +18,9 @@ class TrainingProvider extends ChangeNotifier {
 
   int? _roleid = 0;
   int get roleid => _roleid!;
+
+  bool? _wordsLoaded = false;
+  bool? get wordsLoaded => _wordsLoaded;
   init() async {
     getCountInformation();
   }
@@ -36,6 +39,8 @@ class TrainingProvider extends ChangeNotifier {
     print('Learned Count: $_getLernedWordCount');
     print('Repeat Count: $_getRepeatedWordCount');
     print('Work Hard Count: $_getWorkHardCount');
+
+    _wordsLoaded = true;
     notifyListeners();
   }
 }

@@ -20,57 +20,6 @@ class CategoryItem {
       AppLocalizations.of(context).translate(StepId);
 }
 
-List<CategoryItem> CategoryItemList = [
-  CategoryItem("107", "112", "28", 1),
-  CategoryItem("107", "110", "49", 1),
-  CategoryItem("107", "113", "63", 1),
-  // CategoryItem("107", "", ""),
-  // CategoryItem("107", "", ""),
-  // CategoryItem("107", "", ""),
-  // CategoryItem("107", "", ""),
-  CategoryItem("115", "116", "1", 2),
-  CategoryItem("115", "117", "77", 2),
-  CategoryItem("115", "119", "110", 2),
-  CategoryItem("115", "58", "156", 2),
-  CategoryItem("115", "120", "192", 2),
-  CategoryItem("115", "118", "222", 2),
-  CategoryItem("115", "121", "257", 2),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  CategoryItem("115", "116", "1", 3),
-  CategoryItem("115", "117", "77", 3),
-  CategoryItem("115", "119", "110", 3),
-  CategoryItem("115", "58", "156", 3),
-  CategoryItem("115", "120", "192", 3),
-  CategoryItem("115", "118", "222", 3),
-  CategoryItem("115", "121", "257", 3),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  CategoryItem("115", "116", "1", 4),
-  CategoryItem("115", "117", "77", 4),
-  CategoryItem("115", "119", "110", 4),
-  CategoryItem("115", "58", "156", 4),
-  CategoryItem("115", "120", "192", 4),
-  CategoryItem("115", "118", "222", 4),
-  CategoryItem("115", "121", "257", 4),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-  // CategoryItem("", "", ""),
-];
-
 class CategoriesProvider extends ChangeNotifier {
   final apirepository = APIRepository();
   final dbProvider = DbProvider();
@@ -95,32 +44,9 @@ class CategoriesProvider extends ChangeNotifier {
     getCountInformation();
   }
 
-  List<int> ColorList = [
-    0xFF1A57FF,
-    0xFF22AA00,
-    0xFFC70000,
-    0xFFFF761A,
-  ];
-
   void getCategories(BuildContext context) async {
-    _categoryList = [];
-    List<Word> list = await dbProvider.getWordList(withoutCategoryName: true);
-    for (CategoryItem item in CategoryItemList) {
-      _categoryList.add(WordListInformation(
-        categoryName: item.getName(context),
-        categoryImage: "",
-        totalCount: list.length,
-        order: item.StepOrder,
-        orderColor: ColorList[item.StepOrder - 1],
-        categoryOrderName: item.getStepName(context),
-        dbId: item.DbId,
-        categoryWordCount: list
-            .where(
-                (element) => element.categories!.split(',').contains(item.DbId))
-            .length,
-      ));
-    }
-
+    _categoryList = await dbProvider.getCategories(context);
+    //_categoryList = await AppDbProvider().setCategoryAppLng(_categoryList);
     notifyListeners();
   }
 

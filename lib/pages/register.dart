@@ -41,6 +41,7 @@ class _RegisterState extends State<Register> {
                 child: CTextfield(
                     controller: registerProvider.userName,
                     icon: Icons.person_outline,
+                    inputType: TextInputType.emailAddress,
                     name: AppLocalizations.of(context).translate("9"),
                     hintText: AppLocalizations.of(context).translate("9",
                         addRight: AppLocalizations.of(context)
@@ -60,8 +61,8 @@ class _RegisterState extends State<Register> {
                 padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
                 child: CTextfield(
                   controller: registerProvider.firstName,
-                  name: "Ad",
-                  hintText: "Ad",
+                  name: AppLocalizations.of(context).translate("173"),
+                  hintText: AppLocalizations.of(context).translate("173"),
                   icon: Icons.contact_page_outlined,
                 ),
               ),
@@ -69,8 +70,8 @@ class _RegisterState extends State<Register> {
                 padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
                 child: CTextfield(
                   controller: registerProvider.lastName,
-                  name: "Soyad",
-                  hintText: "Soyad",
+                  name: AppLocalizations.of(context).translate("174"),
+                  hintText: AppLocalizations.of(context).translate("174"),
                   icon: Icons.contact_page_outlined,
                 ),
               ),
@@ -79,7 +80,7 @@ class _RegisterState extends State<Register> {
                 child: CustomIconButton(
                   textColor: Colors.black,
                   colors: MainColors.primaryColor,
-                  icons: Icon(Icons.send),
+                  //icons: Icon(Icons.send),
                   name: AppLocalizations.of(context).translate("15"),
                   width: 0.3.w,
                   height: 2.5.h,

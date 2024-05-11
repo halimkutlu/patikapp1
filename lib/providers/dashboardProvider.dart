@@ -4,9 +4,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/user_roles.dart';
-import 'package:patikmobile/pages/dialog_page.dart';
 import 'package:patikmobile/pages/learn_page.dart';
 import 'package:patikmobile/pages/main_page.dart';
+import 'package:patikmobile/pages/select_dialog_category.dart';
 import 'package:patikmobile/pages/training_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,7 +17,7 @@ class DashboardProvider extends ChangeNotifier {
     MainPage(),
     LearnPage(),
     TrainingPage(),
-    DialogPage(),
+    SelectDialogCategory(),
   ];
 
   List get pages => _pages;
@@ -50,8 +50,8 @@ class DashboardProvider extends ChangeNotifier {
     _userName = prefs.getString("userName") ?? "";
     _nameLastname =
         "${prefs.getString("firstName") ?? ""} ${prefs.getString("lastName") ?? ""}";
-    _useLanguageName = prefs.getString("language_name");
-    _learnLanguageName = prefs.getString("CurrentLanguageName");
+    _useLanguageName = prefs.getString("AppLanguageName");
+    _learnLanguageName = prefs.getString("LearnLanguageName");
     getRoles(prefs);
 
     notifyListeners();

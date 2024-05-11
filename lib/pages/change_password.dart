@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/changePasswordProvider.dart';
 import 'package:patikmobile/widgets/custom_textfield.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
@@ -34,15 +34,10 @@ class _ChangePasswordState extends State<ChangePassword> {
               children: [
                 Center(
                   child: Text(
-                    "changePassword".tr,
+                    AppLocalizations.of(context).translate("83"),
                     style: TextStyle(fontSize: 3.h),
                   ),
                 ),
-                Center(
-                    child: Text(
-                  "changePasswordDescription".tr,
-                  style: TextStyle(fontSize: 1.5.h),
-                )),
               ],
             ),
             Column(
@@ -52,8 +47,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                       top: 0.h, left: 4.h, right: 4.h, bottom: 4.h),
                   child: CTextfield(
                     controller: cpprovider.currentPassword,
-                    name: "currentPassword".tr,
-                    hintText: "currentPassword".tr,
+                    name: AppLocalizations.of(context).translate("84"),
+                    hintText: AppLocalizations.of(context).translate("84"),
                     obscureText: true,
                     icon: Icons.lock_outline,
                   ),
@@ -63,9 +58,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                       top: 0.h, left: 4.h, right: 4.h, bottom: 4.h),
                   child: CTextfield(
                     controller: cpprovider.newPassword,
-                    name: "newPassword".tr,
+                    name: AppLocalizations.of(context).translate("85"),
                     obscureText: true,
-                    hintText: "newPassword".tr,
+                    hintText: AppLocalizations.of(context).translate("86"),
                     icon: Icons.lock_outline,
                   ),
                 ),
@@ -73,8 +68,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                   padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
                   child: CTextfield(
                     controller: cpprovider.newPasswordAgain,
-                    name: "newPassword".tr,
-                    hintText: "newPasswordAgain".tr,
+                    name: AppLocalizations.of(context).translate("87"),
+                    hintText: AppLocalizations.of(context).translate("87"),
                     obscureText: true,
                     icon: Icons.lock_outline,
                   ),
@@ -84,10 +79,10 @@ class _ChangePasswordState extends State<ChangePassword> {
             CustomIconButton(
               textColor: Colors.black,
               colors: MainColors.primaryColor,
-              icons: Icon(Icons.send),
-              name: 'changePassword'.tr,
+              //icons: Icon(Icons.send),
+              name: AppLocalizations.of(context).translate("90"),
               width: 0.3.w,
-              height: 2.5.h,
+              height: 2.8.h,
               onTap: () {
                 cpprovider.changePassword(context);
               },

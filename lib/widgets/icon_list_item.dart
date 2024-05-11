@@ -1,6 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:sizer/sizer.dart';
 
 class IconListItem extends StatefulWidget {
@@ -23,26 +25,27 @@ class _IconListItemState extends State<IconListItem> {
       child: Padding(
         padding: EdgeInsets.only(left: 2.h, right: 2.h, top: 1.h),
         child: Container(
-          height: 6.5.h,
+          height: 5.5.h,
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: const BorderRadius.all(Radius.circular(25)),
               border: Border.all(color: Colors.black, width: 0.1)),
           child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             Padding(
-              padding: EdgeInsets.only(left: 4.w),
+              padding: EdgeInsets.only(left: 4.w, right: 4.w),
               child: Image.asset(
                 widget.imageStr ?? 'lib/assets/graduate.png',
-                width: 7.w,
-                height: 3.h,
-                fit: BoxFit.cover,
+                width: 5.5.w,
+                height: 5.5.w,
+                fit: BoxFit.fill,
               ),
             ),
             Padding(
               padding: EdgeInsets.only(left: 4.w),
-              child: Text(
-                widget.Text ?? "Yeni Kelimeler Öğren",
-                style: TextStyle(fontSize: 2.5.h, fontWeight: FontWeight.w500),
+              child: AutoSizeText(
+                maxLines: 1,
+                widget.Text ?? AppLocalizations.of(context).translate("97"),
+                style: TextStyle(fontSize: 2.1.h, fontWeight: FontWeight.w500),
               ),
             )
           ]),

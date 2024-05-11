@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.8+8
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -57,9 +57,14 @@ dependencies:
   percent_indicator: ^4.2.3
   auto_size_text: ^3.0.0
   flutter_card_swiper: ^6.1.0
-  audioplayers: ^5.2.1
   flutter_svg: ^2.0.9
   google_mobile_ads: ^4.0.0
+  share_plus: ^7.2.2
+  widgets_to_image: ^0.0.2
+  just_audio: ^0.9.36
+  lottie: ^3.1.0
+  in_app_purchase: ^3.2.0
+  # onepref: ^0.0.16
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +76,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: "^0.13.1"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -85,6 +91,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/wordImages/
+    - assets/dialogImages/
+    - assets/dialogBackgroundImages/
+    - assets/icon/icon.png
+    - assets/icon/icon_ios.png
     - lib/assets/locales/
     - lib/assets/img/logo.png
     - lib/assets/img/dots_active.png
@@ -115,7 +126,11 @@ flutter:
     - lib/assets/img/hat.png
     - lib/assets/img/box.png
     - lib/assets/img/error_image.png
-
+    - lib/assets/img/success_image.png
+    - lib/assets/splash_lottie.json
+    - lib/assets/img/logopatik.png
+    - lib/assets/sound/error.mp3
+    - lib/assets/sound/success.mp3
 
 
      #- lib/db/tr-TR.db
@@ -148,3 +163,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path_ios: "assets/icon/icon_ios.png"
+  image_path_android: "assets/icon/icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21

@@ -1,10 +1,9 @@
-// ignore_for_file: prefer_const_constructors, use_function_type_syntax_for_parameters, must_be_immutable
-
-import 'dart:async';
+// ignore_for_file: prefer_const_constructors, use_function_type_syntax_for_parameters, must_be_immutable, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:sizer/sizer.dart';
 
 class Loading extends StatefulWidget {
@@ -51,7 +50,7 @@ class _LoadingState extends State<Loading> {
                     strokeWidth: 1,
                   ),
                 ),
-                Text("Lütfen bekleyiniz")
+                Text(AppLocalizations.of(context).translate("181"))
               ],
             ),
           ));

@@ -31,8 +31,8 @@ class _BoxWidgetState extends State<BoxWidget> {
       child: Column(
         children: [
           Container(
-            height: 3.h,
             width: 25.w,
+            height: 7.w,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10),
@@ -43,12 +43,15 @@ class _BoxWidgetState extends State<BoxWidget> {
                 border: Border.all(width: 3, color: Colors.black38)),
             child: Center(
                 child: AutoSizeText(
+              maxLines: 1,
               widget.text,
+              minFontSize: 6,
+              maxFontSize: 12,
               style: TextStyle(fontWeight: FontWeight.bold),
             )),
           ),
           Container(
-            height: 8.h,
+            height: 17.w,
             width: 23.w,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -65,7 +68,7 @@ class _BoxWidgetState extends State<BoxWidget> {
                   child: Image.asset(
                     widget.iconUrl,
                     width: 6.w,
-                    height: 3.h,
+                    height: 6.w,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -75,6 +78,7 @@ class _BoxWidgetState extends State<BoxWidget> {
                     color: Colors.white,
                     child: Center(
                         child: AutoSizeText(
+                      maxLines: 1,
                       widget.value,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )),

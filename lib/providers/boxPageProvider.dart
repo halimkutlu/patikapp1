@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_final_fields, avoid_print
 import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/api/api_repository.dart';
@@ -10,7 +8,9 @@ import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
+import 'package:patikmobile/services/image_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 import 'package:sqflite/sqflite.dart';
 
 class BoxPageProvider extends ChangeNotifier {
@@ -38,10 +38,11 @@ class BoxPageProvider extends ChangeNotifier {
 
   int? _roleid = 0;
   int get roleid => _roleid!;
-  init(BuildContext context, int selectedBox) async {
+  init(BuildContext context, int selectedBox, bool? completedGame,
+      String? dbId) async {
     _selectedCategoryWords = [];
     await getCountInformation();
-    await getListOfWords(selectedBox);
+    await getListOfWords(selectedBox, completedGame, dbId);
     await getWordsFileInformationFromStorage(_selectedCategoryWords);
     if (_selectedCategoryWords != null && _selectedCategoryWords!.isNotEmpty) {
       _wordsLoaded = true;
@@ -66,42 +67,50 @@ class BoxPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getListOfWords(int selectedBox) async {
+  getListOfWords(int selectedBox, bool? completedGame, String? dbId) async {
     DbProvider dbProvider = DbProvider();
-    await getCategoriesWordsFromDB(dbProvider, selectedBox);
+    await getCategoriesWordsFromDB(
+        dbProvider, selectedBox, completedGame, dbId);
   }
 
-  Future<List<Word>> getCategoriesWordsFromDB(
-      DbProvider dbProvider, int selectedBox) async {
-    List<Word> allWords =
-        await dbProvider.getWordList(withoutCategoryName: true);
+  Future<List<Word>> getCategoriesWordsFromDB(DbProvider dbProvider,
+      int selectedBox, bool? completedGame, String? dbId) async {
+    List<Word> allWords = [];
+    if (selectedBox == 0 && completedGame!) {
+      allWords = await dbProvider.getWordListById(dbId);
+      _selectedCategoryWords = allWords.toList();
 
-    List<WordStatistics> allWordStatistics =
-        await dbProvider.getWordStatisticsList();
+      return _selectedCategoryWords!;
+    } else {
+      allWords = await dbProvider.getWordList(withoutCategoryName: true);
 
-    if (allWords.isNotEmpty) {
-      //seçilen kutuya göre filtrelenir
-      allWordStatistics = allWordStatistics
-          .where((element) => selectedBox == 1
-              ? element.learned == 1
-              : selectedBox == 2
-                  ? element.repeat == 1
-                  : element.workHard == 1)
-          .toList();
+      List<WordStatistics> allWordStatistics =
+          await dbProvider.getWordStatisticsList();
 
-      // allWordStatistics içindeki WordId'leri al
-      Set<int> existingWordIds =
-          allWordStatistics.map((statistics) => statistics.wordId!).toSet();
+      if (allWords.isNotEmpty) {
+        //seçilen kutuya göre filtrelenir
+        allWordStatistics = allWordStatistics
+            .where((element) => selectedBox == 1
+                ? element.learned == 1
+                : selectedBox == 2
+                    ? element.repeat == 1
+                    : element.workHard == 1)
+            .toList();
 
-      // allWords içinde allWordStatistics'te bulunmayan WordId'lere sahip kelimeleri filtrele
-      _selectedCategoryWords = allWords
-          .where(
-            (word) => existingWordIds.contains(word.id),
-          )
-          .toList();
+        // allWordStatistics içindeki WordId'leri al
+        Set<int> existingWordIds =
+            allWordStatistics.map((statistics) => statistics.wordId!).toSet();
+
+        // allWords içinde allWordStatistics'te bulunmayan WordId'lere sahip kelimeleri filtrele
+        _selectedCategoryWords = allWords
+            .where(
+              (word) => existingWordIds.contains(word.id),
+            )
+            .toList();
+      }
+
+      return _selectedCategoryWords!;
     }
-
-    return _selectedCategoryWords!;
   }
 
   Future<String> getCurrentLanguageAsString() async {
@@ -124,15 +133,13 @@ class BoxPageProvider extends ChangeNotifier {
 
     if (selectedCategoryWords!.isNotEmpty) {
       for (var x in selectedCategoryWords) {
-        final wordImage = await File(
-                '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.svg')
-            .readAsBytes();
         final wordSound =
             '${dir.path}/$currentLanguage/${currentLanguage}_${x.id}.mp3';
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
-            imageBytes: wordImage,
+            image: getWordImage(x.id.toString(), x.imgLngPath, height: 7.w),
+            imgLngPath: x.imgLngPath,
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,

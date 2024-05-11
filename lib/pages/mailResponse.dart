@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/providers/registerProvider.dart';
@@ -61,7 +60,7 @@ class _MailResponseState extends State<MailResponse> {
                 child: CustomIconButton(
                   textColor: Colors.black,
                   colors: MainColors.primaryColor,
-                  icons: Icon(Icons.arrow_back_ios_new),
+                  //icons: Icon(Icons.arrow_back_ios_new),
                   name: AppLocalizations.of(context).translate("7"),
                   width: 0.3.w,
                   height: 2.5.h,

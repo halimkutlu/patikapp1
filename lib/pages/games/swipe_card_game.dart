@@ -1,24 +1,18 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_init_to_null
 
-import 'dart:async';
 import 'dart:io';
-import 'package:art_sweetalert/art_sweetalert.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
-import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/word.dart';
-import 'package:patikmobile/pages/dashboard.dart';
-import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/games_providers/swipe_card_game_provider.dart';
 import 'package:patikmobile/services/ad_helper.dart';
-import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
+import 'package:patikmobile/services/image_helper.dart';
+import 'package:patikmobile/services/sound_helper.dart';
+import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SwipeCardGame extends StatefulWidget {
   final WordListInformation? selectedCategoryInfo;
@@ -29,10 +23,10 @@ class SwipeCardGame extends StatefulWidget {
 }
 
 class _SwipeCardGameState extends State<SwipeCardGame> {
-  BannerAd? _bannerAd;
-  bool contentLoaded = false;
+  bool firstLoad = true;
   late SwipeCardGameProvider swipeCardProvider;
-  AudioPlayer audioPlayer = AudioPlayer();
+  BannerAd? _bannerAd;
+  late AdProvider adProvider;
 
   @override
   void initState() {
@@ -41,29 +35,15 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
         Provider.of<SwipeCardGameProvider>(context, listen: false);
     swipeCardProvider.init(widget.selectedCategoryInfo, context);
 
-    // TODO: Load a banner ad
-    BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: AdRequest(),
-      size: AdSize.fullBanner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          ad.dispose();
-        },
-      ),
-    ).load();
+    adProvider = Provider.of<AdProvider>(context, listen: false);
+    adProvider.init(context, (ad) {
+      setState(() => _bannerAd = ad);
+    });
   }
 
   @override
   void dispose() {
-    // TODO: Dispose a BannerAd object
-    _bannerAd?.dispose();
+    if (_bannerAd != null) _bannerAd!.dispose();
     super.dispose();
   }
 
@@ -75,13 +55,34 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
         if (didPop) {
           return;
         }
-        await askToGoMainMenu(func: () {
+        await askToGoMainMenu(context, func: () {
           setState(() {
             swipeCardProvider.resetData();
           });
         });
       },
       child: Scaffold(
+          appBar: !Platform.isAndroid
+              ? AppBar(
+                  toolbarHeight: 3.1.h,
+                  backgroundColor: MainColors.backgroundColor,
+                  elevation: 0.0,
+                  centerTitle: true,
+                  leading: InkWell(
+                    onTap: () async {
+                      await askToGoMainMenu(context, func: () {
+                        setState(() {
+                          swipeCardProvider.resetData();
+                        });
+                      });
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black54,
+                    ),
+                  ),
+                )
+              : null,
           backgroundColor: MainColors.backgroundColor,
           body: Consumer<SwipeCardGameProvider>(
               builder: (context, provider, child) {
@@ -91,8 +92,21 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
             }
             return Stack(
               children: [
+                if (_bannerAd != null)
+                  Positioned(
+                    bottom: 0,
+                    height: _bannerAd!.size.height.toDouble(),
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(child: AdWidget(ad: _bannerAd!)),
+                  ),
                 if (provider.wordsLoaded == true) ...[
                   CardSwiper(
+                    onSwipe: (oncekiIndex, index, direction) {
+                      if (index != null && index > 0) {
+                        PlayAudio(provider.wordListDbInformation![index].audio);
+                      }
+                      return true;
+                    },
                     onEnd: () {
                       provider.goToNextGame(context);
                     },
@@ -102,9 +116,13 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                         : 1,
                     cardBuilder:
                         (context, index, percentThresholdX, percentThresholdY) {
+                      if (firstLoad) {
+                        firstLoad = false;
+                        PlayAudio(provider.wordListDbInformation![0].audio);
+                      }
                       return Center(
                         child: Container(
-                          height: 80.h,
+                          height: 71.h,
                           decoration: BoxDecoration(
                             color: MainColors.primaryColor,
                             borderRadius: BorderRadius.all(Radius.circular(40)),
@@ -119,7 +137,7 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            _playAudio(provider
+                                            PlayAudio(provider
                                                 .wordListDbInformation![index]
                                                 .audio);
                                           },
@@ -138,24 +156,28 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                 children: [
                                   Text(
                                     provider.wordListDbInformation![index]
-                                                .wordA !=
-                                            null
-                                        ? provider.wordListDbInformation![index]
-                                            .wordA!
-                                        : "",
+                                            .word ??
+                                        "",
                                     style: TextStyle(
-                                        fontSize: 2.3.h, color: Colors.black),
+                                        fontSize: 3.2.h, color: Colors.black),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.all(2.0.h),
+                                    padding: EdgeInsets.all(1.0.h),
                                     child: Text(
                                       provider.wordListDbInformation![index]
-                                                  .wordT !=
-                                              null
-                                          ? provider
-                                              .wordListDbInformation![index]
-                                              .wordT!
-                                          : "",
+                                              .wordA ??
+                                          "",
+                                      style: TextStyle(
+                                          fontSize: 2.3.h,
+                                          color: Colors.black54),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(0.h),
+                                    child: Text(
+                                      provider.wordListDbInformation![index]
+                                              .wordT ??
+                                          "",
                                       style: TextStyle(
                                           fontSize: 2.3.h,
                                           color: Colors.black54),
@@ -167,17 +189,20 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                 children: [
                                   !provider.wordListDbInformation![index]
                                           .lastCard!
-                                      ? SvgPicture.memory(
+                                      ? getWordImage(
+                                          provider
+                                              .wordListDbInformation![index].id
+                                              .toString(),
                                           provider.wordListDbInformation![index]
-                                              .imageBytes!,
-                                          height: 19.h,
-                                        )
+                                              .imgLngPath,
+                                          height: 19.h)
                                       : Container(),
                                   Padding(
                                     padding: EdgeInsets.all(4.0.h),
                                     child: Text(
-                                      provider
-                                          .wordListDbInformation![index].word!,
+                                      provider.wordListDbInformation![index]
+                                              .wordAppLng ??
+                                          "",
                                       style: TextStyle(
                                           fontSize: 3.2.h,
                                           color: Colors.black54),
@@ -185,138 +210,96 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                   ),
                                 ],
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(8.0.w),
-                                child: !provider
-                                        .wordListDbInformation![index].lastCard!
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context)
-                                                .translate("137"),
-                                          ),
-                                          Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: InkWell(
-                                                onTap: () async {
-                                                  DbProvider db = DbProvider();
-                                                  if (provider
-                                                          .wordListDbInformation![
-                                                              index]
-                                                          .isAddedToWorkHard !=
-                                                      true) {
-                                                    var status = await db
-                                                        .addToWorkHardBox(provider
-                                                            .wordListDbInformation![
-                                                                index]
-                                                            .id!);
-                                                    if (status == true) {
-                                                      setState(() {
-                                                        provider
-                                                            .wordListDbInformation![
-                                                                index]
-                                                            .isAddedToWorkHard = true;
-                                                      });
-                                                    }
-                                                  } else {
-                                                    //remove
-                                                    var status = await db
-                                                        .updateWorkHard(provider
-                                                            .wordListDbInformation![
-                                                                index]
-                                                            .id!);
-                                                    if (status == true) {
-                                                      setState(() {
-                                                        provider
-                                                            .wordListDbInformation![
-                                                                index]
-                                                            .isAddedToWorkHard = false;
-                                                      });
-                                                    }
-                                                  }
-                                                },
-                                                child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 8.0),
-                                                    child: Icon(
-                                                      provider
-                                                                  .wordListDbInformation![
-                                                                      index]
-                                                                  .isAddedToWorkHard ==
-                                                              true
-                                                          ? Icons
-                                                              .check_circle_outline
-                                                          : Icons
-                                                              .add_circle_outline_outlined,
-                                                      color: provider
-                                                                  .wordListDbInformation![
-                                                                      index]
-                                                                  .isAddedToWorkHard ==
-                                                              true
-                                                          ? Colors.green
-                                                          : Colors.red,
-                                                    )),
-                                              )),
-                                        ],
-                                      )
-                                    : Container(),
-                              ),
+                              // Padding(
+                              //   padding: EdgeInsets.all(8.0.w),
+                              //   child: !provider
+                              //           .wordListDbInformation![index].lastCard!
+                              //       ? Row(
+                              //           mainAxisAlignment:
+                              //               MainAxisAlignment.end,
+                              //           children: [
+                              //             AutoSizeText(
+                              //               maxLines: 2,
+                              //               AppLocalizations.of(context)
+                              //                   .translate("137"),
+                              //             ),
+                              //             Padding(
+                              //                 padding: EdgeInsets.all(8.0),
+                              //                 child: InkWell(
+                              //                   onTap: () async {
+                              //                     DbProvider db = DbProvider();
+                              //                     if (provider
+                              //                             .wordListDbInformation![
+                              //                                 index]
+                              //                             .isAddedToWorkHard !=
+                              //                         true) {
+                              //                       var status = await db
+                              //                           .addToWorkHardBox(provider
+                              //                               .wordListDbInformation![
+                              //                                   index]
+                              //                               .id!);
+                              //                       if (status == true) {
+                              //                         setState(() {
+                              //                           provider
+                              //                               .wordListDbInformation![
+                              //                                   index]
+                              //                               .isAddedToWorkHard = true;
+                              //                         });
+                              //                       }
+                              //                     } else {
+                              //                       //remove
+                              //                       var status = await db
+                              //                           .updateWorkHard(provider
+                              //                               .wordListDbInformation![
+                              //                                   index]
+                              //                               .id!);
+                              //                       if (status == true) {
+                              //                         setState(() {
+                              //                           provider
+                              //                               .wordListDbInformation![
+                              //                                   index]
+                              //                               .isAddedToWorkHard = false;
+                              //                         });
+                              //                       }
+                              //                     }
+                              //                   },
+                              //                   child: Padding(
+                              //                       padding: EdgeInsets.only(
+                              //                           left: 8.0),
+                              //                       child: Icon(
+                              //                         provider
+                              //                                     .wordListDbInformation![
+                              //                                         index]
+                              //                                     .isAddedToWorkHard ==
+                              //                                 true
+                              //                             ? Icons
+                              //                                 .check_circle_outline
+                              //                             : Icons
+                              //                                 .add_circle_outline_outlined,
+                              //                         color: provider
+                              //                                     .wordListDbInformation![
+                              //                                         index]
+                              //                                     .isAddedToWorkHard ==
+                              //                                 true
+                              //                             ? Colors.green
+                              //                             : Colors.red,
+                              //                       )),
+                              //                 )),
+                              //           ],
+                              //         )
+                              //       : Container(),
+                              // ),
                             ],
                           ),
                         ),
                       );
                     },
                     isLoop: false,
-                  ),
-                  SafeArea(
-                    child: Stack(
-                      children: [
-                        Center(),
-                        // TODO: Display a banner when ready
-                      ],
-                    ),
-                  ),
-                  if (_bannerAd != null)
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        width: _bannerAd!.size.width.toDouble() * 2,
-                        height: _bannerAd!.size.height.toDouble(),
-                        child: AdWidget(ad: _bannerAd!),
-                      ),
-                    ),
+                  )
                 ]
               ],
             );
           })),
     );
-  }
-
-  Future<void> _playAudio(String? audio) async {
-    final player = AudioPlayer();
-
-    await player.play(
-      UrlSource(audio!),
-      volume: 500,
-    );
-  }
-
-  Future<void> askToGoMainMenu({VoidCallback? func}) async {
-    await CustomAlertDialogOnlyConfirm(context, () {
-      if (func != null) {
-        func();
-      }
-      Timer(Duration(milliseconds: 100), () {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Dashboard(0)),
-            (Route<dynamic> route) => false);
-      });
-    },
-        "warning".tr,
-        "Eğitimi bitirmek istiyormusunuz. Gelişmeleriniz kaydedilmeyecektir.",
-        ArtSweetAlertType.info,
-        "ok".tr);
   }
 }

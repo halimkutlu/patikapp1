@@ -1,9 +1,10 @@
 // ignore_for_file: file_names, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
 import 'package:patikmobile/models/language.model.dart';
+import 'package:patikmobile/models/user_roles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageProvider {
@@ -11,8 +12,12 @@ class StorageProvider {
   static String learnLcidKey = "learnlcid";
   static Lcid? appLanguge;
   static Lcid? learnLanguge;
+  static String? learnLanguageDir;
+  static String? appDir;
 
   static load() async {
+    var dir = await getApplicationDocumentsDirectory();
+    appDir = dir.path;
     await StorageProvider.getAppLanguage();
     await StorageProvider.getLearnLanguage();
   }
@@ -29,7 +34,8 @@ class StorageProvider {
         await shrdp.setInt(StorageProvider.appLcidKey, applcid);
       }
       StorageProvider.appLanguge = Languages.GetLngFromLCID(applcid);
-      await shrdp.setString("language_name", StorageProvider.appLanguge!.Name!);
+      await shrdp.setString(
+          "AppLanguageName", StorageProvider.appLanguge!.Name!);
     }
     return StorageProvider.appLanguge!;
   }
@@ -44,14 +50,37 @@ class StorageProvider {
         StorageProvider.learnLanguge = Languages.GetLngFromLCID(learnlcid);
       }
     }
+    learnLanguageDir = "$appDir/${StorageProvider.learnLanguge?.Code}";
     return StorageProvider.learnLanguge;
   }
 
   static updateLanguage(BuildContext context, Lcid locale) async {
     SharedPreferences shrdp = await SharedPreferences.getInstance();
+    StorageProvider.appLanguge = locale;
     await shrdp.setInt(appLcidKey, locale.LCID);
-    await shrdp.setString("language_name", locale.Name!);
+    await shrdp.setString("AppLanguageName", locale.Name!);
     AppLocalizationsDelegate().load(const Locale('en'));
-    Get.updateLocale(Locale(locale.Code.split('-').first));
+  }
+
+  static updateLearnLanguage(BuildContext context, Lcid locale) async {
+    SharedPreferences shrdp = await SharedPreferences.getInstance();
+    StorageProvider.learnLanguge = locale;
+    await shrdp.setInt(learnLcidKey, locale.LCID);
+    await shrdp.setString("LearnLanguageName", locale.Name!);
+  }
+
+  static int getPrimaryRole(dynamic userRoles) {
+    if (userRoles.contains(UserRole.admin)) {
+      return UserRole.admin;
+    } else if (userRoles.contains(UserRole.premium)) {
+      return UserRole.premium;
+    } else if (userRoles.contains(UserRole.qr)) {
+      return UserRole.qr;
+    } else if (userRoles.contains(UserRole.free)) {
+      return UserRole.free;
+    } else {
+      return UserRole
+          .unknown; // Varsayılan olarak unknown ya da istediğiniz başka bir değer
+    }
   }
 }

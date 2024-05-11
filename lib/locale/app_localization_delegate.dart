@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -46,36 +45,18 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   // Method to load the localized strings for a locale
   @override
   Future<AppLocalizations> load(Locale locale) async {
-    // if (StorageProvider.appLanguge == null ||
-    //     StorageProvider.appLanguge?.LCID == 0) {
-    //   StorageProvider.load();
-    // if (StorageProvider.prefs == null) {
-    //   SharedPreferences.getInstance()
-    //       .then((value) => AppLocalizationsDelegate.prefs = value);
-    //   sleep(const Duration(milliseconds: 500));
-    // }
-
-    //   AppLocalizationsDelegate.lcid = Languages.GetLngFromLCID(
-    //       AppLocalizationsDelegate.prefs!.getInt("applcid")!);
-    // }
-
-    // Create an instance of AppLocalizations for the given locale
-    // if (AppLocalizationsDelegate.lcid == null ||
-    //     AppLocalizationsDelegate.lcid?.LCID == 0) {
-    //   AppLocalizationsDelegate.lcid = Languages.GetLngFromCode(
-    //       "${locale.languageCode}-${locale.countryCode}");
-    // }
-
-    // if (AppLocalizationsDelegate.lcid == null ||
-    //     AppLocalizationsDelegate.lcid?.LCID == 0) {
-    //   AppLocalizationsDelegate.lcid = Languages.GetLngFromCode("en-US");
-    // }
-
-    SharedPreferences shrdp = await SharedPreferences.getInstance();
-    int llcid = shrdp.getInt(StorageProvider.appLcidKey) ??
-        Languages.GetLCIDFromCode(
-            "${locale.languageCode}-${locale.countryCode}"); // default en-US
-    StorageProvider.appLanguge = Languages.GetLngFromLCID(llcid);
+    if (StorageProvider.appLanguge == null) {
+      var phoneLng = Platform.localeName.split("_");
+      locale = Locale(phoneLng[0], phoneLng[1]);
+      if (!isSupported(locale)) {
+        locale = const Locale("en");
+      }
+      SharedPreferences shrdp = await SharedPreferences.getInstance();
+      int llcid = shrdp.getInt(StorageProvider.appLcidKey) ??
+          Languages.GetLCIDFromCode(
+              "${locale.languageCode}-${locale.countryCode}"); // default en-US
+      StorageProvider.appLanguge = Languages.GetLngFromLCID(llcid);
+    }
 
     AppLocalizations localizations =
         AppLocalizations(StorageProvider.appLanguge!);

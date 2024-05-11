@@ -1,4 +1,4 @@
-# patikapp1
+# Patik
 
 A new Flutter project.
 

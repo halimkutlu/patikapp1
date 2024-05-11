@@ -1,41 +1,49 @@
 {
   "project_info": {
-    "project_number": "587524623446",
-    "project_id": "patikmobile",
-    "storage_bucket": "patikmobile.appspot.com"
+    "project_number": "799969018625",
+    "project_id": "patik-2bd8d",
+    "storage_bucket": "patik-2bd8d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:587524623446:android:4673d988efc27735a57ff7",
+        "mobilesdk_app_id": "1:799969018625:android:3cd8551608a3b49e6cd100",
         "android_client_info": {
-          "package_name": "com.patikmobile"
+          "package_name": "com.patik.mobile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "587524623446-hraf0471emk36mdbt3nat4stc9fne89e.apps.googleusercontent.com",
+          "client_id": "799969018625-fo7lj6cv3ievbtnrifesiallnrhbv288.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.patikmobile",
+            "package_name": "com.patik.mobile",
+            "certificate_hash": "b8d8a4408ceb476285acc015d78e1afabbfd6f8d"
+          }
+        },
+        {
+          "client_id": "799969018625-omgqkfm7qhb7pfgbsltiepmsde99t9q2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.patik.mobile",
             "certificate_hash": "a473f001677f514a858ca8cda505595d3dc1ff04"
           }
         },
         {
-          "client_id": "587524623446-7icmcist11ao44espnr09kgpngdoecg2.apps.googleusercontent.com",
+          "client_id": "799969018625-damc982jvitp204uhunkdj2convpkr8q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBFDNgEQpj6uQg_cIGYzUIBM3p7cEijcog"
+          "current_key": "AIzaSyCIxSGHTmGLmrOy7xYLzSSY4j1MujNR1XA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "587524623446-7icmcist11ao44espnr09kgpngdoecg2.apps.googleusercontent.com",
+              "client_id": "799969018625-damc982jvitp204uhunkdj2convpkr8q.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

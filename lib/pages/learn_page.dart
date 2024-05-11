@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, unnecessary_null_comparison
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +53,9 @@ class _LearnPageState extends State<LearnPage> {
                     if (index < categoriesWithoutOrder.length) {
                       var category = categoriesWithoutOrder[index];
                       return ListTile(
-                        title: AutoSizeText(category.categoryName!),
-                        subtitle:
-                            AutoSizeText('Total Count: ${category.totalCount}'),
+                        title: AutoSizeText(category.categoryAppLngName!),
+                        subtitle: AutoSizeText(
+                            '${AppLocalizations.of(context).translate("171")} ${category.totalCount}'),
                       );
                     } else {
                       var categoryIndex = index - categoriesWithoutOrder.length;
@@ -69,7 +69,10 @@ class _LearnPageState extends State<LearnPage> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      left: 8.0.w, top: 1.h, bottom: 0.h),
+                                      left: 8.0.w,
+                                      right: 8.0.w,
+                                      top: 1.h,
+                                      bottom: 0.h),
                                   child: Text(
                                     '${category.categoryOrderName}',
                                     style: TextStyle(
@@ -81,7 +84,7 @@ class _LearnPageState extends State<LearnPage> {
                             ),
                             Divider(),
                             SizedBox(
-                              height: 13.h,
+                              height: 16.h,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: provider.categoryList.length,
@@ -91,10 +94,10 @@ class _LearnPageState extends State<LearnPage> {
                                   if (horizontalCategory.order ==
                                       category.order) {
                                     return categoryBox(
-                                        "",
-                                        horizontalCategory.categoryName!,
+                                        horizontalCategory.categoryImage!,
+                                        horizontalCategory.categoryAppLngName!,
+                                        horizontalCategory.learnedWordsCount!,
                                         horizontalCategory.categoryWordCount!,
-                                        horizontalCategory.totalCount!,
                                         horizontalCategory.orderColor!,
                                         horizontalCategory);
                                   } else {
@@ -120,7 +123,7 @@ class _LearnPageState extends State<LearnPage> {
     );
   }
 
-  Widget categoryBox(String image, String name, int wordCount, int totalCount,
+  Widget categoryBox(Widget image, String name, int wordCount, int totalCount,
       int color, WordListInformation horizontalCategory) {
     return InkWell(
       onTap: () {
@@ -133,6 +136,7 @@ class _LearnPageState extends State<LearnPage> {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           width: 30.w,
+          //height: 16.h,
           margin: EdgeInsets.symmetric(horizontal: 5.0),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -150,55 +154,52 @@ class _LearnPageState extends State<LearnPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Padding(
+                padding: EdgeInsets.all(0),
+              ),
               Center(
-                child: Icon(
-                  Icons.logo_dev,
-                  color: Color(color),
-                  size: 5.h,
-                ),
+                child: image,
               ),
               Center(
                 child: AutoSizeText(
+                  maxLines: 3,
+                  textAlign: TextAlign.center,
                   name,
                   style: TextStyle(
-                    fontSize: 1.3.h,
+                    fontSize: 1.w,
                     fontWeight: FontWeight.bold,
                     color: Color(color),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AutoSizeText(
-                        wordCount.toString(),
-                        style: TextStyle(
-                          fontSize: 1.3.h,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                      AutoSizeText(
-                        " / ",
-                        style: TextStyle(
-                          fontSize: 1.3.h,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      AutoSizeText(
-                        totalCount.toString(),
-                        style: TextStyle(
-                          fontSize: 1.3.h,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AutoSizeText(
+                    wordCount.toString(),
+                    style: TextStyle(
+                      fontSize: 1.w,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
                   ),
-                ),
+                  AutoSizeText(
+                    " / ",
+                    style: TextStyle(
+                      fontSize: 1.w,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  AutoSizeText(
+                    totalCount.toString(),
+                    style: TextStyle(
+                      fontSize: 1.w,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

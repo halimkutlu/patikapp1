@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, prefer_const_constructors_in_immutables, non_constant_identifier_names
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,8 @@ class CustomIconButton extends StatelessWidget {
   final String name;
   final Color? colors;
   final num height;
-  final Widget? icons;
+  final Widget? leftIcon;
+  final Widget? rightIcon;
   final num width;
   final bool disable;
   final num textOutSpace_top;
@@ -21,7 +22,7 @@ class CustomIconButton extends StatelessWidget {
   CustomIconButton({
     Key? key,
     this.onTap,
-    this.name = "İsim",
+    this.name = "",
     this.textOutSpace_top = 70,
     this.textOutSpace_bottom = 100,
     this.textOutSpace_left = 100,
@@ -31,7 +32,8 @@ class CustomIconButton extends StatelessWidget {
     this.colors,
     this.height = 20,
     this.width = 4,
-    this.icons,
+    this.rightIcon,
+    this.leftIcon,
     this.textInlinePadding = 200,
     this.disable = false,
   });
@@ -50,47 +52,41 @@ class CustomIconButton extends StatelessWidget {
                     right:
                         MediaQuery.of(context).size.width / textOutSpace_right),
                 child: Container(
-                  decoration: BoxDecoration(
-                      color: disable ? Colors.grey : colors ?? Colors.black,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                          topRight: Radius.circular(10))),
-                  width: MediaQuery.of(context).size.width / width,
-                  height: MediaQuery.of(context).size.height / height,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width /
-                                textInlinePadding,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              AutoSizeText(
-                                name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: textColor ?? Colors.white,
-                                    fontSize: textSize),
-                              ),
-                              icons == null
-                                  ? Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: icons)
-                                  : Container(),
-                            ],
-                          ),
+                    padding: EdgeInsets.only(left: 5, right: 5),
+                    decoration: BoxDecoration(
+                        color: disable ? Colors.grey : colors ?? Colors.black,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10),
+                            topRight: Radius.circular(10))),
+                    width: MediaQuery.of(context).size.width / width,
+                    height: MediaQuery.of(context).size.height / height,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        if (leftIcon != null) ...[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: leftIcon,
+                          )
+                        ],
+                        AutoSizeText(
+                          name,
+                          maxLines: 1,
+                          minFontSize: 10,
+                          maxFontSize: textSize,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: textColor ?? Colors.white),
                         ),
-                      ),
-                    ],
-                  ),
-                )));
+                        if (rightIcon != null) ...[
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: rightIcon,
+                          )
+                        ]
+                      ],
+                    ))));
   }
 }
