@@ -127,7 +127,8 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(20))),
                         child: getWordImage(
-                            provider.selectedWord!.id.toString(), false,
+                            provider.selectedWord!.id.toString(),
+                            provider.selectedWord!.imgLngPath,
                             height: 15.h),
                       ),
                     )),

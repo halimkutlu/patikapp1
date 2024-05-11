@@ -19,9 +19,8 @@ Future<bool> getPermissions() async {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
     var sdkInt = androidInfo.version.sdkInt; // SDK, example: 31
 
-    if (sdkInt >= 30) {
-      gotPermissions =
-          await Permission.manageExternalStorage.request().isGranted;
+    if (sdkInt >= 33) {
+      gotPermissions = await Permission.photos.request().isGranted;
     } else {
       // (SDK < 30)
       var storage = await Permission.storage.status;

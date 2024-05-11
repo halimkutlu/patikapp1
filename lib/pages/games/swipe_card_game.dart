@@ -193,7 +193,8 @@ class _SwipeCardGameState extends State<SwipeCardGame> {
                                           provider
                                               .wordListDbInformation![index].id
                                               .toString(),
-                                          false,
+                                          provider.wordListDbInformation![index]
+                                              .imgLngPath,
                                           height: 19.h)
                                       : Container(),
                                   Padding(

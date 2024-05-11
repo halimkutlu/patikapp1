@@ -228,7 +228,8 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
 
         WordListDBInformation wordInfo = WordListDBInformation(
             audio: wordSound,
-            image: getWordImage(x.id.toString(), false, height: 7.w),
+            image: getWordImage(x.id.toString(), x.imgLngPath, height: 7.w),
+            imgLngPath: x.imgLngPath,
             word: x.word,
             wordA: x.wordA,
             wordT: x.wordT,

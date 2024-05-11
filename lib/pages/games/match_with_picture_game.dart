@@ -200,7 +200,8 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
                           ? Colors.orange
                           : Colors.white,
             ),
-            child: getWordImage(info.id.toString(), false, height: 19.h),
+            child:
+                getWordImage(info.id.toString(), info.imgLngPath, height: 19.h),
           ),
         ),
       );

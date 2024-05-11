@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unnecessary_this
 
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -36,10 +37,10 @@ Map<String, String> categoryImageMap = {
   "-27": "950"
 };
 
-Widget getWordImage(String id, bool lngPathImage,
+Widget getWordImage(String id, int? imgLngPath,
     {double? height, double? width, BoxFit? boxFit = BoxFit.contain}) {
   Widget result = Icon(Icons.developer_board);
-  if (lngPathImage) {
+  if (imgLngPath == 1) {
     var file = File('${StorageProvider.learnLanguageDir}/wrd_$id.svg');
     if (file.existsSync()) {
       result =
@@ -53,10 +54,10 @@ Widget getWordImage(String id, bool lngPathImage,
   return result;
 }
 
-Widget getDialogImage(String id, bool lngPathImage,
+Widget getDialogImage(String id, int? imgLngPath,
     {double? height, double? width}) {
   Widget result = Icon(Icons.developer_board);
-  if (lngPathImage) {
+  if (imgLngPath == 1) {
     var file = File('${StorageProvider.learnLanguageDir}/di$id.svg');
     if (file.existsSync()) {
       result = SvgPicture.file(file, height: height, width: width);
@@ -69,16 +70,16 @@ Widget getDialogImage(String id, bool lngPathImage,
   return result;
 }
 
-ImageProvider getDialogBackground(String id, bool lngPathImage) {
-  if (lngPathImage) {
+ImageProvider getDialogBackground(String id, int? imgLngPath) {
+  if (imgLngPath == 1) {
     return FileImage(File('${StorageProvider.learnLanguageDir}/di$id.png'));
   }
   return AssetImage('assets/dialogBackgroundImages/di$id.png');
 }
 
-Future<Uint8List> getCategoryImageBytes(String id, bool lngPathImage) async {
+Future<Uint8List> getCategoryImageBytes(String id, int? imgLngPath) async {
   Uint8List result = Uint8List(0);
-  if (lngPathImage) {
+  if (imgLngPath == 1) {
     var file = File('${StorageProvider.learnLanguageDir}/di$id.svg');
     if (file.existsSync()) {
       result = file.readAsBytesSync();
@@ -88,4 +89,12 @@ Future<Uint8List> getCategoryImageBytes(String id, bool lngPathImage) async {
     result = file.buffer.asUint8List();
   }
   return result;
+}
+
+extension Resize on Image {
+  Image resize({double? height, double? width, BoxFit? boxFit}) {
+    Image img =
+        Image(image: this.image, height: height, width: width, fit: boxFit);
+    return img;
+  }
 }

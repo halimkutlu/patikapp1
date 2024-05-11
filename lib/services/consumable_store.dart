@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// This is a development prototype tha stores consumables in the shared
 /// preferences. Do not use this in real world apps.
 class ConsumableStore {
-  static const String _kPrefKey = 'consumables';
+  static const String _kPrefKey = 'purchase';
   static Future<void> _writes = Future<void>.value();
 
   /// Adds a consumable with ID `id` to the store.

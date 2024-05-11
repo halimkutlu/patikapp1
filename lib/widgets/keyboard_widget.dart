@@ -80,7 +80,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
                           ),
                           child: getWordImage(
                               widget.provider.selectedWord!.id.toString(),
-                              false,
+                              widget.provider.selectedWord!.imgLngPath,
                               boxFit: BoxFit.fill),
                         ),
                         Container(

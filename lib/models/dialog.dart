@@ -1,10 +1,8 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:patikmobile/services/image_helper.dart';
 
 class Dialog {
   int? id;
@@ -16,6 +14,8 @@ class Dialog {
   String? activities;
   int? orderId;
   String? dialogAppLng;
+  int? isFree;
+  int? imgLngPath;
 
   int? errorCount = 0;
 
@@ -28,6 +28,8 @@ class Dialog {
       this.categories,
       this.activities,
       this.orderId,
+      this.isFree,
+      this.imgLngPath,
       this.errorCount = 0,
       this.dialogAppLng = ""});
 
@@ -40,6 +42,8 @@ class Dialog {
       categories: json["Categories"],
       activities: json["Activities"],
       orderId: json["OrderId"],
+      isFree: json["IsFree"],
+      imgLngPath: json["ImgLngPath"],
       errorCount: json["errorCount"] ?? 0,
       dialogAppLng: json["dialogAppLng"]);
 
@@ -52,6 +56,8 @@ class Dialog {
         "Categories": categories,
         "Activities": activities,
         "OrderId": orderId,
+        "IsFree": isFree,
+        "ImgLngPath": imgLngPath,
         "errorCount": errorCount ?? 0,
         "dialogAppLng": dialogAppLng
       };
@@ -74,6 +80,7 @@ class DialogListInformation {
   //Widget? categoryIcon;
   //Widget? categoryBackgroundImage;
   int? order;
+  int? imgLngPath;
   int? orderColor;
   String? dbId;
   String? categoryAppLngName;
@@ -84,6 +91,7 @@ class DialogListInformation {
       this.categoryName,
       this.categoryDialogCount,
       this.order,
+      this.imgLngPath,
       this.totalCount,
       this.dbId,
       this.categoryAppLngName = ""});
@@ -100,6 +108,7 @@ class DialogListInformation {
           categoryDialogCount: json["CategoryDialogCount"],
           totalCount: json["TotalDialogCount"],
           order: json["OrderId"],
+          imgLngPath: json["ImgLngPath"],
           categoryAppLngName: "");
 }
 
@@ -113,6 +122,7 @@ class DialogListDBInformation {
   String? dialogAppLng;
   bool? isAddedToWorkHard = false;
   bool? lastCard = false;
+  int? imgLngPath;
 
   //kelime eşleştirme modeli
   bool? isWordCorrect;
@@ -131,6 +141,7 @@ class DialogListDBInformation {
       this.wordA,
       this.wordT,
       this.id,
+      this.imgLngPath,
       this.isAddedToWorkHard,
       this.lastCard = false,
       this.dialogAppLng = ""});
@@ -142,6 +153,7 @@ class DialogListDBInformation {
           word: json["Word"],
           wordA: json["WordA"],
           wordT: json["WordT"],
+          imgLngPath: json["ImgLngPath"],
           audio:
               '$path/$currentLanguage/${currentLanguage}_Di_${json["Id"]}.mp3');
 }

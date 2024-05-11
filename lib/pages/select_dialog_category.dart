@@ -148,7 +148,9 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                                                         provider
                                                             .categoryList[index]
                                                             .dbId!,
-                                                        false),
+                                                        provider
+                                                            .categoryList[index]
+                                                            .imgLngPath),
                                                     fit: BoxFit.cover)),
                                             padding: const EdgeInsets.all(10),
 
@@ -162,7 +164,9 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                                                         provider
                                                             .categoryList[index]
                                                             .dbId!,
-                                                        false),
+                                                        provider
+                                                            .categoryList[index]
+                                                            .imgLngPath),
                                                     AutoSizeText(
                                                       provider
                                                           .categoryList[index]

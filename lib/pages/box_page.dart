@@ -141,7 +141,7 @@ class _BoxPageState extends State<BoxPage> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 4.w),
                                     child: getWordImage(
-                                        item.id.toString(), false,
+                                        item.id.toString(), item.imgLngPath,
                                         height: 4.h),
                                   ),
                                   item.wordA != null

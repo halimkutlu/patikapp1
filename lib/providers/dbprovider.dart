@@ -15,7 +15,6 @@ import 'package:patikmobile/models/word_statistics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as db;
 import 'package:flutter_bcrypt/flutter_bcrypt.dart';
@@ -53,8 +52,6 @@ class DbProvider extends ChangeNotifier {
 
     bool permissionStatus;
     final phoneId = DeviceProvider.getPhoneId();
-
-    await Permission.manageExternalStorage.request().isGranted;
 
     final appDocDir = await getApplicationCacheDirectory();
 

@@ -17,6 +17,8 @@ class Word {
   String? activities;
   int? orderId;
   String? wordAppLng;
+  int? isFree;
+  int? imgLngPath;
 
   int? errorCount = 0;
 
@@ -29,6 +31,8 @@ class Word {
       this.categories,
       this.activities,
       this.orderId,
+      this.isFree,
+      this.imgLngPath,
       this.errorCount = 0,
       this.wordAppLng = ""});
 
@@ -41,6 +45,8 @@ class Word {
       categories: json["Categories"],
       activities: json["Activities"],
       orderId: json["OrderId"],
+      isFree: json["IsFree"],
+      imgLngPath: json["ImgLngPath"],
       errorCount: json["errorCount"] ?? 0,
       wordAppLng: json["wordAppLng"]);
 
@@ -53,6 +59,8 @@ class Word {
         "Categories": categories,
         "Activities": activities,
         "OrderId": orderId,
+        "IsFree": isFree,
+        "ImgLngPath": imgLngPath,
         "errorCount": errorCount ?? 0,
         "wordAppLng": wordAppLng
       };
@@ -114,7 +122,8 @@ class WordListInformation {
           categoryAppLngName: "",
           categoryImage: !isCategory
               ? null
-              : getWordImage(categoryImageMap[json["Id"].toString()]!, false,
+              : getWordImage(categoryImageMap[json["Id"].toString()]!,
+                  json["ImgLngPath"] ?? 0,
                   height: 7.w));
 
   static getCategoryOrderName(BuildContext context, String activities) {
@@ -136,6 +145,7 @@ class WordListDBInformation {
   String? audio;
   Widget? image;
   int? id;
+  int? imgLngPath;
   String? wordAppLng;
   bool? isAddedToWorkHard = false;
   bool? lastCard = false;
@@ -157,6 +167,7 @@ class WordListDBInformation {
       this.wordA,
       this.wordT,
       this.id,
+      this.imgLngPath,
       this.isAddedToWorkHard,
       this.lastCard = false,
       this.wordAppLng = ""});
