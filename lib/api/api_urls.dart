@@ -6,3 +6,4 @@ const loginUrl = "/Users/Authenticate";
 const learnLanguageUrl = "/Parameters/GetLngList";
 const forgotPasswordUrl = "/Users/ForgotPassword";
 const registerUrl = "/Users/Register";
+const afterPurchaseUrl = "/Purchase/purchased";

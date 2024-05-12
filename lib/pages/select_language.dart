@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
+import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
@@ -212,8 +213,10 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                         } else {
                                           CustomAlertDialogOnlyConfirm(
                                               _scaffoldKey.currentContext!, () {
-                                            Navigator.pop(
-                                                _scaffoldKey.currentContext!);
+                                            
+                                       Navigator.of(_scaffoldKey.currentContext!).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const Login()),
+                  (Route<dynamic> route) => false);
                                           },
                                               AppLocalizations.of(context)
                                                   .translate("158"),
