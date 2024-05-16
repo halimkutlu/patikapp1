@@ -149,7 +149,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context!)
+                                    AppLocalizations.of(context)
                                         .translateLngName(language),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -213,10 +213,14 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                         } else {
                                           CustomAlertDialogOnlyConfirm(
                                               _scaffoldKey.currentContext!, () {
-                                            
-                                       Navigator.of(_scaffoldKey.currentContext!).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const Login()),
-                  (Route<dynamic> route) => false);
+                                            Navigator.of(_scaffoldKey
+                                                    .currentContext!)
+                                                .pushAndRemoveUntil(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const Login()),
+                                                    (Route<dynamic> route) =>
+                                                        false);
                                           },
                                               AppLocalizations.of(context)
                                                   .translate("158"),
@@ -246,7 +250,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        AppLocalizations.of(context!)
+                                        AppLocalizations.of(context)
                                             .translateLngName(language),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(

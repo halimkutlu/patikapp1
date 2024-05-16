@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, avoid_print
+// ignore_for_file: non_constant_identifier_names, avoid_print, avoid_init_to_null
 
 import 'dart:io';
 import 'package:flutter/material.dart';

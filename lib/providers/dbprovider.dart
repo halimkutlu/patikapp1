@@ -10,6 +10,7 @@ import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/dialog.dart' as dialog;
 import 'package:patikmobile/models/information.dart';
 import 'package:patikmobile/models/language.model.dart';
+import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
 import 'package:path_provider/path_provider.dart';
@@ -25,6 +26,12 @@ class DbClass {
   late bool open;
   DbClass(this.open, {this.database});
 }
+
+String get ifPremium =>
+    StaticVariables.lngPlanType == LngPlanType.Free ? "and IsFree=1" : "";
+
+String ifPremiumx(String c) =>
+    StaticVariables.lngPlanType == LngPlanType.Free ? "and $c.IsFree=1" : "";
 
 Future<DbClass> openDatabase(String path) async {
   final file = File(path);
@@ -149,9 +156,8 @@ class DbProvider extends ChangeNotifier {
   Future<List<Word>> getWordList({bool withoutCategoryName = false}) async {
     var status = await reOpenDbConnection();
     if (!status) return [];
-
     var res = await database!.rawQuery('Select * from Words' +
-        (withoutCategoryName ? ' where IsCategoryName != 1' : ''));
+        (withoutCategoryName ? ' where IsCategoryName != 1 $ifPremium' : ''));
 
     List<Word> list = res.map((c) => Word.fromMap(c)).toList();
     //list = await AppDbProvider().setWordAppLng(list);
@@ -164,10 +170,10 @@ class DbProvider extends ChangeNotifier {
 
     Directory dir = await getApplicationDocumentsDirectory();
     String sql = """
-Select w.*, (Select Count(*) from Words w1 where w1.Categories LIKE '%|' || w.Id || '|%') as CategoryWordCount,
-(Select count(*) from Words w2 where w2.IsCategoryName != 1) as TotalWordCount,
-(Select Count(*) from Words w3 where w3.IsCategoryName != 1 and w3.Categories LIKE '%|' || w.Id || '|%' and w3.Id IN (Select ws.WordId from WordStatistics ws)) as LearnedWordsCount
-from Words w where w.IsCategoryName = 1 """;
+Select w.*, (Select Count(*) from Words w1 where w1.Categories LIKE '%|' || w.Id || '|%' ${ifPremiumx("w1")}) as CategoryWordCount,
+(Select count(*) from Words w2 where w2.IsCategoryName != 1 ${ifPremiumx("w2")}) as TotalWordCount,
+(Select Count(*) from Words w3 where w3.IsCategoryName != 1 ${ifPremiumx("w3")} and w3.Categories LIKE '%|' || w.Id || '|%' and w3.Id IN (Select ws.WordId from WordStatistics ws)) as LearnedWordsCount
+from Words w where w.IsCategoryName = 1 ${ifPremiumx("w")}""";
     var res = await database!.rawQuery(sql);
     var liste =
         res.map((e) => WordListInformation.fromMap(e, context, true)).toList();
@@ -340,8 +346,8 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     var status = await reOpenDbConnection();
     if (!status) return [];
 
-    var res = await database!
-        .rawQuery("Select * from Words where Categories LIKE '%|$dbId|%'");
+    var res = await database!.rawQuery(
+        "Select * from Words where Categories LIKE '%|$dbId|%' $ifPremium");
 
     List<Word> list = res.map((c) => Word.fromMap(c)).toList();
     list = await AppDbProvider().setWordAppLng(list);
@@ -362,7 +368,8 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     where 
     ${withoutCategoryName ? "w.IsCategoryName != 1" : "1=1"} 
     ${dbId!.isNotEmpty ? "and Categories LIKE '%|$dbId|%'" : ""}
-    ${notInWordStatistics ? "and ws.WordId IS NULL" : ""} 
+    ${notInWordStatistics ? "and ws.WordId IS NULL" : ""}
+    ${ifPremiumx("w")}
     ORDER BY RANDOM()
     ${limit > 0 ? "LIMIT $limit" : ""} 
     """;
@@ -389,6 +396,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     JOIN WordStatistics ws on w.Id = ws.WordId
     where 
     w.IsCategoryName != 1 
+    ${ifPremiumx("w")}
     ${dbId!.isNotEmpty ? "and Categories LIKE '%|$dbId|%'" : ""}
     $ignoreIds
     ORDER BY RANDOM()
@@ -479,8 +487,8 @@ class AppDbProvider extends ChangeNotifier {
     if (!status) return [];
 
     String idList = liste.map((e) => e.id).toList().join(",");
-    var res =
-        await database!.rawQuery("Select * from Words where Id In ($idList)");
+    var res = await database!
+        .rawQuery("Select * from Words where Id In ($idList) $ifPremium");
 
     res.forEach((c) => liste.firstWhere((r) => r.id == c["Id"]).wordAppLng =
         c["Word"] as String?);
@@ -493,8 +501,8 @@ class AppDbProvider extends ChangeNotifier {
     if (!status) return [];
 
     String idList = liste.map((e) => e.dbId).toList().join(",");
-    var res =
-        await database!.rawQuery("Select * from Words where Id In ($idList)");
+    var res = await database!
+        .rawQuery("Select * from Words where Id In ($idList) $ifPremium");
 
     res.forEach((c) => liste
         .firstWhere((r) => r.dbId == c["Id"].toString())

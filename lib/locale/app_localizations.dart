@@ -42,7 +42,7 @@ class AppLocalizations {
     _localizedStrings = jsonMap.map((key, value) {
       return MapEntry(key, value.toString());
     });
-    Get.updateLocale(Locale(lng!.split("-").first));
+    Get.updateLocale(Locale(lng.split("-").first));
     // Return true when loading is done
     return true;
   }
@@ -59,9 +59,9 @@ class AppLocalizations {
     // Return the localized string if it exists, otherwise return a default message
     if (lng == null) return "";
 
-    if (!lngTranslateIds.keys.any((element) => element == lng!.Code)) return "";
+    if (!lngTranslateIds.keys.any((element) => element == lng.Code)) return "";
 
-    String key = lngTranslateIds[lng!.Code]!;
+    String key = lngTranslateIds[lng.Code]!;
     return (addLeft ?? "") +
         (_localizedStrings[key] ?? 'Key not found') +
         (addRight ?? "");

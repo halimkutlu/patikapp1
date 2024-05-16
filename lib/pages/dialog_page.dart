@@ -39,7 +39,7 @@ class _DialogPageState extends State<DialogPage> {
     var capture = await contrller.capture();
     var xfiles = <XFile>[
       XFile.fromData(capture!,
-          length: capture!.length,
+          length: capture.length,
           mimeType: "image/png",
           name: "dialog.png",
           lastModified: DateTime.now())
@@ -83,9 +83,8 @@ class _DialogPageState extends State<DialogPage> {
                                     decoration: BoxDecoration(
                                         color:
                                             Color.fromARGB(238, 255, 255, 255),
-                                        border: Border.all(color: Colors.black,
-                                        width: 0.1
-                                        ),
+                                        border: Border.all(
+                                            color: Colors.black, width: 0.1),
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(10))),
                                     child: Row(

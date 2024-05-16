@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields
+// ignore_for_file: prefer_final_fields, prefer_const_constructors, file_names
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -65,10 +65,6 @@ class DashboardProvider extends ChangeNotifier {
       _roleid = primaryRole;
       _roleName = getRoleName(primaryRole);
       _userRoles = rolesList.map((role) => UserRole(role)).toList();
-
-      _userRoles.forEach((userRole) {
-        print("${userRole.role}: ${userRole.getRoleDescription()}");
-      });
     }
   }
 

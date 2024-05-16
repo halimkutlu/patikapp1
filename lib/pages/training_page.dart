@@ -88,11 +88,11 @@ class _TrainingPageState extends State<TrainingPage> {
             Card(
                 Color(0xffCC3BFF),
                 AppLocalizations.of(context).translate("151"),
-                trainingSelectNames.LetterPuzzle),
+                trainingSelectNames.letterPuzzle),
             Card(
                 Color(0xffE8233D),
                 AppLocalizations.of(context).translate("152"),
-                trainingSelectNames.FiveOptions)
+                trainingSelectNames.fiveOptions)
           ],
         ),
         Row(
@@ -101,7 +101,7 @@ class _TrainingPageState extends State<TrainingPage> {
             Card(
                 Color(0xff998E00),
                 AppLocalizations.of(context).translate("153"),
-                trainingSelectNames.WordTetris),
+                trainingSelectNames.wordTetris),
           ],
         )
       ],

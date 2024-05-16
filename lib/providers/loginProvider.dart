@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, prefer_final_fields, use_build_context_synchronously, curly_braces_in_flow_control_structures, prefer_const_constructors
+// ignore_for_file: file_names, prefer_final_fields, use_build_context_synchronously, curly_braces_in_flow_control_structures, prefer_const_constructors, empty_catches, non_constant_identifier_names
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
@@ -169,9 +169,7 @@ class LoginProvider extends ChangeNotifier {
             AppLocalizations.of(context).translate("159"));
       }
       notifyListeners();
-    } catch (error) {
-      print(error);
-    }
+    } catch (error) {}
   }
 
   void forgotPassword(BuildContext context) async {

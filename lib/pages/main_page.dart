@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_field, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_field, use_build_context_synchronously, sized_box_for_whitespace
 
 import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -121,7 +121,6 @@ class _MainPageState extends State<MainPage> {
 
   Widget statusArea() {
     var g1 = AutoSizeGroup();
-    var g2 = AutoSizeGroup();
     return Padding(
       padding: EdgeInsets.only(
         top: 1.0.h,

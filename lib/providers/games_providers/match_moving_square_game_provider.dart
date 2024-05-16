@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, prefer_const_constructors, non_constant_identifier_names, use_build_context_synchronously, prefer_spread_collections
+// ignore_for_file: prefer_final_fields, prefer_const_constructors, non_constant_identifier_names, use_build_context_synchronously, prefer_spread_collections, no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
 import 'dart:io';
@@ -134,7 +134,6 @@ class MovingSquaresGameProvide extends ChangeNotifier {
       await startMatchMovingSquareGame(playWith);
     }
     notifyListeners();
-    print(_wordListDbInformation);
     await getWords();
     callback!();
     callback2 = _callback;
@@ -190,7 +189,6 @@ class MovingSquaresGameProvide extends ChangeNotifier {
     List<String>? serializedWords = prefs.getStringList('selectedWords');
     if (serializedWords != null) {
       var words = serializedWords.map((word) => Word.fromJson(word)).toList();
-      print(words);
       return words;
     } else {
       return [];
@@ -247,8 +245,6 @@ class MovingSquaresGameProvide extends ChangeNotifier {
         // displayedList ile yapılacak işlemler devam edecek
       }
     }
-
-    print(_wordListDbInformation);
   }
 
   void updateDividedList(List<WordListDBInformation> list) {
@@ -324,9 +320,9 @@ class MovingSquaresGameProvide extends ChangeNotifier {
         ..addAll(_wordListDbInformation!)
         ..addAll(_rndWordListDbInformation!);
       for (int i = 0; i < _wordListDbInformation!.length; i++) {
-        var differentWord = diffStatisticWords!
+        var differentWord = diffStatisticWords
             .where((element) => element.word != _wordListDbInformation![i].word)
-            .elementAt(Random().nextInt(diffStatisticWords!.length - 1));
+            .elementAt(Random().nextInt(diffStatisticWords.length - 1));
 
         _currentGameItems!.add(fillGameItem(
             _wordListDbInformation![i].word!,
@@ -369,7 +365,7 @@ class MovingSquaresGameProvide extends ChangeNotifier {
       _siradaki = _siradaki! + 1;
       // sonuncu animasyondan sonra tekrar girmiyor
       if (_siradaki! < _wordListDbInformation!.length) {
-        _controllers![_siradaki!].addListener(() {
+        _controllers[_siradaki!].addListener(() {
           moveSquares(context, _controllers);
           notifyListeners();
         });

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, avoid_print, unused_local_variable, non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: prefer_final_fields, avoid_print, unused_local_variable, non_constant_identifier_names, use_build_context_synchronously, file_names
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/locale/app_localizations.dart';

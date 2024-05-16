@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, avoid_print
+// ignore_for_file: prefer_final_fields, avoid_print, file_names
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/models/word_statistics.dart';

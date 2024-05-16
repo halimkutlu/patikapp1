@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors
+// ignore_for_file: prefer_final_fields, avoid_print, use_build_context_synchronously, unused_local_variable, prefer_const_constructors, avoid_function_literals_in_foreach_calls, unnecessary_null_comparison
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';

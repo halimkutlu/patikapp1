@@ -11,7 +11,6 @@ class CTextfield extends StatefulWidget {
   final bool readOnly;
   final IconData icon;
   final List<TextInputFormatter>? inputFormatters;
-  final AutovalidateMode;
   final bool isBorder;
   final bool isIcon;
   final String? hintText;
@@ -56,7 +55,6 @@ class CTextfield extends StatefulWidget {
       this.onChanged,
       this.isBorder = false,
       this.errorText,
-      this.AutovalidateMode,
       this.icon = Icons.mail,
       this.isIcon = true,
       this.inputFormatters,

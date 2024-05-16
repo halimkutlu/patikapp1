@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, non_constant_identifier_names, sized_box_for_whitespace
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -36,7 +36,6 @@ class _TrainingSelectState extends State<TrainingSelect> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     trainingProvider = Provider.of<TrainingProvider>(context, listen: false);
     trainingProvider.init();
@@ -253,19 +252,19 @@ class _TrainingSelectState extends State<TrainingSelect> {
                 trainingGame: true,
                 playWith: playWith,
               )));
-    } else if (widget.selectedGame == trainingSelectNames.WordTetris) {
+    } else if (widget.selectedGame == trainingSelectNames.wordTetris) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => MovingSquaresGame(
                 trainingGame: true,
                 playWith: playWith,
               )));
-    } else if (widget.selectedGame == trainingSelectNames.LetterPuzzle) {
+    } else if (widget.selectedGame == trainingSelectNames.letterPuzzle) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => FillTheBlankGame(
                 trainingGame: true,
                 playWith: playWith,
               )));
-    } else if (widget.selectedGame == trainingSelectNames.FiveOptions) {
+    } else if (widget.selectedGame == trainingSelectNames.fiveOptions) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => MultipleChoiceGame(
                 trainingGame: true,

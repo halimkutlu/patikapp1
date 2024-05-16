@@ -322,13 +322,7 @@ class _NumericKeypadState extends State<NumericKeypad> {
     }
 
     if (isValid) {
-      if (widget.provider.word!.length == dumText.length) {
-        print("bitti");
-        return 2;
-      } else {
-        print("ddaha bitmedi ama dogru");
-        return 1;
-      }
+      return widget.provider.word!.length == dumText.length ? 2 : 1;
     } else {
       await widget.provider.wrongCharacter();
       return 0;

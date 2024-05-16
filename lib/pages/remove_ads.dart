@@ -1,9 +1,8 @@
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -15,7 +14,6 @@ import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/http_response.model.dart';
-import 'package:patikmobile/models/information.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/services/consumable_store.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
@@ -486,40 +484,48 @@ class _RemoveAdsState extends State<RemoveAds> {
     // }
     return oldSubscription;
   }
-  
-  void changeUserRoleofApp(PurchaseDetails purchaseDetails) async{
 
+  void changeUserRoleofApp(PurchaseDetails purchaseDetails) async {
     //ÖDEME İŞLEMİ SONRASI YAPILACAK DB İŞLEMLERİ
 
+    final apirepository = APIRepository();
+    Map<String, dynamic> jsonMap =
+        json.decode(purchaseDetails.verificationData.localVerificationData);
+    Purchase purchase = Purchase.fromJson(jsonMap);
+    purchase.source = purchaseDetails.verificationData.source;
+    var data = {
+      "Acknowledged": purchase.acknowledged,
+      "OrderId": purchase.orderId,
+      "PackageName": purchase.packageName,
+      "ProductId": purchase.productId,
+      "PurchaseState": purchase.purchaseState,
+      "PurchaseTime": purchase.purchaseTime,
+      "PurchaseToken": purchase.purchaseToken,
+      "Quantity": purchase.quantity,
+      "Source": purchase.source
+    };
+    httpSonucModel apiresult =
+        await apirepository.post(controller: afterPurchaseUrl, data: data);
 
-     final apirepository = APIRepository();
-     Map<String, dynamic> jsonMap = json.decode(purchaseDetails.verificationData.localVerificationData);
-     Purchase purchase = Purchase.fromJson(jsonMap);
-     purchase.source = purchaseDetails.verificationData.source;
+    if (apiresult.success!) {
+      //success
+      DbProvider db = DbProvider();
+      var info = await db.getInformation();
+      if (info.lngPlanType == 1) //FREE Mİ PREMİUM MU BİLEMEDİM HANGİSİ
+      {
+        //Dbden tipini değiştirmek lazım
 
-     httpSonucModel apiresult =
-          await apirepository.post(controller: afterPurchaseUrl, data: purchase);
-
-      if (apiresult.success!) {
-        //success
-        DbProvider db = DbProvider();
-        var info = await db.getInformation();
-        if(info.lngPlanType == 1) //FREE Mİ PREMİUM MU BİLEMEDİM HANGİSİ
-        {
-          //Dbden tipini değiştirmek lazım
-          
-          //Start 
-        }
-
-      } else {
-        CustomAlertDialogOnlyConfirm(context, () {
-          Navigator.pop(context);
-        },
-            AppLocalizations.of(context).translate("164"),
-            apiresult.message!,
-            ArtSweetAlertType.info,
-            AppLocalizations.of(context).translate("159"));
+        //Start
       }
+    } else {
+      CustomAlertDialogOnlyConfirm(context, () {
+        Navigator.pop(context);
+      },
+          AppLocalizations.of(context).translate("164"),
+          apiresult.message!,
+          ArtSweetAlertType.info,
+          AppLocalizations.of(context).translate("159"));
+    }
   }
 }
 
@@ -532,7 +538,7 @@ class Purchase {
   String purchaseToken;
   int quantity;
   bool acknowledged;
-  String source;
+  String? source;
 
   Purchase({
     required this.orderId,
@@ -543,7 +549,7 @@ class Purchase {
     required this.purchaseToken,
     required this.quantity,
     required this.acknowledged,
-    required this.source
+    //required this.source
   });
 
   factory Purchase.fromJson(Map<String, dynamic> json) {
@@ -556,12 +562,10 @@ class Purchase {
       purchaseToken: json['purchaseToken'],
       quantity: json['quantity'],
       acknowledged: json['acknowledged'],
-      source: json['source'],
-
+      //source: json['source'],
     );
   }
 }
-
 
 /// Example implementation of the
 /// [`SKPaymentQueueDelegate`](https://developer.apple.com/documentation/storekit/skpaymentqueuedelegate?language=objc).

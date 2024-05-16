@@ -49,8 +49,8 @@ void main() async {
       options: const FirebaseOptions(
         apiKey: 'AIzaSyCIxSGHTmGLmrOy7xYLzSSY4j1MujNR1XA',
         appId: '1:799969018625:android:3cd8551608a3b49e6cd100',
-        messagingSenderId: '',
-        projectId: 'patik',
+        messagingSenderId: '799969018625',
+        projectId: 'patik-2bd8d',
       ),
     );
   } else {
@@ -66,7 +66,6 @@ void main() async {
 }
 
 Future<InitializationStatus> _initGoogleMobileAds() {
-  // TODO: Initialize Google Mobile Ads SDK
   return MobileAds.instance.initialize();
 }
 

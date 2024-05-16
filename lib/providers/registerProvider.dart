@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, use_build_context_synchronously, file_names
+// ignore_for_file: prefer_final_fields, use_build_context_synchronously, file_names, prefer_const_constructors
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +62,6 @@ class RegisterProvider extends ChangeNotifier {
           ArtSweetAlertType.info,
           AppLocalizations.of(context).translate("159"));
     } else {
-      //TODO API REGİSTER
       _loading = true;
 
       httpSonucModel apiresult =

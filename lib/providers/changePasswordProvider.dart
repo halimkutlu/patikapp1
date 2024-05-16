@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, prefer_final_fields, file_names
+// ignore_for_file: use_build_context_synchronously, prefer_final_fields, file_names, missing_required_param
 
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';

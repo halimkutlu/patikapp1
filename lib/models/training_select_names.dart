@@ -1,9 +1,11 @@
+// ignore_for_file: camel_case_types
+
 enum trainingSelectNames {
   pictureWordMatching,
   soundWordMatching,
-  LetterPuzzle,
-  FiveOptions,
-  WordTetris
+  letterPuzzle,
+  fiveOptions,
+  wordTetris
 }
 
 enum playWithEnum { learnedWords, repeatedWords, workHardWords, allWords }

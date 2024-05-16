@@ -57,7 +57,7 @@ class _DashboardState extends State<Dashboard> {
     var capture = await contrller.capture();
     var xfiles = <XFile>[
       XFile.fromData(capture!,
-          length: capture!.length,
+          length: capture.length,
           mimeType: "image/png",
           name: "dialog.png",
           lastModified: DateTime.now())

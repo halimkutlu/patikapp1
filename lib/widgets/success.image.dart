@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:patikmobile/services/sound_helper.dart';
 import 'package:sizer/sizer.dart';
 
 Widget SuccessImage() {
