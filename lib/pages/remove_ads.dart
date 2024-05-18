@@ -16,6 +16,7 @@ import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/http_response.model.dart';
+import 'package:patikmobile/providers/apiService.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:patikmobile/services/consumable_store.dart';
@@ -506,19 +507,13 @@ class _RemoveAdsState extends State<RemoveAds> {
       "Quantity": purchase.quantity,
       "Source": purchase.source
     };
-    var data2 = jsonEncode(data);
-    var response = await http.post(
-        Uri.parse('https://lingobetik.com.tr/api/Purchase/Purchased'),
-        headers: {
-          "Accept": "application/json",
-          "content-type": "application/json; charset=utf-8",
-          "X-Requested-With": "XMLHttpRequest",
-          "PhoneID": DeviceProvider.getPhoneId(),
-          "Authorization": StaticVariables.token
-        },
-        body: data2);
 
-    if (response.statusCode == 201) {
+    await ApiService.initialize();
+
+    final apiService = ApiService(baseUrl: 'https://lingobetik.com.tr/api');
+
+    final response = await apiService.post('/Purchase/Purchased', data);
+    if (response.success == true) {
       //success
       DbProvider db = DbProvider();
       var info = await db.getInformation();
@@ -533,7 +528,7 @@ class _RemoveAdsState extends State<RemoveAds> {
         Navigator.pop(context);
       },
           AppLocalizations.of(context).translate("164"),
-          response.body,
+          response.message!,
           ArtSweetAlertType.info,
           AppLocalizations.of(context).translate("159"));
     }

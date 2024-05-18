@@ -414,6 +414,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt(StorageProvider.learnLcidKey, lcid);
     await prefs.setString("LearnLanguageName", language.Name!);
+    StaticVariables.token = prefs.getString("Token")!;
     StorageProvider.learnLanguge = Languages.GetLngFromLCID(lcid);
 
     var path = await getDbPath(lngName: language.Code);

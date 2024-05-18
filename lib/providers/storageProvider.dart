@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localization_delegate.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/user_roles.dart';
@@ -23,10 +24,10 @@ class StorageProvider {
   }
 
   static getAppLanguage() async {
+    SharedPreferences shrdp = await SharedPreferences.getInstance();
+    StaticVariables.token = shrdp.getString("Token") ?? "";
     if (StorageProvider.appLanguge == null) {
       int applcid = 0;
-
-      SharedPreferences shrdp = await SharedPreferences.getInstance();
 
       applcid = shrdp.getInt(StorageProvider.appLcidKey) ?? 0;
       if (applcid == 0) {

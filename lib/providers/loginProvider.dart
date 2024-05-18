@@ -152,13 +152,22 @@ class LoginProvider extends ChangeNotifier {
           Name: user.displayName);
 
       if (apiresult.success!) {
-        if (StaticVariables.FirstTimeLogin) {
+        if (StorageProvider.learnLanguge != null &&
+            StorageProvider.learnLanguge!.LCID > 0) {
+          DbProvider dbProvider = DbProvider();
+          bool isLanguageExist = await dbProvider
+              .checkLearnLanguage(StorageProvider.learnLanguge!.LCID);
+
+          if (isLanguageExist)
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const Dashboard(0)),
+                (Route<dynamic> route) => false);
+          else
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => SelectLearnLanguage()));
+        } else {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => SelectLanguage()));
-        } else {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const Dashboard(0)),
-              (Route<dynamic> route) => false);
         }
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
