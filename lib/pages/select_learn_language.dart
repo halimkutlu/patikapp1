@@ -200,10 +200,11 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                                       Dashboard(0)),
                                               (Route<dynamic> route) => false);
                                     } else {
-                                      Navigator.of(context).pushReplacement(
+                                      Navigator.of(context).pushAndRemoveUntil(
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  Dashboard(0)));
+                                                  Dashboard(0)),
+                                          (Route<dynamic> route) => false);
                                     }
                                   } else {
                                     CustomAlertDialog(
@@ -244,9 +245,14 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                       } else {
                                         CustomAlertDialogOnlyConfirm(
                                             _scaffoldKey.currentContext!, () {
-                                              Navigator.of(_scaffoldKey.currentContext!).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const Login()),
-                  (Route<dynamic> route) => false);
+                                          Navigator.of(
+                                                  _scaffoldKey.currentContext!)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const Login()),
+                                                  (Route<dynamic> route) =>
+                                                      false);
                                         },
                                             AppLocalizations.of(context)
                                                 .translate("158"),

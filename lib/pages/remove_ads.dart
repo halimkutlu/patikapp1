@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:art_sweetalert/art_sweetalert.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
@@ -12,11 +13,14 @@ import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/api/api_urls.dart';
+import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
+import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:patikmobile/services/consumable_store.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
+import 'package:http/http.dart' as http;
 
 // Auto-consume must be true on iOS.
 // To try without auto-consume on another platform, change `true` to `false` here.
@@ -57,6 +61,7 @@ class _RemoveAdsState extends State<RemoveAds> {
       // handle error here.
     });
     initStoreInfo();
+    // changeUserRoleofApp2();
     super.initState();
   }
 
@@ -486,9 +491,6 @@ class _RemoveAdsState extends State<RemoveAds> {
   }
 
   void changeUserRoleofApp(PurchaseDetails purchaseDetails) async {
-    //ÖDEME İŞLEMİ SONRASI YAPILACAK DB İŞLEMLERİ
-
-    final apirepository = APIRepository();
     Map<String, dynamic> jsonMap =
         json.decode(purchaseDetails.verificationData.localVerificationData);
     Purchase purchase = Purchase.fromJson(jsonMap);
@@ -504,10 +506,19 @@ class _RemoveAdsState extends State<RemoveAds> {
       "Quantity": purchase.quantity,
       "Source": purchase.source
     };
-    httpSonucModel apiresult =
-        await apirepository.post(controller: afterPurchaseUrl, data: data);
+    var data2 = jsonEncode(data);
+    var response = await http.post(
+        Uri.parse('https://lingobetik.com.tr/api/Purchase/Purchased'),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json; charset=utf-8",
+          "X-Requested-With": "XMLHttpRequest",
+          "PhoneID": DeviceProvider.getPhoneId(),
+          "Authorization": StaticVariables.token
+        },
+        body: data2);
 
-    if (apiresult.success!) {
+    if (response.statusCode == 201) {
       //success
       DbProvider db = DbProvider();
       var info = await db.getInformation();
@@ -522,7 +533,7 @@ class _RemoveAdsState extends State<RemoveAds> {
         Navigator.pop(context);
       },
           AppLocalizations.of(context).translate("164"),
-          apiresult.message!,
+          response.body,
           ArtSweetAlertType.info,
           AppLocalizations.of(context).translate("159"));
     }

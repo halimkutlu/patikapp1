@@ -156,8 +156,9 @@ class LoginProvider extends ChangeNotifier {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => SelectLanguage()));
         } else {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const Dashboard(0)));
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const Dashboard(0)),
+              (Route<dynamic> route) => false);
         }
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
