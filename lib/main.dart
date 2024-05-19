@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -62,7 +63,7 @@ void main() async {
   var applcid = shrdp.getInt(StorageProvider.appLcidKey);
   Lcid locale = Languages.GetLngFromLCID(applcid ?? 1033);
   AppLocalizationsDelegate().load(const Locale('en'));
-  runApp(MultiProvider(providers: providers, child: const MyApp()));
+  runApp(MultiProvider(providers: providers, child: Phoenix(child: MyApp())));
 }
 
 Future<InitializationStatus> _initGoogleMobileAds() {

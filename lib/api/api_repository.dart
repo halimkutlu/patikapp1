@@ -19,6 +19,7 @@ class APIRepository {
 //Servisten gelen cevap için bekleme süresi
 //İleride değiştirilebilir.
   final int timeout = 120000;
+  final String encKey = "PatikEncryptedKeyPatikEncrypte32";
 
   APIRepository() {
     dio = Dio(BaseOptions(baseUrl: _baseUrl, followRedirects: true, headers: {
@@ -406,7 +407,7 @@ class APIRepository {
       [String? uid]) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final key = encrypt.Key.fromUtf8(encKey);
     final iv = encrypt.IV.fromSecureRandom(16);
 
     final encrypter = encrypt.Encrypter(encrypt.AES(key));
@@ -424,7 +425,7 @@ class APIRepository {
   }
 
   Future<UserNamePasswordClass> decryptedUserNamePassword() async {
-    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final key = encrypt.Key.fromUtf8(encKey);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? emailCrypted = prefs.getString("emailHash");
@@ -435,28 +436,32 @@ class APIRepository {
     UserNamePasswordClass userNamePassword =
         UserNamePasswordClass(success: false);
 
-    if (emailCrypted != null &&
-        passwordCrypted != null &&
-        ivBase64 != null &&
-        emailCrypted.isNotEmpty &&
-        passwordCrypted.isNotEmpty &&
-        ivBase64.isNotEmpty) {
-      final iv = encrypt.IV.fromBase64(ivBase64);
-      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+    try {
+      if (emailCrypted != null &&
+          passwordCrypted != null &&
+          ivBase64 != null &&
+          emailCrypted.isNotEmpty &&
+          passwordCrypted.isNotEmpty &&
+          ivBase64.isNotEmpty) {
+        final iv = encrypt.IV.fromBase64(ivBase64);
+        final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
-      final decryptedUserName = encrypter.decrypt64(emailCrypted, iv: iv);
-      final decryptedPassword = encrypter.decrypt64(passwordCrypted, iv: iv);
-      String? decrypteduid;
+        final decryptedUserName = encrypter.decrypt64(emailCrypted, iv: iv);
+        final decryptedPassword = encrypter.decrypt64(passwordCrypted, iv: iv);
+        String? decrypteduid;
 
-      if (uidCrypted != null && uidCrypted.isNotEmpty) {
-        decrypteduid = encrypter.decrypt64(uidCrypted, iv: iv);
+        if (uidCrypted != null && uidCrypted.isNotEmpty) {
+          decrypteduid = encrypter.decrypt64(uidCrypted, iv: iv);
+        }
+
+        userNamePassword = UserNamePasswordClass(
+            success: true,
+            userName: decryptedUserName,
+            Password: decryptedPassword,
+            uid: decrypteduid);
       }
-
-      userNamePassword = UserNamePasswordClass(
-          success: true,
-          userName: decryptedUserName,
-          Password: decryptedPassword,
-          uid: decrypteduid);
+    } catch (e) {
+      print(e);
     }
 
     return userNamePassword;
