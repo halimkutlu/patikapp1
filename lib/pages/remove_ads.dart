@@ -180,7 +180,9 @@ class _RemoveAdsState extends State<RemoveAds> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('IAP Example'),
+          title: Text(
+            AppLocalizations.of(context).translate("73"),
+          ),
         ),
         body: Stack(
           children: stack,
@@ -308,9 +310,7 @@ class _RemoveAdsState extends State<RemoveAds> {
       },
     ));
 
-    return Card(
-        child: Column(
-            children: <Widget>[productHeader, const Divider()] + productList));
+    return Card(child: Column(children: <Widget>[] + productList));
   }
 
   Card _buildConsumableBox() {

@@ -163,17 +163,19 @@ class _DashboardState extends State<Dashboard> {
                                     maxLines: 1,
                                     UserRole.getRoleDescriptionFromId(
                                         mainProvider.roleid)),
-                            CustomIconButton(
-                              onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) => RemoveAds())),
-                              textSize: 20,
-                              height: 8.w,
-                              textInlinePadding: 3.w,
-                              colors: Colors.red,
-                              name:
-                                  AppLocalizations.of(context).translate("73"),
-                            )
+                            mainProvider.roleid == UserRole.free
+                                ? CustomIconButton(
+                                    onTap: () => Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => RemoveAds())),
+                                    textSize: 20,
+                                    height: 8.w,
+                                    textInlinePadding: 3.w,
+                                    colors: Colors.red,
+                                    name: AppLocalizations.of(context)
+                                        .translate("73"),
+                                  )
+                                : Container()
                           ],
                         ),
                       ),
@@ -221,11 +223,11 @@ class _DashboardState extends State<Dashboard> {
                       text: AppLocalizations.of(context).translate("77"),
                       centerWidget: Text(""),
                       onTap: () {}),
-                  MenuItem(
-                      logo: 'lib/assets/img/star_.png',
-                      text: AppLocalizations.of(context).translate("69"),
-                      centerWidget: Text(""),
-                      onTap: () {}),
+                  // MenuItem(
+                  //     logo: 'lib/assets/img/star_.png',
+                  //     text: AppLocalizations.of(context).translate("69"),
+                  //     centerWidget: Text(""),
+                  //     onTap: () {}),
                   MenuItem(
                       logo: 'lib/assets/img/mail.png',
                       text: AppLocalizations.of(context).translate("80"),

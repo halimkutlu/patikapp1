@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/introductionPages/introductionPage1.dart';
@@ -15,6 +16,17 @@ class SplashScreenProvider extends ChangeNotifier {
   initData(BuildContext context) async {
     Timer(const Duration(seconds: 3), () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      var roles = prefs.getString("roles");
+      if (roles != null && roles.isNotEmpty) {
+        // var roleList = roles.split(',');
+        // StaticVariables.Roles = List<int>parse(roles.split(','));
+        // Başındaki ve sonundaki köşeli parantezleri kaldır
+        String trimmedStr = roles.substring(1, roles.length - 1);
+
+        // Virgülle ayır ve her bir öğeyi int'e dönüştür
+        List<int> intList = trimmedStr.split(', ').map(int.parse).toList();
+        StaticVariables.Roles = intList;
+      }
       var introShowed = prefs.getBool("introShowed");
       if (introShowed != true) {
         Navigator.of(context).pushAndRemoveUntil(
@@ -30,6 +42,7 @@ class SplashScreenProvider extends ChangeNotifier {
         } else {
           var language = Languages.GetLngFromLCID(learningLanguageLCID);
           var path = await DbProvider().getDbPath(lngName: language.Code);
+
           var pathExist = await File(path).exists();
           if (pathExist) {
             var dbProvider = DbProvider();
