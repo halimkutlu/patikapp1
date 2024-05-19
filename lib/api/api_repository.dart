@@ -1,12 +1,9 @@
 // ignore_for_file: non_constant_identifier_names, unused_local_variable, avoid_print, depend_on_referenced_packages, deprecated_member_use, unnecessary_null_comparison
 
-import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/http_response.model.dart';
@@ -42,14 +39,12 @@ class APIRepository {
 //RefreshToken
 
   initializeInterceptors() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, requestInterceptorHandler) {
         StaticVariables.loading = true;
         //_startLoadingCallback!();
         options.headers['PhoneID'] = DeviceProvider.getPhoneId();
-        options.headers['Version'] = packageInfo.version;
+        options.headers['Version'] = Version;
 
         if (StaticVariables.token != "") {
           print("Token:${StaticVariables.token}");

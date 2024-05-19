@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/models/user.dart';
@@ -18,7 +18,7 @@ class ApiService {
   };
 
   ApiService({required this.baseUrl}) {
-    headers['Version'] = packageInfo.version;
+    headers['Version'] = Version;
     headers['PhoneID'] = GetDeviceProvider.getPhoneId();
     headers['Authorization'] = StaticVariables.token;
   }
