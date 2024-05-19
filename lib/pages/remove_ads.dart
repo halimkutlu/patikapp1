@@ -527,36 +527,14 @@ class _RemoveAdsState extends State<RemoveAds> {
               response.data!.lastName!,
               response.data!.roles!,
               response.data!.username!);
-        }
-      }
 
-      if (StaticVariables.Roles.any((element) => element == UserRole.premium)) {
-        //success
-        DbProvider db = DbProvider();
-        AppDbProvider appdb = AppDbProvider();
-        var info = await db.getInformation();
-        var appinfo = await appdb.getInformation();
-        if (info.lngPlanType == LngPlanType.Free) {
-          data = {"LCID": info.lcid, "Version": "1.0.0", "Code": info.code};
-          response = await apiService.post(getUpgradeSqlStrings, data);
-          if (response.success!) {
-            var status = await db.reOpenDbConnection();
-            if (status) {
-              status = await db.runScript([""]);
-            }
-          }
-        }
-        if (appinfo.lngPlanType == LngPlanType.Free) {
-          data = {
-            "LCID": appinfo.lcid,
-            "Version": "1.0.0",
-            "Code": appinfo.code
-          };
-          response = await apiService.post(getUpgradeSqlStrings, data);
-          if (response.success!) {
-            var status = await db.reOpenDbConnection();
-            if (status) {}
-          }
+          CustomAlertDialogOnlyConfirm(context, () {
+            exit(0);
+          },
+              AppLocalizations.of(context).translate("182"),
+              response.message!,
+              ArtSweetAlertType.info,
+              AppLocalizations.of(context).translate("159"));
         }
       }
     } else {

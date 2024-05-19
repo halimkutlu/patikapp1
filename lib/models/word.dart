@@ -172,3 +172,44 @@ class WordListDBInformation {
       this.lastCard = false,
       this.wordAppLng = ""});
 }
+
+class InsertWord {
+  final int id;
+  final String word;
+  final String? wordA;
+  final String? wordT;
+  final int isCategoryName;
+  final String categories;
+  final String activities;
+  final int orderId;
+  final int isFree;
+  final int imgLngPath;
+
+  InsertWord({
+    required this.id,
+    required this.word,
+    this.wordA,
+    this.wordT,
+    required this.isCategoryName,
+    required this.categories,
+    required this.activities,
+    required this.orderId,
+    required this.isFree,
+    required this.imgLngPath,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'Id': id,
+      'Word': word,
+      'WordA': wordA,
+      'WordT': wordT,
+      'IsCategoryName': isCategoryName,
+      'Categories': categories,
+      'Activities': activities,
+      'OrderId': orderId,
+      'IsFree': isFree,
+      'ImgLngPath': imgLngPath,
+    };
+  }
+}

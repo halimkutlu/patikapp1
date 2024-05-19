@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/dialog.dart' as dialog;
@@ -14,6 +15,7 @@ import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:patikmobile/providers/apiService.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -129,10 +131,48 @@ class DbProvider extends ChangeNotifier {
           if (result.status)
             prefs.setInt(StorageProvider.learnLcidKey, lcid.LCID);
         }
-      } else
+      } else {
         result.status = true;
+      }
+      if (StaticVariables.Roles.any((element) => element == UserRole.premium)) {
+        Information infrm = await getInformation();
+        if (infrm.lngPlanType == LngPlanType.Free) {
+          try {
+            List<String> scripts = await getPremiumContent();
+            if (scripts.isNotEmpty) runScript(scripts);
+          } catch (e) {
+            print(e);
+          }
+        }
+      }
     }
+
     return result;
+  }
+
+  Future<List<String>> getPremiumContent() async {
+    ApiService apiService = ApiService(baseUrl: BASE_URL);
+
+    //success
+    var info = await getInformation();
+    if (info.lngPlanType == LngPlanType.Free) {
+      var data = {"LCID": info.lcid, "Version": "1.0.0", "Code": info.code};
+      var response = await apiService.post(getUpgradeSqlStrings, data);
+      if (response.success!) {
+        // Eğer dönüş başarılıysa ve veri varsa, dönüştürüp geri döndür
+        if (response.data != null && response.data is List) {
+          List<String> sqlStrings =
+              response.data.map<String>((e) => e.toString()).toList();
+          return sqlStrings;
+        } else {
+          // Veri yoksa veya beklenen formatta değilse boş bir liste döndür
+          return [];
+        }
+      }
+    }
+
+    // Diğer durumlarda veya başarısızlık durumunda null döndür
+    return [];
   }
 
   getDbPath({String lngName = ""}) async {
@@ -427,13 +467,20 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     return await File(path).exists();
   }
 
+  insertPremiumContents(int lcid, List<String> scripts) async {
+    // istenilen dilin Lcid türünde çekilmesi
+    //istenilen dilin telefon içerisinde var mı kontrolü, varsa açılacak.
+    runScript(scripts);
+  }
+
   Future<bool> runScript(List<String> scripts) async {
     if (scripts.isEmpty) return false;
     try {
-      for (var i = 0; i < scripts.length; i++) {
-        await database!.rawQuery(scripts[i]);
+      for (var script in scripts) {
+        await database!.rawInsert(script);
       }
     } catch (e) {
+      print("Error executing script: $e");
       return false;
     }
     return true;
@@ -473,10 +520,47 @@ class AppDbProvider extends ChangeNotifier {
           if (result.status)
             prefs.setInt(StorageProvider.appLcidKey, lcid.LCID);
         }
-      } else
+      } else {
         result.status = true;
+      }
+      if (StaticVariables.Roles.any((element) => element == UserRole.premium)) {
+        Information infrm = await getInformation();
+        if (infrm.lngPlanType == LngPlanType.Free) {
+          try {
+            List<String> scripts = await getPremiumContent();
+            if (scripts.isNotEmpty) runScript(scripts);
+          } catch (e) {
+            print(e);
+          }
+        }
+      }
     }
     return result;
+  }
+
+  Future<List<String>> getPremiumContent() async {
+    ApiService apiService = ApiService(baseUrl: BASE_URL);
+
+    //success
+    var info = await getInformation();
+    if (info.lngPlanType == LngPlanType.Free) {
+      var data = {"LCID": info.lcid, "Version": "1.0.0", "Code": info.code};
+      var response = await apiService.post(getUpgradeSqlStrings, data);
+      if (response.success!) {
+        // Eğer dönüş başarılıysa ve veri varsa, dönüştürüp geri döndür
+        if (response.data != null && response.data is List) {
+          List<String> sqlStrings =
+              response.data.map<String>((e) => e.toString()).toList();
+          return sqlStrings;
+        } else {
+          // Veri yoksa veya beklenen formatta değilse boş bir liste döndür
+          return [];
+        }
+      }
+    }
+
+    // Diğer durumlarda veya başarısızlık durumunda null döndür
+    return [];
   }
 
   getDbPath({String lngName = ""}) async {
