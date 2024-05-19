@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/http_response.model.dart';
+import 'package:patikmobile/models/user.dart';
+import 'package:patikmobile/models/user.model.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
 
 class ApiService {
@@ -49,6 +51,30 @@ class ApiService {
       return httpSonucModel.fromJsonData(json.decode(response.body));
     } else {
       return httpSonucModel.fromJsonData(json.decode(response.body));
+    }
+  }
+
+  Future<UserResult> purchase(
+      String endpoint, Map<String, dynamic> data) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: json.encode(data),
+    );
+    var responseData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      return UserResult(
+          message: responseData["Message"] ?? "",
+          data: User.fromJson(responseData),
+          success: responseData["Success"] ?? false,
+          statusCode: response.statusCode);
+    } else {
+      return UserResult(
+          data: null,
+          message: response.body,
+          statusCode: response.statusCode,
+          success: false);
     }
   }
 }

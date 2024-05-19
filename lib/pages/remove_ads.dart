@@ -16,6 +16,7 @@ import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/models/user.dart';
+import 'package:patikmobile/models/user.model.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/providers/apiService.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
@@ -511,39 +512,34 @@ class _RemoveAdsState extends State<RemoveAds> {
 
     final apiService = ApiService(baseUrl: BASE_URL);
 
-    httpSonucModel response = await apiService.post(afterPurchaseUrl, data);
+    UserResult response = await apiService.purchase(afterPurchaseUrl, data);
     if (response.success == true) {
-      if (response.data!['Token'] != null) {
-        response.data = User.fromJson(response.data);
-        if (response.data != null) {
-          StaticVariables.token = response.data!.token!;
-          StaticVariables.Name = response.data!.firstName ?? "";
-          StaticVariables.Surname = response.data!.lastName ?? "";
-          StaticVariables.Roles = response.data!.roles!;
-          StaticVariables.UserName = response.data!.username!;
-          APIRepository.saveToken(
-              response.data!.token!,
-              response.data!.firstName!,
-              response.data!.lastName!,
-              response.data!.roles!,
-              response.data!.username!);
+      StaticVariables.token = response.data!.token!;
+      StaticVariables.Name = response.data!.firstName ?? "";
+      StaticVariables.Surname = response.data!.lastName ?? "";
+      StaticVariables.Roles = response.data!.roles!;
+      StaticVariables.UserName = response.data!.username!;
+      APIRepository.saveToken(
+          response.data!.token!,
+          response.data!.firstName!,
+          response.data!.lastName!,
+          response.data!.roles!,
+          response.data!.username!);
 
-          CustomAlertDialogOnlyConfirm(context, () {
-            exit(0);
-          },
-              AppLocalizations.of(context).translate("182"),
-              response.message!,
-              ArtSweetAlertType.info,
-              AppLocalizations.of(context).translate("159"));
-        }
-      }
+      CustomAlertDialogOnlyConfirm(context, () {
+        exit(0);
+      },
+          AppLocalizations.of(context).translate("164"),
+          AppLocalizations.of(context).translate("182"),
+          ArtSweetAlertType.info,
+          AppLocalizations.of(context).translate("159"));
     } else {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
       },
           AppLocalizations.of(context).translate("164"),
           response.message!,
-          ArtSweetAlertType.info,
+          ArtSweetAlertType.danger,
           AppLocalizations.of(context).translate("159"));
     }
   }

@@ -467,12 +467,6 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     return await File(path).exists();
   }
 
-  insertPremiumContents(int lcid, List<String> scripts) async {
-    // istenilen dilin Lcid türünde çekilmesi
-    //istenilen dilin telefon içerisinde var mı kontrolü, varsa açılacak.
-    runScript(scripts);
-  }
-
   Future<bool> runScript(List<String> scripts) async {
     if (scripts.isEmpty) return false;
     try {

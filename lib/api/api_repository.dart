@@ -84,7 +84,7 @@ class APIRepository {
       String? Name}) async {
     try {
       var result = UserResult(message: "Başarili", success: true);
-      Future.delayed(const Duration(seconds: 2)).whenComplete(() {});
+      //Future.delayed(const Duration(seconds: 2)).whenComplete(() {});
       //Kullanılacak servisin içeriğine göre içerik değiştirilebilir.
       print("login olunuyor.");
       print("$userName $password $Uid $Name");
