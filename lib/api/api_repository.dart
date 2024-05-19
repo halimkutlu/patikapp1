@@ -1,16 +1,19 @@
 // ignore_for_file: non_constant_identifier_names, unused_local_variable, avoid_print, depend_on_referenced_packages, deprecated_member_use, unnecessary_null_comparison
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/models/user.model.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:encrypt/encrypt.dart' as encrypt;
 import '../models/user.dart';
 
 class APIRepository {
@@ -32,19 +35,21 @@ class APIRepository {
           ((X509Certificate cert, String host, int port) => true);
       return dioClient;
     };
-
     initializeInterceptors();
   }
 //Uygulama içerisinde kullanılan token 30 dakika içerisinde yenileniyor, sayfa içerisinde gezen kulanıcı 30 dakika boyunca işlem yapmaz
 //ise tekrar token alarak işlemlerine devam etmesi sağlanır.
 //RefreshToken
 
-  initializeInterceptors() {
+  initializeInterceptors() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, requestInterceptorHandler) {
         StaticVariables.loading = true;
         //_startLoadingCallback!();
         options.headers['PhoneID'] = DeviceProvider.getPhoneId();
+        options.headers['Version'] = packageInfo.version;
 
         if (StaticVariables.token != "") {
           print("Token:${StaticVariables.token}");
@@ -113,15 +118,14 @@ class APIRepository {
             StaticVariables.Surname = result.data!.lastName ?? "";
             StaticVariables.Roles = result.data!.roles!;
             StaticVariables.UserName = result.data!.username!;
+            saveUserNamePasswordEncyrpted(userName, password, Uid);
             saveToken(
                 result.data!.token!,
                 result.data!.firstName!,
                 result.data!.lastName!,
                 result.data!.roles!,
                 result.data!.username!);
-            if (rememberMe != false) {
-              rememberMeOption();
-            }
+
             return UserResult(
               message: result.message,
               data: result.data,
@@ -380,15 +384,6 @@ class APIRepository {
     }
   }
 
-//Beni hatırla butonuna basıldığı takdirde calısan alan,
-//Kullanıcının bilgilerini localstorage üzerine kayıt edilir ve bir dahaki girişinde direkt olarak local storage üzerinden alınır.
-  void rememberMeOption() async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.setString("Token", StaticVariables.token);
-    // await prefs.setString("cryptedUserName", StaticVariables.cryptedUserName);
-    // await prefs.setString("cryptedPassword", StaticVariables.cryptedPassword);
-  }
-
   static void saveToken(String token, String firstName, String lastName,
       List<int> roles, String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -412,28 +407,63 @@ class APIRepository {
     StaticVariables.reset();
   }
 
-//Şifreler hashed olarak tutulması gerektiği için encode ediliyor.
-  encode(String zipText) {
-    // var stringBytes = utf8.encode(zipText);
-    // var gzipBytes = GZipEncoder().encode(stringBytes);
-    // var stringEncoded = base64.encode(gzipBytes!);
-    // debugPrint('encoded: $stringEncoded');
+  void saveUserNamePasswordEncyrpted(String? userName, String? password,
+      [String? uid]) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromSecureRandom(16);
+
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+    final encryptedUserName = encrypter.encrypt(userName!, iv: iv);
+    final encryptedPassword = encrypter.encrypt(password!, iv: iv);
+    if (uid != null && uid.isNotEmpty) {
+      var encryptedUid = encrypter.encrypt(uid, iv: iv);
+      prefs.setString("uidHash", encryptedUid.base64);
+    }
+
+    prefs.setString("emailHash", encryptedUserName.base64);
+    prefs.setString("passwordHash", encryptedPassword.base64);
+    prefs.setString("iv", iv.base64); // IV değerini saklayın
   }
 
-  // getFirstTimeLogin() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var firstTimeLogin = prefs.getBool("firstTimeLogin");
-  //   if (firstTimeLogin == null) {
-  //     prefs.setBool("firstTimeLogin", true);
-  //     firstTimeLogin = true;
-  //   }
-  //   StaticVariables.FirstTimeLogin = firstTimeLogin;
-  //   return firstTimeLogin;
-  // }
+  Future<UserNamePasswordClass> decryptedUserNamePassword() async {
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  // setFirstTimeLogin() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.setBool("firstTimeLogin", false);
-  //   StaticVariables.FirstTimeLogin = false;
-  // }
+    String? emailCrypted = prefs.getString("emailHash");
+    String? passwordCrypted = prefs.getString("passwordHash");
+    String? uidCrypted = prefs.getString("uidHash");
+    String? ivBase64 = prefs.getString("iv");
+
+    UserNamePasswordClass userNamePassword =
+        UserNamePasswordClass(success: false);
+
+    if (emailCrypted != null &&
+        passwordCrypted != null &&
+        ivBase64 != null &&
+        emailCrypted.isNotEmpty &&
+        passwordCrypted.isNotEmpty &&
+        ivBase64.isNotEmpty) {
+      final iv = encrypt.IV.fromBase64(ivBase64);
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+      final decryptedUserName = encrypter.decrypt64(emailCrypted, iv: iv);
+      final decryptedPassword = encrypter.decrypt64(passwordCrypted, iv: iv);
+      String? decrypteduid;
+
+      if (uidCrypted != null && uidCrypted.isNotEmpty) {
+        decrypteduid = encrypter.decrypt64(uidCrypted, iv: iv);
+      }
+
+      userNamePassword = UserNamePasswordClass(
+          success: true,
+          userName: decryptedUserName,
+          Password: decryptedPassword,
+          uid: decrypteduid);
+    }
+
+    return userNamePassword;
+  }
 }

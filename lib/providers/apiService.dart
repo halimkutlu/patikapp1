@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/models/user.dart';
@@ -20,6 +21,8 @@ class ApiService {
 
   // Statik initialize yöntemi
   static Future<void> initialize() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    headers['Version'] = packageInfo.version;
     headers['PhoneID'] = GetDeviceProvider.getPhoneId();
     var token = await GetToken();
     headers['Authorization'] = token;

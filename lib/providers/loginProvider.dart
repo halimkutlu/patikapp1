@@ -64,7 +64,13 @@ class LoginProvider extends ChangeNotifier {
         AppLocalizations.of(context).translate("163"));
   }
 
-  void login(BuildContext context) async {
+  void login(BuildContext context,
+      [String? username, String? password, String? uid]) async {
+    if (username != null && password != null) {
+      _usernameController.text = username;
+      _passwordController.text = password;
+    }
+
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       CustomAlertDialogOnlyConfirm(context, () {
         Navigator.pop(context);
@@ -79,6 +85,7 @@ class LoginProvider extends ChangeNotifier {
       UserResult apiresult = await apirepository.login(
           userName: _usernameController.text,
           password: _passwordController.text,
+          Uid: uid,
           rememberMe: false);
 
       if (apiresult.success!) {
