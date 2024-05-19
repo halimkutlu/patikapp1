@@ -408,8 +408,17 @@ class APIRepository {
     StaticVariables.reset();
   }
 
+  Future<void> deleteUserNamePasswordEncyrpted() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove("uidHash");
+    await prefs.remove("emailHash");
+    await prefs.remove("passwordHash");
+    await prefs.remove("iv");
+  }
+
   void saveUserNamePasswordEncyrpted(String? userName, String? password,
       [String? uid]) async {
+    await deleteUserNamePasswordEncyrpted();
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final key = encrypt.Key.fromUtf8(encKey);
