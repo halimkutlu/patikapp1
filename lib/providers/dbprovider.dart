@@ -27,11 +27,16 @@ class DbClass {
   DbClass(this.open, {this.database});
 }
 
+const List<int> premiumList = [UserRole.admin, UserRole.premium, UserRole.qr];
 String get ifPremium =>
-    StaticVariables.lngPlanType == LngPlanType.Free ? "and IsFree=1" : "";
+    StaticVariables.Roles.any((element) => premiumList.contains(element))
+        ? ""
+        : "and IsFree=1";
 
 String ifPremiumx(String c) =>
-    StaticVariables.lngPlanType == LngPlanType.Free ? "and $c.IsFree=1" : "";
+    StaticVariables.Roles.any((element) => premiumList.contains(element))
+        ? ""
+        : "and $c.IsFree=1";
 
 Future<DbClass> openDatabase(String path) async {
   final file = File(path);
@@ -421,6 +426,18 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
 
     return await File(path).exists();
   }
+
+  Future<bool> runScript(List<String> scripts) async {
+    if (scripts.isEmpty) return false;
+    try {
+      for (var i = 0; i < scripts.length; i++) {
+        await database!.rawQuery(scripts[i]);
+      }
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
 }
 
 class AppDbProvider extends ChangeNotifier {
@@ -567,5 +584,17 @@ class AppDbProvider extends ChangeNotifier {
     var path = await getDbPath(lngName: language.Code);
 
     return await File(path).exists();
+  }
+
+  Future<bool> runScript(List<String> scripts) async {
+    if (scripts.isEmpty) return false;
+    try {
+      for (var i = 0; i < scripts.length; i++) {
+        await database!.rawQuery(scripts[i]);
+      }
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 }

@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison
 
 class User {
   late int? id;
@@ -21,13 +21,15 @@ class User {
       this.Success});
 
   User.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    firstName = json['FirstName'];
-    lastName = json['LastName'];
-    username = json['Username'];
-    roles = List<int>.from(json['Roles']);
-    token = json['Token'];
-    message = json['message'];
-    Success = json['Success'];
+    if (json != null) {
+      id = json['Id'];
+      firstName = json['FirstName'];
+      lastName = json['LastName'];
+      username = json['Username'];
+      roles = List<int>.from(json['Roles']);
+      token = json['Token'];
+      message = json['message'];
+      Success = json['Success'];
+    }
   }
 }

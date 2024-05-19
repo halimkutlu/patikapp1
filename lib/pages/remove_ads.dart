@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:art_sweetalert/art_sweetalert.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
@@ -16,12 +15,12 @@ import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/http_response.model.dart';
+import 'package:patikmobile/models/user.dart';
+import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/providers/apiService.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
-import 'package:patikmobile/providers/deviceProvider.dart';
 import 'package:patikmobile/services/consumable_store.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
-import 'package:http/http.dart' as http;
 
 // Auto-consume must be true on iOS.
 // To try without auto-consume on another platform, change `true` to `false` here.
@@ -510,18 +509,55 @@ class _RemoveAdsState extends State<RemoveAds> {
 
     await ApiService.initialize();
 
-    final apiService = ApiService(baseUrl: 'https://lingobetik.com.tr/api');
+    final apiService = ApiService(baseUrl: BASE_URL);
 
-    final response = await apiService.post('/Purchase/Purchased', data);
+    httpSonucModel response = await apiService.post(afterPurchaseUrl, data);
     if (response.success == true) {
-      //success
-      DbProvider db = DbProvider();
-      var info = await db.getInformation();
-      if (info.lngPlanType == 1) //FREE Mİ PREMİUM MU BİLEMEDİM HANGİSİ
-      {
-        //Dbden tipini değiştirmek lazım
+      if (response.data!['Token'] != null) {
+        response.data = User.fromJson(response.data);
+        if (response.data != null) {
+          StaticVariables.token = response.data!.token!;
+          StaticVariables.Name = response.data!.firstName ?? "";
+          StaticVariables.Surname = response.data!.lastName ?? "";
+          StaticVariables.Roles = response.data!.roles!;
+          StaticVariables.UserName = response.data!.username!;
+          APIRepository.saveToken(
+              response.data!.token!,
+              response.data!.firstName!,
+              response.data!.lastName!,
+              response.data!.roles!,
+              response.data!.username!);
+        }
+      }
 
-        //Start
+      if (StaticVariables.Roles.any((element) => element == UserRole.premium)) {
+        //success
+        DbProvider db = DbProvider();
+        AppDbProvider appdb = AppDbProvider();
+        var info = await db.getInformation();
+        var appinfo = await appdb.getInformation();
+        if (info.lngPlanType == LngPlanType.Free) {
+          data = {"LCID": info.lcid, "Version": "1.0.0", "Code": info.code};
+          response = await apiService.post(getUpgradeSqlStrings, data);
+          if (response.success!) {
+            var status = await db.reOpenDbConnection();
+            if (status) {
+              status = await db.runScript([""]);
+            }
+          }
+        }
+        if (appinfo.lngPlanType == LngPlanType.Free) {
+          data = {
+            "LCID": appinfo.lcid,
+            "Version": "1.0.0",
+            "Code": appinfo.code
+          };
+          response = await apiService.post(getUpgradeSqlStrings, data);
+          if (response.success!) {
+            var status = await db.reOpenDbConnection();
+            if (status) {}
+          }
+        }
       }
     } else {
       CustomAlertDialogOnlyConfirm(context, () {

@@ -114,7 +114,6 @@ class APIRepository {
             StaticVariables.Roles = result.data!.roles!;
             StaticVariables.UserName = result.data!.username!;
             saveToken(
-                password!,
                 result.data!.token!,
                 result.data!.firstName!,
                 result.data!.lastName!,
@@ -390,8 +389,8 @@ class APIRepository {
     // await prefs.setString("cryptedPassword", StaticVariables.cryptedPassword);
   }
 
-  void saveToken(String password, String token, String firstName,
-      String lastName, List<int> roles, String username) async {
+  static void saveToken(String token, String firstName, String lastName,
+      List<int> roles, String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("Token", token);
     await prefs.setString("firstName", firstName);

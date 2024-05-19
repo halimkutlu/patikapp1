@@ -1,13 +1,10 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/models/http_response.model.dart';
-import 'package:patikmobile/models/user.dart';
-import 'package:patikmobile/models/user.model.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   final String baseUrl;
@@ -48,7 +45,7 @@ class ApiService {
       body: json.encode(data),
     );
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return httpSonucModel.fromJsonData(json.decode(response.body));
     } else {
       return httpSonucModel.fromJsonData(json.decode(response.body));
