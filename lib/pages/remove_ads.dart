@@ -148,10 +148,10 @@ class _RemoveAdsState extends State<RemoveAds> {
       stack.add(
         ListView(
           children: <Widget>[
-            _buildConnectionCheckTile(),
+            //_buildConnectionCheckTile(),
             _buildProductList(),
-            _buildConsumableBox(),
-            _buildRestoreButton(),
+            //_buildConsumableBox(),
+            //_buildRestoreButton(),
           ],
         ),
       );
@@ -229,7 +229,7 @@ class _RemoveAdsState extends State<RemoveAds> {
     if (!_isAvailable) {
       return const Card();
     }
-    const ListTile productHeader = ListTile(title: Text('Products for Sale'));
+    //const ListTile productHeader = ListTile(title: Text('Products for Sale'));
     final List<ListTile> productList = <ListTile>[];
     if (_notFoundIds.isNotEmpty) {
       productList.add(ListTile(
@@ -507,8 +507,6 @@ class _RemoveAdsState extends State<RemoveAds> {
       "Quantity": purchase.quantity,
       "Source": purchase.source
     };
-
-    await ApiService.initialize();
 
     final apiService = ApiService(baseUrl: BASE_URL);
 

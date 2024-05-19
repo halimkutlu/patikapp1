@@ -16,13 +16,9 @@ class ApiService {
     "X-Requested-With": "XMLHttpRequest"
   };
 
-  ApiService({required this.baseUrl});
-
-  // Statik initialize yöntemi
-  static Future<void> initialize() async {
+  ApiService({required this.baseUrl}) {
     headers['PhoneID'] = GetDeviceProvider.getPhoneId();
-    var token = await GetToken();
-    headers['Authorization'] = token;
+    headers['Authorization'] = StaticVariables.token;
   }
 
   // GET request

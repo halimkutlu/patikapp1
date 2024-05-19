@@ -22,11 +22,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as db;
 import 'package:flutter_bcrypt/flutter_bcrypt.dart';
 import 'package:sqflite/sqlite_api.dart';
+import 'dart:math' as math;
 
 class DbClass {
   late db.Database? database;
   late bool open;
   DbClass(this.open, {this.database});
+}
+
+extension FancyIterable on Iterable<int> {
+  int get max => reduce(math.max);
+
+  int get min => reduce(math.min);
 }
 
 const List<int> premiumList = [UserRole.admin, UserRole.premium, UserRole.qr];
@@ -160,9 +167,10 @@ class DbProvider extends ChangeNotifier {
       var response = await apiService.post(getUpgradeSqlStrings, data);
       if (response.success!) {
         // Eğer dönüş başarılıysa ve veri varsa, dönüştürüp geri döndür
-        if (response.data != null && response.data is List) {
-          List<String> sqlStrings =
-              response.data.map<String>((e) => e.toString()).toList();
+        if (response.data != null && response.data["Scripts"] is List) {
+          List<String> sqlStrings = response.data["Scripts"]
+              .map<String>((e) => e.toString())
+              .toList();
           return sqlStrings;
         } else {
           // Veri yoksa veya beklenen formatta değilse boş bir liste döndür
@@ -542,9 +550,10 @@ class AppDbProvider extends ChangeNotifier {
       var response = await apiService.post(getUpgradeSqlStrings, data);
       if (response.success!) {
         // Eğer dönüş başarılıysa ve veri varsa, dönüştürüp geri döndür
-        if (response.data != null && response.data is List) {
-          List<String> sqlStrings =
-              response.data.map<String>((e) => e.toString()).toList();
+        if (response.data != null && response.data["Scripts"] is List) {
+          List<String> sqlStrings = response.data["Scripts"]
+              .map<String>((e) => e.toString())
+              .toList();
           return sqlStrings;
         } else {
           // Veri yoksa veya beklenen formatta değilse boş bir liste döndür

@@ -24,7 +24,8 @@ class SplashScreenProvider extends ChangeNotifier {
         String trimmedStr = roles.substring(1, roles.length - 1);
 
         // Virgülle ayır ve her bir öğeyi int'e dönüştür
-        List<int> intList = trimmedStr.split(', ').map(int.parse).toList();
+        List<int> intList =
+            trimmedStr.replaceAll(" ", "").split(',').map(int.parse).toList();
         StaticVariables.Roles = intList;
       }
       var introShowed = prefs.getBool("introShowed");

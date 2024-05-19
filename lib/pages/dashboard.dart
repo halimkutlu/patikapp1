@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields, unused_element, use_build_context_synchronously
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/user_roles.dart';
@@ -10,6 +11,7 @@ import 'package:patikmobile/pages/feedback.dart';
 import 'package:patikmobile/pages/remove_ads.dart';
 import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/pages/select_learn_language.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
 import 'package:patikmobile/providers/dashboardProvider.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
@@ -148,7 +150,8 @@ class _DashboardState extends State<Dashboard> {
                               mainProvider.nameLastname,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            mainProvider.roleid == UserRole.free
+                            !StaticVariables.Roles.any(
+                                    (element) => premiumList.contains(element))
                                 ? AutoSizeText(
                                     maxLines: 1,
                                     AppLocalizations.of(context)
@@ -162,8 +165,9 @@ class _DashboardState extends State<Dashboard> {
                                 : AutoSizeText(
                                     maxLines: 1,
                                     UserRole.getRoleDescriptionFromId(
-                                        mainProvider.roleid)),
-                            mainProvider.roleid == UserRole.free
+                                        StaticVariables.Roles.min)),
+                            !StaticVariables.Roles.any(
+                                    (element) => premiumList.contains(element))
                                 ? CustomIconButton(
                                     onTap: () => Navigator.of(context).push(
                                         MaterialPageRoute(

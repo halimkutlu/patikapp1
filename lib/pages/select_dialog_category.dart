@@ -6,6 +6,8 @@ import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/dialog_page.dart';
+import 'package:patikmobile/pages/remove_ads.dart';
+import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/dialogCategoriesProvider.dart';
 import 'package:patikmobile/services/image_helper.dart';
 import 'package:patikmobile/widgets/icon_button.dart';
@@ -53,7 +55,8 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (StaticVariables.lngPlanType <= LngPlanType.Free) ...[
+                    if (!StaticVariables.Roles.any(
+                        (element) => premiumList.contains(element))) ...[
                       Center(
                           heightFactor: 3.h,
                           child: AutoSizeText(
@@ -66,6 +69,9 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
                                 height: 0.10,
                               ))),
                       CustomIconButton(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => RemoveAds())),
                         textSize: 20,
                         height: 2.7.h,
                         textInlinePadding: 3.h,
