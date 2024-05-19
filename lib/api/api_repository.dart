@@ -397,6 +397,11 @@ class APIRepository {
     await prefs.remove("firstName");
     await prefs.remove("lastName");
     await prefs.remove("userName");
+    await prefs.remove("uidHash");
+    await prefs.remove("emailHash");
+    await prefs.remove("passwordHash");
+    await prefs.remove("iv");
+
     await prefs.remove("roles"); //değiştirilicek
 
     StaticVariables.reset();
