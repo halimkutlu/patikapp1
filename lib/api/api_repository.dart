@@ -26,6 +26,8 @@ class APIRepository {
       "Accept": "application/json",
       "content-type": "application/json; charset=utf-8",
       "X-Requested-With": "XMLHttpRequest",
+      "PhoneID": DeviceProvider.getPhoneId(),
+      "Version": Version
     }));
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient dioClient) {
@@ -44,8 +46,6 @@ class APIRepository {
       onRequest: (options, requestInterceptorHandler) {
         StaticVariables.loading = true;
         //_startLoadingCallback!();
-        options.headers['PhoneID'] = DeviceProvider.getPhoneId();
-        options.headers['Version'] = Version;
 
         if (StaticVariables.token != "") {
           print("Token:${StaticVariables.token}");
@@ -90,8 +90,8 @@ class APIRepository {
       print("login olunuyor.");
       print("$userName $password $Uid $Name");
       final response = await dio.post(loginUrl, data: {
-        "userName": userName,
-        "password": password,
+        "Username": userName,
+        "Password": password,
         "Uid": Uid,
         "Name": Name
       });

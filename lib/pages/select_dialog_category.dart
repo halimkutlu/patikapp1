@@ -4,7 +4,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
-import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/dialog_page.dart';
 import 'package:patikmobile/pages/remove_ads.dart';
 import 'package:patikmobile/providers/dbprovider.dart';

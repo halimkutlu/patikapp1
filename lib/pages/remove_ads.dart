@@ -15,12 +15,8 @@ import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
-import 'package:patikmobile/models/http_response.model.dart';
-import 'package:patikmobile/models/user.dart';
 import 'package:patikmobile/models/user.model.dart';
-import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/providers/apiService.dart';
-import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/services/consumable_store.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 
@@ -44,7 +40,7 @@ class _RemoveAdsState extends State<RemoveAds> {
   List<String> _notFoundIds = <String>[];
   List<ProductDetails> _products = <ProductDetails>[];
   List<PurchaseDetails> _purchases = <PurchaseDetails>[];
-  List<String> _consumables = <String>[];
+  //List<String> _consumables = <String>[];
   bool _isAvailable = false;
   bool _purchasePending = false;
   bool _loading = true;
@@ -75,7 +71,7 @@ class _RemoveAdsState extends State<RemoveAds> {
         _products = <ProductDetails>[];
         _purchases = <PurchaseDetails>[];
         _notFoundIds = <String>[];
-        _consumables = <String>[];
+        //_consumables = <String>[];
         _purchasePending = false;
         _loading = false;
       });
@@ -98,7 +94,7 @@ class _RemoveAdsState extends State<RemoveAds> {
         _products = productDetailResponse.productDetails;
         _purchases = <PurchaseDetails>[];
         _notFoundIds = productDetailResponse.notFoundIDs;
-        _consumables = <String>[];
+        //_consumables = <String>[];
         _purchasePending = false;
         _loading = false;
       });
@@ -112,19 +108,19 @@ class _RemoveAdsState extends State<RemoveAds> {
         _products = productDetailResponse.productDetails;
         _purchases = <PurchaseDetails>[];
         _notFoundIds = productDetailResponse.notFoundIDs;
-        _consumables = <String>[];
+        //_consumables = <String>[];
         _purchasePending = false;
         _loading = false;
       });
       return;
     }
 
-    final List<String> consumables = await ConsumableStore.load();
+    //final List<String> consumables = await ConsumableStore.load();
     setState(() {
       _isAvailable = isAvailable;
       _products = productDetailResponse.productDetails;
       _notFoundIds = productDetailResponse.notFoundIDs;
-      _consumables = consumables;
+      //_consumables = consumables;
       _purchasePending = false;
       _loading = false;
     });
@@ -192,33 +188,33 @@ class _RemoveAdsState extends State<RemoveAds> {
     );
   }
 
-  Card _buildConnectionCheckTile() {
-    if (_loading) {
-      return const Card(child: ListTile(title: Text('Trying to connect...')));
-    }
-    final Widget storeHeader = ListTile(
-      leading: Icon(_isAvailable ? Icons.check : Icons.block,
-          color: _isAvailable
-              ? Colors.green
-              : ThemeData.light().colorScheme.error),
-      title:
-          Text('The store is ${_isAvailable ? 'available' : 'unavailable'}.'),
-    );
-    final List<Widget> children = <Widget>[storeHeader];
+  // Card _buildConnectionCheckTile() {
+  //   if (_loading) {
+  //     return const Card(child: ListTile(title: Text('Trying to connect...')));
+  //   }
+  //   final Widget storeHeader = ListTile(
+  //     leading: Icon(_isAvailable ? Icons.check : Icons.block,
+  //         color: _isAvailable
+  //             ? Colors.green
+  //             : ThemeData.light().colorScheme.error),
+  //     title:
+  //         Text('The store is ${_isAvailable ? 'available' : 'unavailable'}.'),
+  //   );
+  //   final List<Widget> children = <Widget>[storeHeader];
 
-    if (_isAvailable == false) {
-      children.addAll(<Widget>[
-        const Divider(),
-        ListTile(
-          title: Text('Not connected',
-              style: TextStyle(color: ThemeData.light().colorScheme.error)),
-          subtitle: const Text(
-              'Unable to connect to the payments processor. Has this app been configured correctly? See the example README for instructions.'),
-        ),
-      ]);
-    }
-    return Card(child: Column(children: children));
-  }
+  //   if (_isAvailable == false) {
+  //     children.addAll(<Widget>[
+  //       const Divider(),
+  //       ListTile(
+  //         title: Text('Not connected',
+  //             style: TextStyle(color: ThemeData.light().colorScheme.error)),
+  //         subtitle: const Text(
+  //             'Unable to connect to the payments processor. Has this app been configured correctly? See the example README for instructions.'),
+  //       ),
+  //     ]);
+  //   }
+  //   return Card(child: Column(children: children));
+  // }
 
   Card _buildProductList() {
     if (_loading) {
@@ -314,74 +310,74 @@ class _RemoveAdsState extends State<RemoveAds> {
     return Card(child: Column(children: <Widget>[] + productList));
   }
 
-  Card _buildConsumableBox() {
-    if (_loading) {
-      return const Card(
-          child: ListTile(
-              leading: CircularProgressIndicator(),
-              title: Text('Fetching consumables...')));
-    }
-    if (!_isAvailable || _notFoundIds.contains(_premium)) {
-      return const Card();
-    }
-    const ListTile consumableHeader =
-        ListTile(title: Text('Purchased consumables'));
-    final List<Widget> tokens = _consumables.map((String id) {
-      return GridTile(
-        child: IconButton(
-          icon: const Icon(
-            Icons.stars,
-            size: 42.0,
-            color: Colors.orange,
-          ),
-          splashColor: Colors.yellowAccent,
-          onPressed: () => consume(id),
-        ),
-      );
-    }).toList();
-    return Card(
-        child: Column(children: <Widget>[
-      consumableHeader,
-      const Divider(),
-      GridView.count(
-        crossAxisCount: 5,
-        shrinkWrap: true,
-        padding: const EdgeInsets.all(16.0),
-        children: tokens,
-      )
-    ]));
-  }
+  // Card _buildConsumableBox() {
+  //   if (_loading) {
+  //     return const Card(
+  //         child: ListTile(
+  //             leading: CircularProgressIndicator(),
+  //             title: Text('Fetching consumables...')));
+  //   }
+  //   if (!_isAvailable || _notFoundIds.contains(_premium)) {
+  //     return const Card();
+  //   }
+  //   const ListTile consumableHeader =
+  //       ListTile(title: Text('Purchased consumables'));
+  //   final List<Widget> tokens = _consumables.map((String id) {
+  //     return GridTile(
+  //       child: IconButton(
+  //         icon: const Icon(
+  //           Icons.stars,
+  //           size: 42.0,
+  //           color: Colors.orange,
+  //         ),
+  //         splashColor: Colors.yellowAccent,
+  //         onPressed: () => consume(id),
+  //       ),
+  //     );
+  //   }).toList();
+  //   return Card(
+  //       child: Column(children: <Widget>[
+  //     consumableHeader,
+  //     const Divider(),
+  //     GridView.count(
+  //       crossAxisCount: 5,
+  //       shrinkWrap: true,
+  //       padding: const EdgeInsets.all(16.0),
+  //       children: tokens,
+  //     )
+  //   ]));
+  // }
 
-  Widget _buildRestoreButton() {
-    if (_loading) {
-      return Container();
-    }
+  // Widget _buildRestoreButton() {
+  //   if (_loading) {
+  //     return Container();
+  //   }
 
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () => _inAppPurchase.restorePurchases(),
-            child: const Text('Restore purchases'),
-          ),
-        ],
-      ),
-    );
-  }
+  //   return Padding(
+  //     padding: const EdgeInsets.all(4.0),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.end,
+  //       children: <Widget>[
+  //         TextButton(
+  //           style: TextButton.styleFrom(
+  //             backgroundColor: Theme.of(context).primaryColor,
+  //             foregroundColor: Colors.white,
+  //           ),
+  //           onPressed: () => _inAppPurchase.restorePurchases(),
+  //           child: const Text('Restore purchases'),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Future<void> consume(String id) async {
-    await ConsumableStore.consume(id);
-    final List<String> consumables = await ConsumableStore.load();
-    setState(() {
-      _consumables = consumables;
-    });
-  }
+  // Future<void> consume(String id) async {
+  //   await ConsumableStore.consume(id);
+  //   final List<String> consumables = await ConsumableStore.load();
+  //   setState(() {
+  //     _consumables = consumables;
+  //   });
+  // }
 
   void showPendingUI() {
     setState(() {
@@ -393,10 +389,10 @@ class _RemoveAdsState extends State<RemoveAds> {
     // IMPORTANT!! Always verify purchase details before delivering the product.
     if (purchaseDetails.productID == _premium) {
       await ConsumableStore.save(purchaseDetails.purchaseID!);
-      final List<String> consumables = await ConsumableStore.load();
+      //final List<String> consumables = await ConsumableStore.load();
       setState(() {
         _purchasePending = false;
-        _consumables = consumables;
+        //_consumables = consumables;
       });
     } else {
       setState(() {
@@ -434,8 +430,6 @@ class _RemoveAdsState extends State<RemoveAds> {
             purchaseDetails.status == PurchaseStatus.restored) {
           final bool valid = await _verifyPurchase(purchaseDetails);
           if (valid) {
-            //db ekleme
-            changeUserRoleofApp(purchaseDetails);
             unawaited(deliverProduct(purchaseDetails));
           } else {
             _handleInvalidPurchase(purchaseDetails);
@@ -451,7 +445,9 @@ class _RemoveAdsState extends State<RemoveAds> {
           }
         }
         if (purchaseDetails.pendingCompletePurchase) {
-          await _inAppPurchase.completePurchase(purchaseDetails);
+          _inAppPurchase
+              .completePurchase(purchaseDetails)
+              .then((value) => changeUserRoleofApp(purchaseDetails));
         }
       }
     }
