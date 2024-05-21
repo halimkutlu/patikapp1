@@ -133,7 +133,7 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
                                 provider),
                           ),
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: _buildWordWidgets(
                                 matchWithPictureGameProvide.UIwordList,
                                 provider),
@@ -238,6 +238,7 @@ class _MatchWithPictureGameState extends State<MatchWithPictureGame> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
+                    textAlign: TextAlign.center,
                     info.word!,
                     style: TextStyle(
                       color: Colors.black,

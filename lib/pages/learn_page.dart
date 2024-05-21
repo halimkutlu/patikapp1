@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, unnecessary_null_comparison
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, unnecessary_null_comparison, use_super_parameters
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';

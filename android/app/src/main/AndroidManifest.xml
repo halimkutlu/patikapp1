@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
     <!-- To handle the reselection within the app on Android 14+ (when targeting API 33+) -->
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-feature android:name="android.hardware.telephony" android:required="true" />
     <application
         android:label="Patik"
         android:requestLegacyExternalStorage="true"
@@ -17,6 +18,10 @@
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/launcher_icon">
+        <activity
+          android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+android:screenOrientation="portrait"
+android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-6858090207498683~8463731188"/>
