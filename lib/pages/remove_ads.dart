@@ -498,6 +498,7 @@ class _RemoveAdsState extends State<RemoveAds> {
       "OrderId": purchase.orderId,
       "PackageName": purchase.packageName,
       "ProductId": purchase.productId,
+      "PurchaseStatus": purchaseDetails.status.index,
       "PurchaseState": purchase.purchaseState,
       "PurchaseTime": purchase.purchaseTime,
       "PurchaseToken": purchase.purchaseToken,
