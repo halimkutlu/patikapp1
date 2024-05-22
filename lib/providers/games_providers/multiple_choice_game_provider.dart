@@ -150,7 +150,7 @@ class MultipleChoiceGameProvider extends ChangeNotifier {
   }
 
   getTrainingWords(playWithEnum playWith, BuildContext context) async {
-    DbProvider dbProvider = DbProvider();
+    LearnDbProvider dbProvider = LearnDbProvider();
     List<WordStatistics> words = [];
     List<Word> allWords =
         await dbProvider.getWordList(withoutCategoryName: true);

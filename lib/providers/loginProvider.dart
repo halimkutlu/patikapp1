@@ -92,7 +92,7 @@ class LoginProvider extends ChangeNotifier {
         //dil kontrolü
         if (StorageProvider.learnLanguge != null &&
             StorageProvider.learnLanguge!.LCID > 0) {
-          DbProvider dbProvider = DbProvider();
+          LearnDbProvider dbProvider = LearnDbProvider();
           bool isLanguageExist = await dbProvider
               .checkLearnLanguage(StorageProvider.learnLanguge!.LCID);
 
@@ -160,7 +160,7 @@ class LoginProvider extends ChangeNotifier {
       if (apiresult.success!) {
         if (StorageProvider.learnLanguge != null &&
             StorageProvider.learnLanguge!.LCID > 0) {
-          DbProvider dbProvider = DbProvider();
+          LearnDbProvider dbProvider = LearnDbProvider();
           bool isLanguageExist = await dbProvider
               .checkLearnLanguage(StorageProvider.learnLanguge!.LCID);
 
@@ -256,10 +256,11 @@ class LoginProvider extends ChangeNotifier {
 
   Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
       BuildContext context,
+      DbProviderBase dbProvider,
       Lcid lcid,
       bool lernLng,
       void Function(int, int)? onReceiveProgress) async {
-    DbProvider dbProvider = DbProvider();
+    //DbProvider dbProvider = DbProvider();
     FileDownloadStatus processResult = FileDownloadStatus();
     processResult.status = false;
 

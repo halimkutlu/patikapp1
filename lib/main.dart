@@ -77,7 +77,7 @@ List<SingleChildWidget> providers = [
       create: (_) => IntroductionPageProvider()),
   ChangeNotifierProvider<LoginProvider>(create: (_) => LoginProvider()),
   ChangeNotifierProvider<RegisterProvider>(create: (_) => RegisterProvider()),
-  ChangeNotifierProvider<DbProvider>(create: (_) => DbProvider()),
+  ChangeNotifierProvider<LearnDbProvider>(create: (_) => LearnDbProvider()),
   ChangeNotifierProvider<DashboardProvider>(create: (_) => DashboardProvider()),
   ChangeNotifierProvider<ChangePasswordProvider>(
       create: (_) => ChangePasswordProvider()),

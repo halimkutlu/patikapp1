@@ -60,7 +60,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
   @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(context);
-    final dbProvider = Provider.of<DbProvider>(context);
+    final dbProvider = Provider.of<LearnDbProvider>(context);
     if (Languages.LngList.isEmpty) loginProvider.getLearnLanguage(context);
     Languages.LoadLngList(context);
     return Scaffold(
@@ -218,6 +218,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                           await loginProvider
                                               .startProcessOfDownloadLearnLanguage(
                                                   context,
+                                                  LearnDbProvider(),
                                                   language,
                                                   false,
                                                   onReceiveProgress);

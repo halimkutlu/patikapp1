@@ -24,7 +24,7 @@ class MainPageProvider extends ChangeNotifier {
   }
 
   void getCountInformation() async {
-    DbProvider dbProvider = DbProvider();
+    LearnDbProvider dbProvider = LearnDbProvider();
 
     List<WordStatistics> list = await dbProvider.getWordStatisticsList();
     _getLernedWordCount =

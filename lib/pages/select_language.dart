@@ -197,6 +197,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                             await loginProvider
                                                 .startProcessOfDownloadLearnLanguage(
                                                     context,
+                                                    AppDbProvider(),
                                                     language,
                                                     true,
                                                     onReceiveProgress);

@@ -22,7 +22,7 @@ class CategoryItem {
 
 class CategoriesProvider extends ChangeNotifier {
   final apirepository = APIRepository();
-  final dbProvider = DbProvider();
+  final dbProvider = LearnDbProvider();
   final List<WordListInformation> wordList = [];
 
   int? _getLernedWordCount = 0;

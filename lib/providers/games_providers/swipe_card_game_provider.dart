@@ -51,7 +51,7 @@ class SwipeCardGameProvider extends ChangeNotifier {
     prefs.setStringList('selectedWords', []);
 
     _wordsLoaded = false;
-    DbProvider dbProvider = DbProvider();
+    LearnDbProvider dbProvider = LearnDbProvider();
     //ADIM 1 ==> Seçilen dbId si ile öncelikle o kategoriye ait liste getirilir.
     _selectedCategoryWords = await getCategoriesWordsFromDB(dbId, dbProvider);
     //ADIM 2 ==> Seçilen kelimelere ait Veritabanından resimleri ve sesleri getirilir.
@@ -95,7 +95,7 @@ class SwipeCardGameProvider extends ChangeNotifier {
   }
 
   Future<List<Word>> getCategoriesWordsFromDB(
-      String? dbId, DbProvider dbProvider) async {
+      String? dbId, LearnDbProvider dbProvider) async {
     _selectedCategoryWords = await dbProvider.getRandomWordList(
         dbId: dbId, withoutCategoryName: true);
 

@@ -63,9 +63,18 @@ Future<DbClass> openDatabase(String path) async {
   return sonuc;
 }
 
-class DbProvider extends ChangeNotifier {
+abstract class DbProviderBase extends ChangeNotifier {
+  runProcess(BuildContext context, String filename);
+  ifConnectionAlive();
+  Future<void> closeDbConnection();
+  Future<bool> reOpenDbConnection();
+  Future<FileDownloadStatus> openDbConnection(Lcid lcid);
+}
+
+class LearnDbProvider extends DbProviderBase {
   static db.Database? database;
 
+  @override
   runProcess(BuildContext context, String filename) async {
     FileDownloadStatus result = FileDownloadStatus();
     result.status = false;
@@ -106,6 +115,7 @@ class DbProvider extends ChangeNotifier {
     }
   }
 
+  @override
   Future<bool> reOpenDbConnection() async {
     if (database != null && (database?.isOpen ?? false)) return true;
     if (StorageProvider.learnLanguge!.Code.isNotEmpty) {
@@ -119,6 +129,7 @@ class DbProvider extends ChangeNotifier {
     return false;
   }
 
+  @override
   Future<FileDownloadStatus> openDbConnection(Lcid lcid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setStringList("selectedWords", []);
@@ -155,6 +166,16 @@ class DbProvider extends ChangeNotifier {
     }
 
     return result;
+  }
+
+  @override
+  ifConnectionAlive() {
+    return database?.isOpen ?? false;
+  }
+
+  @override
+  Future<void> closeDbConnection() async {
+    if (database?.isOpen ?? false) await database!.close();
   }
 
   Future<List<String>> getPremiumContent() async {
@@ -196,14 +217,6 @@ class DbProvider extends ChangeNotifier {
       if (file.existsSync()) return file.path;
     }
     return "";
-  }
-
-  ifConnectionAlive() {
-    return database?.isOpen ?? false;
-  }
-
-  Future<void> closeDbConnection() async {
-    if (database?.isOpen ?? false) await database!.close();
   }
 
   Future<List<Word>> getWordList({bool withoutCategoryName = false}) async {
@@ -489,10 +502,52 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
   }
 }
 
-class AppDbProvider extends ChangeNotifier {
+class AppDbProvider extends DbProviderBase {
   static Database? database;
   bool? checkInformation;
 
+  @override
+  runProcess(BuildContext context, String filename) async {
+    FileDownloadStatus result = FileDownloadStatus();
+    result.status = false;
+    result.message = "";
+
+    bool permissionStatus;
+    final phoneId = DeviceProvider.getPhoneId();
+
+    final appDocDir = await getApplicationCacheDirectory();
+
+    final file = File('${appDocDir.path}/$filename.zip');
+
+    if (await file.exists()) {
+      try {
+        List<int> bytes = file.readAsBytesSync();
+        Archive archive = ZipDecoder().decodeBytes(bytes);
+
+        Directory dir = await getApplicationDocumentsDirectory();
+
+        for (ArchiveFile file in archive) {
+          File tempFile = File('${dir.path}/${file.name}');
+
+          tempFile
+            ..createSync(recursive: true)
+            ..writeAsBytesSync(file.content);
+        }
+      } catch (e) {
+        result.message = AppLocalizations.of(context).translate("177");
+        print(e);
+        return result;
+      } finally {
+        await file.delete();
+      }
+
+      result.status = true;
+      result.message = AppLocalizations.of(context).translate("176");
+      return result;
+    }
+  }
+
+  @override
   Future<bool> reOpenDbConnection() async {
     if (database?.isOpen ?? false) return true;
     if (StorageProvider.appLanguge!.Code.isNotEmpty) {
@@ -504,6 +559,7 @@ class AppDbProvider extends ChangeNotifier {
     return false;
   }
 
+  @override
   Future<FileDownloadStatus> openDbConnection(Lcid lcid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setStringList("selectedWords", []);
@@ -538,6 +594,16 @@ class AppDbProvider extends ChangeNotifier {
       }
     }
     return result;
+  }
+
+  @override
+  ifConnectionAlive() {
+    return database?.isOpen ?? false;
+  }
+
+  @override
+  Future<void> closeDbConnection() async {
+    if (database?.isOpen ?? false) await database!.close();
   }
 
   Future<List<String>> getPremiumContent() async {
@@ -577,14 +643,6 @@ class AppDbProvider extends ChangeNotifier {
     String dbPath = File('$patikAppDir/$lngName.db').path;
 
     return dbPath;
-  }
-
-  ifConnectionAlive() {
-    return database?.isOpen ?? false;
-  }
-
-  Future<void> closeDbConnection() async {
-    if (database?.isOpen ?? false) await database!.close();
   }
 
   Future<List<Word>> setWordAppLng(List<Word> liste) async {
