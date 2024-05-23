@@ -203,8 +203,14 @@ class LoginProvider extends ChangeNotifier {
           controller: forgotPasswordUrl,
           data: {"Username": forgotMailController.text});
       if (apiresult.success!) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
+        CustomAlertDialogOnlyConfirm(context, () {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => Login()));
+        },
+            AppLocalizations.of(context).translate("167"),
+            AppLocalizations.of(context).translate("19"),
+            ArtSweetAlertType.success,
+            AppLocalizations.of(context).translate("159"));
       } else {
         CustomAlertDialogOnlyConfirm(context, () {
           Navigator.pop(context);
