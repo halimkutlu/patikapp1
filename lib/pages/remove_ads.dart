@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
@@ -525,17 +524,8 @@ class _RemoveAdsState extends State<RemoveAds> {
           response.data!.roles!,
           response.data!.username!);
 
-      CustomAlertDialogOnlyConfirm(context, () async {
-        SharedPreferences shrdp = await SharedPreferences.getInstance();
-        var learnlcid = shrdp.getInt("learnlcid");
-        if (learnlcid != null) {
-          DbProvider db = DbProvider();
-          Lcid language = Languages.GetLngFromLCID(learnlcid);
-          await db.closeDbConnection();
-          await db.openDbConnection(language);
-        }
-
-        await Phoenix.rebirth(context);
+      CustomAlertDialogOnlyConfirm(context, () {
+        exit(0);
       },
           AppLocalizations.of(context).translate("164"),
           AppLocalizations.of(context).translate("182"),

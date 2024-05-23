@@ -13,7 +13,7 @@ import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DialogCategoriesProvider extends ChangeNotifier {
-  final dbProvider = DbProvider();
+  final dbProvider = LearnDbProvider();
   final List<DialogListInformation> wordList = [];
 
   List<DialogListInformation> categoryList = [];

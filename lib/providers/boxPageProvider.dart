@@ -51,7 +51,7 @@ class BoxPageProvider extends ChangeNotifier {
   }
 
   Future<void> getCountInformation() async {
-    DbProvider dbProvider = DbProvider();
+    LearnDbProvider dbProvider = LearnDbProvider();
 
     List<WordStatistics> list = await dbProvider.getWordStatisticsList();
     _getLernedWordCount =
@@ -68,12 +68,12 @@ class BoxPageProvider extends ChangeNotifier {
   }
 
   getListOfWords(int selectedBox, bool? completedGame, String? dbId) async {
-    DbProvider dbProvider = DbProvider();
+    LearnDbProvider dbProvider = LearnDbProvider();
     await getCategoriesWordsFromDB(
         dbProvider, selectedBox, completedGame, dbId);
   }
 
-  Future<List<Word>> getCategoriesWordsFromDB(DbProvider dbProvider,
+  Future<List<Word>> getCategoriesWordsFromDB(LearnDbProvider dbProvider,
       int selectedBox, bool? completedGame, String? dbId) async {
     List<Word> allWords = [];
     if (selectedBox == 0 && completedGame!) {

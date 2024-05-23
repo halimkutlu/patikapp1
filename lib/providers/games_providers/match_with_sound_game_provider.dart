@@ -358,7 +358,7 @@ class MatchWithSoundGameProvide extends ChangeNotifier {
   }
 
   getTrainingWords(playWithEnum playWith) async {
-    DbProvider dbProvider = DbProvider();
+    LearnDbProvider dbProvider = LearnDbProvider();
     List<WordStatistics> words = [];
     List<Word> allWords =
         await dbProvider.getWordList(withoutCategoryName: true);
