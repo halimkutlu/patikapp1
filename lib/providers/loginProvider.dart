@@ -7,7 +7,6 @@ import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/http_response.model.dart';
-import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/user.model.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/forgotPassword.dart';
@@ -16,7 +15,6 @@ import 'package:patikmobile/pages/register.dart';
 import 'package:patikmobile/pages/select_language.dart';
 import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
-import 'package:patikmobile/providers/download_file.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
 import 'package:patikmobile/widgets/customAlertDialog.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
@@ -221,85 +219,5 @@ class LoginProvider extends ChangeNotifier {
   void gotoForgotPassWordPage(BuildContext context) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => ForgotPassword()));
-  }
-
-  getLearnLanguage(BuildContext context) async {
-    httpSonucModel lngList =
-        await apirepository.get(controller: learnLanguageUrl);
-    if (lngList.success!) {
-      Languages.fromJson(lngList.data);
-      notifyListeners();
-    }
-  }
-
-  setUseLanguage(Lcid language, BuildContext context, bool dashboard) {
-    StorageProvider.updateLanguage(context, language);
-    notifyListeners();
-    //Navigator.pop(context);
-    CustomAlertDialogOnlyConfirm(context, () {
-      if (dashboard) {
-        Navigator.pop(context);
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => Dashboard(0)));
-      } else {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => SelectLearnLanguage()));
-      }
-
-      notifyListeners();
-    },
-        AppLocalizations.of(context).translate("164"),
-        AppLocalizations.of(context).translate("168"),
-        ArtSweetAlertType.success,
-        AppLocalizations.of(context).translate("159"));
-  }
-
-  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
-      BuildContext context,
-      DbProviderBase dbProvider,
-      Lcid lcid,
-      bool lernLng,
-      void Function(int, int)? onReceiveProgress) async {
-    //DbProvider dbProvider = DbProvider();
-    FileDownloadStatus processResult = FileDownloadStatus();
-    processResult.status = false;
-
-    if (lcid.Code.isNotEmpty) {
-      notifyListeners();
-
-      //DOSYA İNDİRME İŞLEMİ YAPILIR.
-      FileDownloadStatus resultDownloadFile = await downloadFile(
-          "GetLngFileStream", context,
-          lcid: lcid.LCID, onReceiveProgress: onReceiveProgress);
-
-      if (resultDownloadFile.status) {
-        //DOSYA İNDRİME İŞLEMİ BAŞARILI İSE DOSYAYI CACHEDEN ALARAK TELEFONA ÇIKARTMA İŞLEMİ YAPILIR
-        FileDownloadStatus result =
-            await dbProvider.runProcess(context, lcid.Code);
-        if (result.status == false) {
-          notifyListeners();
-          processResult.status = false;
-          return processResult;
-        } else {
-          //EĞER DOSYA ÇIKARTMA İŞLEMİ BAŞARILI İSE
-          if (dbProvider.ifConnectionAlive()) dbProvider.closeDbConnection();
-          FileDownloadStatus dbresult = await dbProvider.openDbConnection(lcid);
-          if (dbresult.status) {
-            processResult.status = true;
-          } else {
-            processResult.status = false;
-          }
-          notifyListeners();
-          return processResult;
-        }
-      } else {
-        processResult.status = false;
-        processResult.message = resultDownloadFile.message;
-        notifyListeners();
-        return processResult;
-      }
-    }
-    notifyListeners();
-    return processResult;
   }
 }

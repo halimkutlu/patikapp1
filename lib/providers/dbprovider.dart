@@ -1,23 +1,30 @@
-// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_function_literals_in_foreach_calls, curly_braces_in_flow_control_structures, unused_local_variable, avoid_print, prefer_interpolation_to_compose_strings, null_argument_to_non_null_type, avoid_init_to_null
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, avoid_function_literals_in_foreach_calls, curly_braces_in_flow_control_structures, unused_local_variable, avoid_print, prefer_interpolation_to_compose_strings, null_argument_to_non_null_type, avoid_init_to_null, prefer_const_constructors
 
 import 'dart:async';
 import 'dart:io';
 import 'package:archive/archive.dart';
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/dialog.dart' as dialog;
+import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/models/information.dart';
 import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:patikmobile/pages/dashboard.dart';
+import 'package:patikmobile/pages/select_learn_language.dart';
 import 'package:patikmobile/providers/apiService.dart';
 import 'package:patikmobile/providers/deviceProvider.dart';
+import 'package:patikmobile/providers/download_file.dart';
 import 'package:patikmobile/providers/storageProvider.dart';
+import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as db;
 import 'package:flutter_bcrypt/flutter_bcrypt.dart';
@@ -65,10 +72,10 @@ Future<DbClass> openDatabase(String path) async {
 
 abstract class DbProviderBase extends ChangeNotifier {
   runProcess(BuildContext context, String filename);
-  ifConnectionAlive();
-  Future<void> closeDbConnection();
-  Future<bool> reOpenDbConnection();
-  Future<FileDownloadStatus> openDbConnection(Lcid lcid);
+  //ifConnectionAlive();
+  Future<void> closeDb();
+  Future<bool> openDbConnection({bool reopen = false, Lcid? lcid = null});
+  Future<bool> openDb(Lcid lcid);
 }
 
 class LearnDbProvider extends DbProviderBase {
@@ -116,50 +123,43 @@ class LearnDbProvider extends DbProviderBase {
   }
 
   @override
-  Future<bool> reOpenDbConnection() async {
-    if (database != null && (database?.isOpen ?? false)) return true;
-    if (StorageProvider.learnLanguge!.Code.isNotEmpty) {
-      if (!(database?.isOpen ?? false)) {
-        String dbPath = await getDbPath();
-        var dbase = await openDatabase(dbPath);
-        database = dbase.database;
-        return dbase.open;
-      }
+  Future<bool> openDbConnection(
+      {bool reopen = false, Lcid? lcid = null}) async {
+    if (!reopen && database != null && (database?.isOpen ?? false)) return true;
+    lcid = lcid ?? StorageProvider.learnLanguge;
+    if (lcid != null && lcid.Code.isNotEmpty) {
+      return await openDb(lcid);
     }
     return false;
   }
 
   @override
-  Future<FileDownloadStatus> openDbConnection(Lcid lcid) async {
+  Future<bool> openDb(Lcid lcid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setStringList("selectedWords", []);
-    FileDownloadStatus result = FileDownloadStatus();
+    bool result = false;
     if (lcid.Code.isNotEmpty) {
-      if (!(database?.isOpen ?? false)) {
-        String dbPath = await getDbPath(lngName: lcid.Code);
-        var dbase = await openDatabase(dbPath);
-        database = dbase.database;
-        if (dbase.open) {
+      String dbPath = await getDbPath(lngName: lcid.Code);
+      var dbase = await openDatabase(dbPath);
+      database = dbase.database;
+      if (dbase.open) {
+        Information infrm = await getInformation(isOpen: true);
+        String hash = infrm.lngHash!;
+        StaticVariables.lngPlanType = infrm.lngPlanType!;
+        String phoneId = DeviceProvider.getPhoneId();
+        result = await FlutterBcrypt.verify(password: phoneId, hash: hash);
+        if (result) prefs.setInt(StorageProvider.learnLcidKey, lcid.LCID);
+
+        if (StaticVariables.Roles.any(
+            (element) => element == UserRole.premium)) {
           Information infrm = await getInformation();
-          String hash = infrm.lngHash!;
-          StaticVariables.lngPlanType = infrm.lngPlanType!;
-          String phoneId = DeviceProvider.getPhoneId();
-          result.status =
-              await FlutterBcrypt.verify(password: phoneId, hash: hash);
-          if (result.status)
-            prefs.setInt(StorageProvider.learnLcidKey, lcid.LCID);
-        }
-      } else {
-        result.status = true;
-      }
-      if (StaticVariables.Roles.any((element) => element == UserRole.premium)) {
-        Information infrm = await getInformation();
-        if (infrm.lngPlanType == LngPlanType.Free) {
-          try {
-            List<String> scripts = await getPremiumContent();
-            if (scripts.isNotEmpty) runScript(scripts);
-          } catch (e) {
-            print(e);
+          if (infrm.lngPlanType == LngPlanType.Free) {
+            try {
+              List<String> scripts = await getPremiumContent();
+              if (scripts.isNotEmpty) runScript(scripts);
+            } catch (e) {
+              print(e);
+            }
           }
         }
       }
@@ -168,14 +168,15 @@ class LearnDbProvider extends DbProviderBase {
     return result;
   }
 
-  @override
-  ifConnectionAlive() {
-    return database?.isOpen ?? false;
-  }
+  // @override
+  // ifConnectionAlive() {
+  //   return database?.isOpen ?? false;
+  // }
 
   @override
-  Future<void> closeDbConnection() async {
-    if (database?.isOpen ?? false) await database!.close();
+  Future<void> closeDb() async {
+    if (database != null && (database?.isOpen ?? false))
+      await database!.close();
   }
 
   Future<List<String>> getPremiumContent() async {
@@ -220,7 +221,7 @@ class LearnDbProvider extends DbProviderBase {
   }
 
   Future<List<Word>> getWordList({bool withoutCategoryName = false}) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
     var res = await database!.rawQuery('Select * from Words' +
         (withoutCategoryName ? ' where IsCategoryName != 1 $ifPremium' : ''));
@@ -231,7 +232,7 @@ class LearnDbProvider extends DbProviderBase {
   }
 
   Future<List<WordListInformation>> getCategories(BuildContext context) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     Directory dir = await getApplicationDocumentsDirectory();
@@ -248,7 +249,7 @@ from Words w where w.IsCategoryName = 1 ${ifPremiumx("w")}""";
 
   Future<List<dialog.DialogListInformation>> getDialogCategories(
       BuildContext context) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     Directory dir = await getApplicationDocumentsDirectory();
@@ -268,7 +269,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
       String id,
       String path,
       String currentLanguage) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     Directory dir = await getApplicationDocumentsDirectory();
@@ -284,7 +285,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
 
   Future<bool> addToWorkHardBox(int dbId) async {
     try {
-      var status = await reOpenDbConnection();
+      var status = await openDbConnection();
       if (!status) return false;
       await database!.insert(
         'WordStatistics',
@@ -308,7 +309,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
 
   Future<bool> addToLearnedBox(int dbId) async {
     try {
-      var status = await reOpenDbConnection();
+      var status = await openDbConnection();
       if (!status) return false;
       await database!.insert(
         'WordStatistics',
@@ -332,7 +333,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
 
   Future<bool> addToRepeatBox(int dbId) async {
     try {
-      var status = await reOpenDbConnection();
+      var status = await openDbConnection();
       if (!status) return false;
       await database!.insert(
         'WordStatistics',
@@ -356,7 +357,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
 
   Future<bool> updateWorkHard(int dbId) async {
     try {
-      var status = await reOpenDbConnection();
+      var status = await openDbConnection();
       if (!status) return false;
 
       await database!.update(
@@ -373,8 +374,8 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     }
   }
 
-  Future<Information> getInformation() async {
-    var status = await reOpenDbConnection();
+  Future<Information> getInformation({bool isOpen = false}) async {
+    var status = isOpen || await openDbConnection();
     if (!status) return Information();
 
     var res = await database!.query("Information", columns: [
@@ -391,7 +392,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
   }
 
   Future<List<WordStatistics>> getWordStatisticsList() async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     var res = await database!.query('WordStatistics', columns: [
@@ -409,7 +410,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
   }
 
   Future<List<Word>> getWordListById(String? dbId) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     var res = await database!.rawQuery(
@@ -425,7 +426,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
       bool withoutCategoryName = false,
       bool notInWordStatistics = true,
       int limit = 5}) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     String sqlQuery = """
@@ -449,7 +450,7 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
 
   Future<List<Word>> getRandomStatisticsWordList(
       {String? dbId = "", int limit = 5, List<int>? ignoreIdList}) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     String ignoreIds = "";
@@ -500,6 +501,66 @@ from Dialogs w where w.IsCategoryName = 1 order by Id desc""";
     }
     return true;
   }
+
+  getLearnLanguage(BuildContext context) async {
+    final apirepository = APIRepository();
+    httpSonucModel lngList =
+        await apirepository.get(controller: learnLanguageUrl);
+    if (lngList.success!) {
+      Languages.fromJson(lngList.data);
+      notifyListeners();
+    }
+  }
+
+  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
+      BuildContext context,
+      DbProviderBase dbProvider,
+      Lcid lcid,
+      bool lernLng,
+      void Function(int, int)? onReceiveProgress) async {
+    //DbProvider dbProvider = DbProvider();
+    FileDownloadStatus processResult = FileDownloadStatus();
+    processResult.status = false;
+
+    if (lcid.Code.isNotEmpty) {
+      notifyListeners();
+
+      //DOSYA İNDİRME İŞLEMİ YAPILIR.
+      FileDownloadStatus resultDownloadFile = await downloadFile(
+          "GetLngFileStream", context,
+          lcid: lcid.LCID, onReceiveProgress: onReceiveProgress);
+
+      if (resultDownloadFile.status) {
+        //DOSYA İNDRİME İŞLEMİ BAŞARILI İSE DOSYAYI CACHEDEN ALARAK TELEFONA ÇIKARTMA İŞLEMİ YAPILIR
+        FileDownloadStatus result =
+            await dbProvider.runProcess(context, lcid.Code);
+        if (result.status == false) {
+          notifyListeners();
+          processResult.status = false;
+          return processResult;
+        } else {
+          //EĞER DOSYA ÇIKARTMA İŞLEMİ BAŞARILI İSE
+          await closeDb();
+          FileDownloadStatus dbresult = FileDownloadStatus();
+          dbresult.status = await openDb(lcid);
+          if (dbresult.status) {
+            processResult.status = true;
+          } else {
+            processResult.status = false;
+          }
+          notifyListeners();
+          return processResult;
+        }
+      } else {
+        processResult.status = false;
+        processResult.message = resultDownloadFile.message;
+        notifyListeners();
+        return processResult;
+      }
+    }
+    notifyListeners();
+    return processResult;
+  }
 }
 
 class AppDbProvider extends DbProviderBase {
@@ -548,47 +609,40 @@ class AppDbProvider extends DbProviderBase {
   }
 
   @override
-  Future<bool> reOpenDbConnection() async {
-    if (database?.isOpen ?? false) return true;
-    if (StorageProvider.appLanguge!.Code.isNotEmpty) {
-      String dbPath = await getDbPath();
-      var dbase = await openDatabase(dbPath);
-      database = dbase.database;
-      return dbase.open;
+  Future<bool> openDbConnection(
+      {bool reopen = false, Lcid? lcid = null}) async {
+    if (!reopen && database != null && (database?.isOpen ?? false)) return true;
+    lcid = lcid ?? StorageProvider.appLanguge;
+    if (lcid != null && lcid.Code.isNotEmpty) {
+      return await openDb(lcid);
     }
     return false;
   }
 
   @override
-  Future<FileDownloadStatus> openDbConnection(Lcid lcid) async {
+  Future<bool> openDb(Lcid lcid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList("selectedWords", []);
-    FileDownloadStatus result = FileDownloadStatus();
+    bool result = false;
     if (lcid.Code.isNotEmpty) {
-      if (!(database?.isOpen ?? false)) {
-        String dbPath = await getDbPath();
-        var dbase = await openDatabase(dbPath);
-        database = dbase.database;
-        if (dbase.open) {
-          Information infrm = await getInformation();
-          String hash = infrm.lngHash!;
-          String phoneId = DeviceProvider.getPhoneId();
-          result.status =
-              await FlutterBcrypt.verify(password: phoneId, hash: hash);
-          if (result.status)
-            prefs.setInt(StorageProvider.appLcidKey, lcid.LCID);
-        }
-      } else {
-        result.status = true;
-      }
-      if (StaticVariables.Roles.any((element) => element == UserRole.premium)) {
-        Information infrm = await getInformation();
-        if (infrm.lngPlanType == LngPlanType.Free) {
-          try {
-            List<String> scripts = await getPremiumContent();
-            if (scripts.isNotEmpty) runScript(scripts);
-          } catch (e) {
-            print(e);
+      String dbPath = await getDbPath(lngName: lcid.Code);
+      var dbase = await openDatabase(dbPath);
+      database = dbase.database;
+      if (dbase.open) {
+        Information infrm = await getInformation(isOpen: true);
+        String hash = infrm.lngHash!;
+        String phoneId = DeviceProvider.getPhoneId();
+        result = await FlutterBcrypt.verify(password: phoneId, hash: hash);
+        if (result) prefs.setInt(StorageProvider.appLcidKey, lcid.LCID);
+
+        if (StaticVariables.Roles.any(
+            (element) => element == UserRole.premium)) {
+          if (infrm.lngPlanType == LngPlanType.Free) {
+            try {
+              List<String> scripts = await getPremiumContent();
+              if (scripts.isNotEmpty) runScript(scripts);
+            } catch (e) {
+              print(e);
+            }
           }
         }
       }
@@ -596,14 +650,15 @@ class AppDbProvider extends DbProviderBase {
     return result;
   }
 
-  @override
-  ifConnectionAlive() {
-    return database?.isOpen ?? false;
-  }
+  // @override
+  // ifConnectionAlive() {
+  //   return database?.isOpen ?? false;
+  // }
 
   @override
-  Future<void> closeDbConnection() async {
-    if (database?.isOpen ?? false) await database!.close();
+  Future<void> closeDb() async {
+    if (database != null && (database?.isOpen ?? false))
+      await database!.close();
   }
 
   Future<List<String>> getPremiumContent() async {
@@ -646,7 +701,7 @@ class AppDbProvider extends DbProviderBase {
   }
 
   Future<List<Word>> setWordAppLng(List<Word> liste) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     String idList = liste.map((e) => e.id).toList().join(",");
@@ -660,7 +715,7 @@ class AppDbProvider extends DbProviderBase {
 
   Future<List<WordListInformation>> setCategoryAppLng(
       List<WordListInformation> liste) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     String idList = liste.map((e) => e.dbId).toList().join(",");
@@ -675,7 +730,7 @@ class AppDbProvider extends DbProviderBase {
 
   Future<List<dialog.DialogListDBInformation>> setDialogAppLng(
       List<dialog.DialogListDBInformation> liste) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     String idList = liste.map((e) => e.id).toList().join(",");
@@ -689,7 +744,7 @@ class AppDbProvider extends DbProviderBase {
 
   Future<List<dialog.DialogListInformation>> setDialogCategoryAppLng(
       List<dialog.DialogListInformation> liste) async {
-    var status = await reOpenDbConnection();
+    var status = await openDbConnection();
     if (!status) return [];
 
     String idList = liste.map((e) => e.dbId).toList().join(",");
@@ -702,8 +757,8 @@ class AppDbProvider extends DbProviderBase {
     return liste;
   }
 
-  Future<Information> getInformation() async {
-    var status = await reOpenDbConnection();
+  Future<Information> getInformation({bool isOpen = false}) async {
+    var status = isOpen || await openDbConnection();
     if (!status) return Information();
 
     var res = await database!.query("Information", columns: [
@@ -741,5 +796,77 @@ class AppDbProvider extends DbProviderBase {
       return false;
     }
     return true;
+  }
+
+  setUseLanguage(Lcid language, BuildContext context, bool dashboard) {
+    StorageProvider.updateLanguage(context, language);
+    notifyListeners();
+    //Navigator.pop(context);
+    CustomAlertDialogOnlyConfirm(context, () {
+      if (dashboard) {
+        Navigator.pop(context);
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => Dashboard(0)));
+      } else {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => SelectLearnLanguage()));
+      }
+
+      notifyListeners();
+    },
+        AppLocalizations.of(context).translate("164"),
+        AppLocalizations.of(context).translate("168"),
+        ArtSweetAlertType.success,
+        AppLocalizations.of(context).translate("159"));
+  }
+
+  Future<FileDownloadStatus> startProcessOfDownloadLearnLanguage(
+      BuildContext context,
+      DbProviderBase dbProvider,
+      Lcid lcid,
+      bool lernLng,
+      void Function(int, int)? onReceiveProgress) async {
+    //DbProvider dbProvider = DbProvider();
+    FileDownloadStatus processResult = FileDownloadStatus();
+    processResult.status = false;
+
+    if (lcid.Code.isNotEmpty) {
+      notifyListeners();
+
+      //DOSYA İNDİRME İŞLEMİ YAPILIR.
+      FileDownloadStatus resultDownloadFile = await downloadFile(
+          "GetLngFileStream", context,
+          lcid: lcid.LCID, onReceiveProgress: onReceiveProgress);
+
+      if (resultDownloadFile.status) {
+        //DOSYA İNDRİME İŞLEMİ BAŞARILI İSE DOSYAYI CACHEDEN ALARAK TELEFONA ÇIKARTMA İŞLEMİ YAPILIR
+        FileDownloadStatus result =
+            await dbProvider.runProcess(context, lcid.Code);
+        if (result.status == false) {
+          notifyListeners();
+          processResult.status = false;
+          return processResult;
+        } else {
+          //EĞER DOSYA ÇIKARTMA İŞLEMİ BAŞARILI İSE
+          await closeDb();
+          FileDownloadStatus dbresult = FileDownloadStatus();
+          dbresult.status = await openDb(lcid);
+          if (dbresult.status) {
+            processResult.status = true;
+          } else {
+            processResult.status = false;
+          }
+          notifyListeners();
+          return processResult;
+        }
+      } else {
+        processResult.status = false;
+        processResult.message = resultDownloadFile.message;
+        notifyListeners();
+        return processResult;
+      }
+    }
+    notifyListeners();
+    return processResult;
   }
 }

@@ -28,7 +28,6 @@ class SelectLearnLanguage extends StatefulWidget {
 
 class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  late LoginProvider loginProvider;
   late double received = 0;
   late bool isDownloading = false;
   //late NavigatorState _navigator;
@@ -59,9 +58,8 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
 
   @override
   Widget build(BuildContext context) {
-    final loginProvider = Provider.of<LoginProvider>(context);
     final dbProvider = Provider.of<LearnDbProvider>(context);
-    if (Languages.LngList.isEmpty) loginProvider.getLearnLanguage(context);
+    if (Languages.LngList.isEmpty) dbProvider.getLearnLanguage(context);
     Languages.LoadLngList(context);
     return Scaffold(
       backgroundColor: Color.fromRGBO(248, 187, 195, 1),
@@ -190,8 +188,7 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                   if (lngCheck) {
                                     StorageProvider.updateLearnLanguage(
                                         context, language);
-                                    await dbProvider.closeDbConnection();
-                                    await dbProvider.openDbConnection(language);
+                                    await dbProvider.openDb(language);
                                     if (widget.noReturn == true) {
                                       Navigator.of(_scaffoldKey.currentContext!)
                                           .pushAndRemoveUntil(
@@ -214,14 +211,13 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                       isDownloading = true;
                                       StaticVariables.loading = true;
 
-                                      FileDownloadStatus status =
-                                          await loginProvider
-                                              .startProcessOfDownloadLearnLanguage(
-                                                  context,
-                                                  LearnDbProvider(),
-                                                  language,
-                                                  false,
-                                                  onReceiveProgress);
+                                      FileDownloadStatus status = await dbProvider
+                                          .startProcessOfDownloadLearnLanguage(
+                                              context,
+                                              LearnDbProvider(),
+                                              language,
+                                              false,
+                                              onReceiveProgress);
                                       if (status.status) {
                                         StorageProvider.updateLearnLanguage(
                                             context, language);

@@ -49,7 +49,6 @@ class _SelectLanguageState extends State<SelectLanguage> {
 
   @override
   Widget build(BuildContext context) {
-    final loginProvider = Provider.of<LoginProvider>(context);
     final appDbProvider = Provider.of<AppDbProvider>(context);
     Languages.LoadLngList(context);
     //late NavigatorState _navigator;
@@ -178,13 +177,11 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                     var lngCheck = await appDbProvider
                                         .checkAppLanguage(language.LCID);
                                     if (lngCheck) {
-                                      loginProvider.setUseLanguage(
+                                      appDbProvider.setUseLanguage(
                                           language,
                                           _scaffoldKey.currentContext!,
                                           widget.dashboard ?? false);
-                                      await appDbProvider.closeDbConnection();
-                                      await appDbProvider
-                                          .openDbConnection(language);
+                                      await appDbProvider.openDb(language);
                                     } else {
                                       CustomAlertDialog(
                                           _scaffoldKey.currentContext!,
@@ -194,7 +191,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                         isDownloading = true;
                                         StaticVariables.loading = true;
                                         FileDownloadStatus status =
-                                            await loginProvider
+                                            await appDbProvider
                                                 .startProcessOfDownloadLearnLanguage(
                                                     context,
                                                     AppDbProvider(),
@@ -203,14 +200,11 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                                     onReceiveProgress);
                                         isDownloading = false;
                                         if (status.status) {
-                                          loginProvider.setUseLanguage(
+                                          appDbProvider.setUseLanguage(
                                               language,
                                               _scaffoldKey.currentContext!,
                                               widget.dashboard ?? false);
-                                          await appDbProvider
-                                              .closeDbConnection();
-                                          await appDbProvider
-                                              .openDbConnection(language);
+                                          await appDbProvider.openDb(language);
                                         } else {
                                           CustomAlertDialogOnlyConfirm(
                                               _scaffoldKey.currentContext!, () {
