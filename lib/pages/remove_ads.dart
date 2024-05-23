@@ -14,13 +14,10 @@ import 'package:patikmobile/api/api_repository.dart';
 import 'package:patikmobile/api/api_urls.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
-import 'package:patikmobile/models/language.model.dart';
 import 'package:patikmobile/models/user.model.dart';
 import 'package:patikmobile/providers/apiService.dart';
-import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/services/consumable_store.dart';
 import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // Auto-consume must be true on iOS.
 // To try without auto-consume on another platform, change `true` to `false` here.
