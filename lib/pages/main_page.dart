@@ -9,6 +9,7 @@ import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/pages/box_page.dart';
 import 'package:patikmobile/pages/dialog_page.dart';
 import 'package:patikmobile/pages/learn_page.dart';
+import 'package:patikmobile/pages/select_dialog_category.dart';
 import 'package:patikmobile/pages/training_page.dart';
 import 'package:patikmobile/providers/mainPageProvider.dart';
 import 'package:patikmobile/services/appTimer.dart';
@@ -108,8 +109,8 @@ class _MainPageState extends State<MainPage> {
                 imageStr: 'lib/assets/img/chat.png',
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DialogPage(
-                            dialogId: "-1",
+                      builder: (context) => SelectDialogCategory(
+                            comeFromMenu: true,
                           )));
                 }),
             statusArea(),

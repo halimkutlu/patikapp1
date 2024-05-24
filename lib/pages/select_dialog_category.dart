@@ -15,7 +15,8 @@ import 'package:sizer/sizer.dart';
 import 'package:patikmobile/assets/style/mainColors.dart';
 
 class SelectDialogCategory extends StatefulWidget {
-  const SelectDialogCategory({super.key});
+  final bool comeFromMenu;
+  const SelectDialogCategory({super.key, this.comeFromMenu = false});
 
   @override
   State<SelectDialogCategory> createState() => _SelectDialogCategoryState();
@@ -39,8 +40,9 @@ class _SelectDialogCategoryState extends State<SelectDialogCategory> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: widget.comeFromMenu,
       child: Scaffold(
+          appBar: widget.comeFromMenu ? AppBar() : null,
           backgroundColor: MainColors.backgroundColor,
           body: Consumer<DialogCategoriesProvider>(
               builder: (context, provider, child) {
