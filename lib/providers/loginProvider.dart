@@ -51,7 +51,7 @@ class LoginProvider extends ChangeNotifier {
 
   void logout(BuildContext context) async {
     CustomAlertDialog(context, () {
-      apirepository.removeToken();
+      APIRepository.removeToken();
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
     },

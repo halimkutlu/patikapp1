@@ -380,6 +380,11 @@ class APIRepository {
     }
   }
 
+  static void logoutAndCloseApp() async {
+    await removeToken();
+    exit(0);
+  }
+
   static void saveToken(String token, String firstName, String lastName,
       List<int> roles, String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -392,23 +397,20 @@ class APIRepository {
     StaticVariables.token = token;
   }
 
-  void removeToken() async {
+  static Future<void> removeToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove("Token");
     await prefs.remove("firstName");
     await prefs.remove("lastName");
     await prefs.remove("userName");
-    await prefs.remove("uidHash");
-    await prefs.remove("emailHash");
-    await prefs.remove("passwordHash");
-    await prefs.remove("iv");
+    await deleteUserNamePasswordEncyrpted();
 
     await prefs.remove("roles"); //değiştirilicek
 
     StaticVariables.reset();
   }
 
-  Future<void> deleteUserNamePasswordEncyrpted() async {
+  static Future<void> deleteUserNamePasswordEncyrpted() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove("uidHash");
     await prefs.remove("emailHash");

@@ -509,31 +509,19 @@ class _RemoveAdsState extends State<RemoveAds> {
 
     UserResult response = await apiService.purchase(afterPurchaseUrl, data);
     if (response.success == true) {
-      StaticVariables.token = response.data!.token!;
-      StaticVariables.Name = response.data!.firstName ?? "";
-      StaticVariables.Surname = response.data!.lastName ?? "";
-      StaticVariables.Roles = response.data!.roles!;
-      StaticVariables.UserName = response.data!.username!;
-      APIRepository.saveToken(
-          response.data!.token!,
-          response.data!.firstName!,
-          response.data!.lastName!,
-          response.data!.roles!,
-          response.data!.username!);
-
-      CustomAlertDialogOnlyConfirm(context, () {
-        exit(0);
-      },
+      CustomAlertDialogOnlyConfirm(
+          context,
+          () => APIRepository.logoutAndCloseApp(),
           AppLocalizations.of(context).translate("164"),
           AppLocalizations.of(context).translate("182"),
           ArtSweetAlertType.info,
           AppLocalizations.of(context).translate("159"));
     } else {
-      CustomAlertDialogOnlyConfirm(context, () {
-        Navigator.pop(context);
-      },
+      CustomAlertDialogOnlyConfirm(
+          context,
+          () => APIRepository.logoutAndCloseApp(),
           AppLocalizations.of(context).translate("164"),
-          response.message!,
+          "${response.message!}\n\n${AppLocalizations.of(context).translate("182")}",
           ArtSweetAlertType.danger,
           AppLocalizations.of(context).translate("159"));
     }

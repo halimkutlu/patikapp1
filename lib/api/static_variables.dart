@@ -27,6 +27,7 @@ class StaticVariables {
     LangCode = "";
     FirstTimeLogin = true;
     PhoneID = "";
+    lngPlanType = LngPlanType.Free;
   }
 
   static bool _value = false;
