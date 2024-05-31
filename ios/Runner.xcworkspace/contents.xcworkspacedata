@@ -2,6 +2,15 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Learn With Patik.storekit">
+   </FileRef>
+   <FileRef
+      location = "group:StoreKitTestCertificate.cer">
+   </FileRef>
+   <FileRef
+      location = "group:../../patikappkeyler/StoreKitTestCertificate.cer">
+   </FileRef>
+   <FileRef
       location = "group:Runner.xcodeproj">
    </FileRef>
    <FileRef

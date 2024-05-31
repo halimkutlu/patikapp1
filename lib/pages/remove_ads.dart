@@ -23,8 +23,8 @@ import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 // To try without auto-consume on another platform, change `true` to `false` here.
 final bool _kAutoConsume = Platform.isIOS || true;
 
-const String _premium = 'premium';
-const List<String> _kProductIds = <String>[_premium];
+String _premium =  'premium${Platform.isIOS ? "ios" : ""}';
+List<String> _kProductIds = <String>[_premium];
 
 class RemoveAds extends StatefulWidget {
   const RemoveAds({super.key});
@@ -187,33 +187,6 @@ class _RemoveAdsState extends State<RemoveAds> {
     );
   }
 
-  // Card _buildConnectionCheckTile() {
-  //   if (_loading) {
-  //     return const Card(child: ListTile(title: Text('Trying to connect...')));
-  //   }
-  //   final Widget storeHeader = ListTile(
-  //     leading: Icon(_isAvailable ? Icons.check : Icons.block,
-  //         color: _isAvailable
-  //             ? Colors.green
-  //             : ThemeData.light().colorScheme.error),
-  //     title:
-  //         Text('The store is ${_isAvailable ? 'available' : 'unavailable'}.'),
-  //   );
-  //   final List<Widget> children = <Widget>[storeHeader];
-
-  //   if (_isAvailable == false) {
-  //     children.addAll(<Widget>[
-  //       const Divider(),
-  //       ListTile(
-  //         title: Text('Not connected',
-  //             style: TextStyle(color: ThemeData.light().colorScheme.error)),
-  //         subtitle: const Text(
-  //             'Unable to connect to the payments processor. Has this app been configured correctly? See the example README for instructions.'),
-  //       ),
-  //     ]);
-  //   }
-  //   return Card(child: Column(children: children));
-  // }
 
   Card _buildProductList() {
     if (_loading) {
@@ -309,75 +282,6 @@ class _RemoveAdsState extends State<RemoveAds> {
     return Card(child: Column(children: <Widget>[] + productList));
   }
 
-  // Card _buildConsumableBox() {
-  //   if (_loading) {
-  //     return const Card(
-  //         child: ListTile(
-  //             leading: CircularProgressIndicator(),
-  //             title: Text('Fetching consumables...')));
-  //   }
-  //   if (!_isAvailable || _notFoundIds.contains(_premium)) {
-  //     return const Card();
-  //   }
-  //   const ListTile consumableHeader =
-  //       ListTile(title: Text('Purchased consumables'));
-  //   final List<Widget> tokens = _consumables.map((String id) {
-  //     return GridTile(
-  //       child: IconButton(
-  //         icon: const Icon(
-  //           Icons.stars,
-  //           size: 42.0,
-  //           color: Colors.orange,
-  //         ),
-  //         splashColor: Colors.yellowAccent,
-  //         onPressed: () => consume(id),
-  //       ),
-  //     );
-  //   }).toList();
-  //   return Card(
-  //       child: Column(children: <Widget>[
-  //     consumableHeader,
-  //     const Divider(),
-  //     GridView.count(
-  //       crossAxisCount: 5,
-  //       shrinkWrap: true,
-  //       padding: const EdgeInsets.all(16.0),
-  //       children: tokens,
-  //     )
-  //   ]));
-  // }
-
-  // Widget _buildRestoreButton() {
-  //   if (_loading) {
-  //     return Container();
-  //   }
-
-  //   return Padding(
-  //     padding: const EdgeInsets.all(4.0),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.end,
-  //       children: <Widget>[
-  //         TextButton(
-  //           style: TextButton.styleFrom(
-  //             backgroundColor: Theme.of(context).primaryColor,
-  //             foregroundColor: Colors.white,
-  //           ),
-  //           onPressed: () => _inAppPurchase.restorePurchases(),
-  //           child: const Text('Restore purchases'),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Future<void> consume(String id) async {
-  //   await ConsumableStore.consume(id);
-  //   final List<String> consumables = await ConsumableStore.load();
-  //   setState(() {
-  //     _consumables = consumables;
-  //   });
-  // }
-
   void showPendingUI() {
     setState(() {
       _purchasePending = true;
@@ -446,7 +350,10 @@ class _RemoveAdsState extends State<RemoveAds> {
         if (purchaseDetails.pendingCompletePurchase) {
           _inAppPurchase
               .completePurchase(purchaseDetails)
-              .then((value) => changeUserRoleofApp(purchaseDetails));
+              .then((value) => {
+         
+                changeUserRoleofApp(purchaseDetails)
+              });
         }
       }
     }
@@ -488,6 +395,13 @@ class _RemoveAdsState extends State<RemoveAds> {
   }
 
   void changeUserRoleofApp(PurchaseDetails purchaseDetails) async {
+    if(purchaseDetails.purchaseID == null)
+    {
+        setState(() {
+      _purchasePending = false;
+    });
+      return;
+    }
     Map<String, dynamic> jsonMap =
         json.decode(purchaseDetails.verificationData.localVerificationData);
     Purchase purchase = Purchase.fromJson(jsonMap);
