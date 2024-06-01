@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -23,7 +24,7 @@ import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 // To try without auto-consume on another platform, change `true` to `false` here.
 final bool _kAutoConsume = Platform.isIOS || true;
 
-String _premium =  'premium${Platform.isIOS ? "ios" : ""}';
+String _premium =  'premium${Platform.isIOS ? "ios_consumble" : ""}';
 List<String> _kProductIds = <String>[_premium];
 
 class RemoveAds extends StatefulWidget {
@@ -394,6 +395,40 @@ class _RemoveAdsState extends State<RemoveAds> {
     return oldSubscription;
   }
 
+  void verifyIOSPurchase(PurchaseDetails purchaseDetails) async {
+  String localVerificationData = purchaseDetails.verificationData.serverVerificationData;
+
+  // Apple'ın doğrulama URL'si
+  String url = 'https://sandbox.itunes.apple.com/verifyReceipt';
+
+  // İstek gövdesi
+  Map<String, dynamic> body = {
+    'receipt-data': localVerificationData.toString(),
+    'password': "37fe8235c5f045ab908b6f512ca90351",  // App Store Connect'ten alabileceğiniz paylaşılan gizli anahtar
+    "exclude-old-transactions": false
+  };
+
+  // POST isteği gönderme
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: json.encode(body),
+  );
+
+  if (response.statusCode == 200) {
+    // Başarılı doğrulama
+    Map<String, dynamic> responseData = json.decode(response.body);
+    print('Doğrulama başarılı: $responseData');
+    // Doğrulama sonuçlarını işleyin
+  } else {
+    // Doğrulama başarısız
+    print('Doğrulama başarısız: ${response.statusCode}');
+    // Hata işlemlerini gerçekleştirin
+  }
+}
+
   void changeUserRoleofApp(PurchaseDetails purchaseDetails) async {
     if(purchaseDetails.purchaseID == null)
     {
@@ -402,6 +437,7 @@ class _RemoveAdsState extends State<RemoveAds> {
     });
       return;
     }
+
     Map<String, dynamic> jsonMap =
         json.decode(purchaseDetails.verificationData.localVerificationData);
     Purchase purchase = Purchase.fromJson(jsonMap);

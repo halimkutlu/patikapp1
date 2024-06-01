@@ -37,6 +37,34 @@
 	<string>Camera access is not used in any area within the application.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Microphone access is not used in any area within the application.</string>
+
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.patik.mobile</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.799969018625-ba7uco4rb9jhnjj43r5kknf3sc5et4dg</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>***Something here***</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -57,4 +85,5 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 </dict>
+
 </plist>
