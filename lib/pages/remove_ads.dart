@@ -430,19 +430,21 @@ class _RemoveAdsState extends State<RemoveAds> {
 }
 
   void changeUserRoleofApp(PurchaseDetails purchaseDetails) async {
-    if(purchaseDetails.purchaseID == null)
+    if(Platform.isAndroid && purchaseDetails.purchaseID == null)
     {
         setState(() {
       _purchasePending = false;
     });
       return;
     }
-
-    Map<String, dynamic> jsonMap =
+    Map<String,Object?> data = {};
+    if(Platform.isAndroid)
+    {
+Map<String, dynamic> jsonMap =
         json.decode(purchaseDetails.verificationData.localVerificationData);
     Purchase purchase = Purchase.fromJson(jsonMap);
     purchase.source = purchaseDetails.verificationData.source;
-    var data = {
+     data = {
       "Acknowledged": purchase.acknowledged,
       "OrderId": purchase.orderId,
       "PackageName": purchase.packageName,
@@ -452,8 +454,31 @@ class _RemoveAdsState extends State<RemoveAds> {
       "PurchaseTime": purchase.purchaseTime,
       "PurchaseToken": purchase.purchaseToken,
       "Quantity": purchase.quantity,
-      "Source": purchase.source
+      "Source": purchase.source,
+      "Platform":  "Android",
+      "PurchaseDetailsResponse" : json.encode(purchaseDetails),
     };
+    }
+    if(Platform.isIOS)
+    {
+      print(purchaseDetails);
+      data = {
+        "PurchaseDetailsResponse" : json.encode(purchaseDetails),
+        "Acknowledged": false,
+        "OrderId": "",
+        "PackageName": "",
+        "ProductId": "",
+        "PurchaseStatus": 1,
+        "PurchaseState": 1,
+        "PurchaseTime": 0,
+        "PurchaseToken": "",
+        "Quantity": 1,
+        "Source": "",
+        "Platform":"IOS",
+      };
+    
+    }
+    
 
     final apiService = ApiService(baseUrl: BASE_URL);
 
