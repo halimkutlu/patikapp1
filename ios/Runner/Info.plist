@@ -59,10 +59,6 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>***Something here***</string>
-			</array>
 		</dict>
 	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
