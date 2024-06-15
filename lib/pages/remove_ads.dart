@@ -24,8 +24,9 @@ import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 // To try without auto-consume on another platform, change `true` to `false` here.
 final bool _kAutoConsume = Platform.isIOS || true;
 
-String _premium =  'premium${Platform.isIOS ? "ios_consumble" : ""}';
+String _premium = 'premium${Platform.isIOS ? "ios_consumble_new" : ""}';
 List<String> _kProductIds = <String>[_premium];
+String debugText = "hazır";
 
 class RemoveAds extends StatefulWidget {
   const RemoveAds({super.key});
@@ -135,7 +136,7 @@ class _RemoveAdsState extends State<RemoveAds> {
       iosPlatformAddition.setDelegate(null);
     }
     _subscription.cancel();
-    super.dispose();
+    super.dispose();  
   }
 
   @override
@@ -145,6 +146,8 @@ class _RemoveAdsState extends State<RemoveAds> {
       stack.add(
         ListView(
           children: <Widget>[
+            // Center(child: Text(_premium)),
+            // Center(child: Text(debugText)),
             //_buildConnectionCheckTile(),
             _buildProductList(),
             //_buildConsumableBox(),
@@ -188,7 +191,6 @@ class _RemoveAdsState extends State<RemoveAds> {
     );
   }
 
-
   Card _buildProductList() {
     if (_loading) {
       return const Card(
@@ -202,11 +204,13 @@ class _RemoveAdsState extends State<RemoveAds> {
     //const ListTile productHeader = ListTile(title: Text('Products for Sale'));
     final List<ListTile> productList = <ListTile>[];
     if (_notFoundIds.isNotEmpty) {
-      productList.add(ListTile(
-          title: Text('[${_notFoundIds.join(", ")}] not found',
-              style: TextStyle(color: ThemeData.light().colorScheme.error)),
-          subtitle: const Text(
-              'This app needs special configuration to run. Please see example/README.md for instructions.')));
+      productList.add(
+        ListTile(
+            title: Text('[${_notFoundIds.join(", ")}] not found',
+                style: TextStyle(color: ThemeData.light().colorScheme.error)),
+            subtitle: const Text(
+                'This app needs special configuration to run. Please see example/README.md for instructions.')),
+      );
     }
 
     // This loading previous purchases code is just a demo. Please do not use this as it is.
@@ -348,11 +352,9 @@ class _RemoveAdsState extends State<RemoveAds> {
             await androidAddition.consumePurchase(purchaseDetails);
           }
         }
-        if (purchaseDetails.pendingCompletePurchase) {
-          _inAppPurchase
-              .completePurchase(purchaseDetails)
-              .then((value) => {
-         
+
+        if (purchaseDetails.pendingCompletePurchase ) {
+          _inAppPurchase.completePurchase(purchaseDetails).then((value) => {
                 changeUserRoleofApp(purchaseDetails)
               });
         }
@@ -396,109 +398,137 @@ class _RemoveAdsState extends State<RemoveAds> {
   }
 
   void verifyIOSPurchase(PurchaseDetails purchaseDetails) async {
-  String localVerificationData = purchaseDetails.verificationData.serverVerificationData;
+    String localVerificationData =
+        purchaseDetails.verificationData.serverVerificationData;
 
-  // Apple'ın doğrulama URL'si
-  String url = 'https://sandbox.itunes.apple.com/verifyReceipt';
+    // Apple'ın doğrulama URL'si
+    String url = 'https://sandbox.itunes.apple.com/verifyReceipt';
 
-  // İstek gövdesi
-  Map<String, dynamic> body = {
-    'receipt-data': localVerificationData.toString(),
-    'password': "37fe8235c5f045ab908b6f512ca90351",  // App Store Connect'ten alabileceğiniz paylaşılan gizli anahtar
-    "exclude-old-transactions": false
-  };
+    // İstek gövdesi
+    Map<String, dynamic> body = {
+      'receipt-data': localVerificationData.toString(),
+      'password':
+          "37fe8235c5f045ab908b6f512ca90351", // App Store Connect'ten alabileceğiniz paylaşılan gizli anahtar
+      "exclude-old-transactions": false
+    };
 
-  // POST isteği gönderme
-  final response = await http.post(
-    Uri.parse(url),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: json.encode(body),
-  );
+    // POST isteği gönderme
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(body),
+    );
 
-  if (response.statusCode == 200) {
-    // Başarılı doğrulama
-    Map<String, dynamic> responseData = json.decode(response.body);
-    print('Doğrulama başarılı: $responseData');
-    // Doğrulama sonuçlarını işleyin
-  } else {
-    // Doğrulama başarısız
-    print('Doğrulama başarısız: ${response.statusCode}');
-    // Hata işlemlerini gerçekleştirin
+    if (response.statusCode == 200) {
+      // Başarılı doğrulama
+      Map<String, dynamic> responseData = json.decode(response.body);
+      print('Doğrulama başarılı: $responseData');
+      // Doğrulama sonuçlarını işleyin
+    } else {
+      // Doğrulama başarısız
+      print('Doğrulama başarısız: ${response.statusCode}');
+      // Hata işlemlerini gerçekleştirin
+    }
   }
-}
 
   void changeUserRoleofApp(PurchaseDetails purchaseDetails) async {
-    if(Platform.isAndroid && purchaseDetails.purchaseID == null)
-    {
-        setState(() {
-      _purchasePending = false;
+    final apiService = ApiService(baseUrl: BASE_URL);
+    setState(() {
+      debugText = "changeUserRoleofApp e girdi";
     });
+    if (Platform.isAndroid && purchaseDetails.purchaseID == null) {
+      setState(() {
+        debugText = "purchaseID null geldi";
+        _purchasePending = false;
+      });
       return;
     }
-    Map<String,Object?> data = {};
-    if(Platform.isAndroid)
-    {
-Map<String, dynamic> jsonMap =
-        json.decode(purchaseDetails.verificationData.localVerificationData);
-    Purchase purchase = Purchase.fromJson(jsonMap);
-    purchase.source = purchaseDetails.verificationData.source;
-     data = {
-      "Acknowledged": purchase.acknowledged,
-      "OrderId": purchase.orderId,
-      "PackageName": purchase.packageName,
-      "ProductId": purchase.productId,
-      "PurchaseStatus": purchaseDetails.status.index,
-      "PurchaseState": purchase.purchaseState,
-      "PurchaseTime": purchase.purchaseTime,
-      "PurchaseToken": purchase.purchaseToken,
-      "Quantity": purchase.quantity,
-      "Source": purchase.source,
-      "Platform":  "Android",
-      "PurchaseDetailsResponse" : json.encode(purchaseDetails),
-    };
+    Map<String, Object?> data = {};
+    if (Platform.isAndroid) {
+      Map<String, dynamic> jsonMap =
+          json.decode(purchaseDetails.verificationData.localVerificationData);
+      Purchase purchase = Purchase.fromJson(jsonMap);
+      purchase.source = purchaseDetails.verificationData.source;
+      var data = {
+        "Acknowledged": purchase.acknowledged,
+        "OrderId": purchase.orderId,
+        "PackageName": purchase.packageName,
+        "ProductId": purchase.productId,
+        "PurchaseStatus": purchaseDetails.status.index,
+        "PurchaseState": purchase.purchaseState,
+        "PurchaseTime": purchase.purchaseTime,
+        "PurchaseToken": purchase.purchaseToken,
+        "Quantity": purchase.quantity,
+        "Source": purchase.source,
+        "Platform": "Android",
+        "PurchaseDetailsResponse": json.encode(purchaseDetails),
+      };
+      UserResult response = await apiService.purchase(afterPurchaseUrl, data);
+      if (response.success == true) {
+        setState(() {
+          debugText = "Servis başarılı";
+        });
+        CustomAlertDialogOnlyConfirm(
+            context,
+            () => APIRepository.logoutAndCloseApp(),
+            AppLocalizations.of(context).translate("164"),
+            AppLocalizations.of(context).translate("182"),
+            ArtSweetAlertType.info,
+            AppLocalizations.of(context).translate("159"));
+      } else {
+        CustomAlertDialogOnlyConfirm(
+            context,
+            () => APIRepository.logoutAndCloseApp(),
+            AppLocalizations.of(context).translate("164"),
+            "${response.message!}\n\n${AppLocalizations.of(context).translate("182")}",
+            ArtSweetAlertType.danger,
+            AppLocalizations.of(context).translate("159"));
+      }
     }
-    if(Platform.isIOS)
-    {
-      print(purchaseDetails);
-      data = {
-        "PurchaseDetailsResponse" : json.encode(purchaseDetails),
+
+    if (Platform.isIOS) {
+      var data = {
         "Acknowledged": false,
         "OrderId": "",
         "PackageName": "",
         "ProductId": "",
-        "PurchaseStatus": 1,
-        "PurchaseState": 1,
+        "PurchaseStatus": purchaseDetails.status.index,
+        "PurchaseState": purchaseDetails.status.index,
         "PurchaseTime": 0,
         "PurchaseToken": "",
         "Quantity": 1,
         "Source": "",
-        "Platform":"IOS",
+        "Platform": "IOS",
       };
-    
-    }
-    
-
-    final apiService = ApiService(baseUrl: BASE_URL);
-
-    UserResult response = await apiService.purchase(afterPurchaseUrl, data);
-    if (response.success == true) {
-      CustomAlertDialogOnlyConfirm(
-          context,
-          () => APIRepository.logoutAndCloseApp(),
-          AppLocalizations.of(context).translate("164"),
-          AppLocalizations.of(context).translate("182"),
-          ArtSweetAlertType.info,
-          AppLocalizations.of(context).translate("159"));
-    } else {
-      CustomAlertDialogOnlyConfirm(
-          context,
-          () => APIRepository.logoutAndCloseApp(),
-          AppLocalizations.of(context).translate("164"),
-          "${response.message!}\n\n${AppLocalizations.of(context).translate("182")}",
-          ArtSweetAlertType.danger,
-          AppLocalizations.of(context).translate("159"));
+      setState(() {
+          debugText = "Servis e gidecek IOS";
+        });
+      UserResult response = await apiService.purchase(afterPurchaseUrl, data);
+      if (response.success == true) {
+        setState(() {
+          debugText = "Servis başarılı";
+        });
+        CustomAlertDialogOnlyConfirm(
+            context,
+            () => APIRepository.logoutAndCloseApp(),
+            AppLocalizations.of(context).translate("164"),
+            AppLocalizations.of(context).translate("182"),
+            ArtSweetAlertType.info,
+            AppLocalizations.of(context).translate("159"));
+      } else {
+         setState(() {
+          debugText = "Servis başarısız${data.isNotEmpty ? "data dolu": "data boş"}";
+        });
+        CustomAlertDialogOnlyConfirm(
+            context,
+            () {Navigator.pop(context);},
+            AppLocalizations.of(context).translate("164"),
+            response.message!,
+            ArtSweetAlertType.danger,
+            AppLocalizations.of(context).translate("159"));
+      }
     }
   }
 }
