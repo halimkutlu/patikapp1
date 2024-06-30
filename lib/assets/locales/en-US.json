@@ -180,5 +180,7 @@
     "179": "Do you want to finish the training? Your progress will not be saved.",
     "180": "Back",
     "181": "Please wait",
-    "182": "The application will be closed for the update. Please restart the application" 
+    "182": "The application will be closed for the update. Please restart the application",
+    "183": "Registration successful. You can now log in.",
+    "184": "Download file size:"
 }

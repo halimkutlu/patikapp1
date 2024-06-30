@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
 import 'package:patikmobile/models/language.model.dart';
+import 'package:patikmobile/models/languageSizeModel.dart';
 import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
 import 'package:patikmobile/providers/loginProvider.dart';
@@ -30,6 +31,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
   late LoginProvider loginProvider;
   late double received = 0;
   late bool isDownloading = false;
+  List<LngFileSizeResponse> lngFileSizeResponse = List<LngFileSizeResponse>.empty(growable: true);
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -183,7 +185,9 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                           widget.dashboard ?? false);
                                       await appDbProvider.openDb(language);
                                     } else {
-                                      CustomAlertDialog(
+
+                                           List<LngFileSizeResponse> selectedLanguageSize = await getLngSizeList(appDbProvider);
+                                                                              CustomAlertDialog(
                                           _scaffoldKey.currentContext!,
                                           () async {
                                         Navigator.pop(
@@ -225,12 +229,12 @@ class _SelectLanguageState extends State<SelectLanguage> {
                                                   .translate("159"));
                                         }
                                       },
-                                          AppLocalizations.of(context)
-                                              .translate("160"),
-                                          AppLocalizations.of(context)
-                                                  .translateLngName(language) +
-                                              AppLocalizations.of(context)
-                                                  .translate("161"),
+                                         AppLocalizations.of(context)
+                                            .translate("160"),
+                                        "${AppLocalizations.of(context)
+                                                .translateLngName(language)}${AppLocalizations.of(context)
+                                                .translate("161")} ${AppLocalizations.of(context) 
+                                                .translate("184",addLeft: "\n\n")} ${ getSelectedLanguageSizeWithRoles(selectedLanguageSize,language)} MB",
                                           ArtSweetAlertType.question,
                                           AppLocalizations.of(context)
                                               .translate("162"),
@@ -283,5 +287,18 @@ class _SelectLanguageState extends State<SelectLanguage> {
         Positioned(child: Loading())
       ]),
     );
+  }
+  
+  Future<List<LngFileSizeResponse>> getLngSizeList(AppDbProvider appDbProvider) async {
+     lngFileSizeResponse = await appDbProvider.getLanguageFileSize();
+     print(lngFileSizeResponse);
+     return lngFileSizeResponse;
+  }
+  
+  double? getSelectedLanguageSizeWithRoles(List<LngFileSizeResponse>? selectedLanguageList, Lcid language) {
+  LngFileSizeResponse dumLngFileSizeResponse = LngFileSizeResponse();
+   var selectedLanguageSize = selectedLanguageList!.isNotEmpty ? selectedLanguageList.firstWhere((x)=> x.lcid ==language.LCID) : dumLngFileSizeResponse; 
+   var fileSize = selectedLanguageSize.fileSizeList![StaticVariables.lngPlanType];
+   return fileSize;
   }
 }

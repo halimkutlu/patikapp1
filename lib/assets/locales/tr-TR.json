@@ -159,7 +159,7 @@
     "158": "Hata",
     "159": "Tamam",
     "160": "Emin misiniz?",
-    "161": "\n\nYukarıda belirtilen dil dosyası mobil cihazınıza indirilecektir. İndirme işlemi bitene kadar uygulamayı kapatmamalısınız. İndirme işlemini oyalıyor musunuz?",
+    "161": "\n\nYukarıda belirtilen dil dosyası mobil cihazınıza indirilecektir. İndirme işlemi bitene kadar uygulamayı kapatmamalısınız. İndirme işlemini onaylıyor musunuz?",
     "162": "Evet",
     "163": "Hayır",
     "164": "Uyarı",
@@ -180,5 +180,7 @@
     "179": "Eğitimi bitirmek istiyor musunuz?. Gelişmeleriniz kaydedilmeyecektir.",
     "180": "Geri",
     "181": "Lütfen Bekleyiniz",
-    "182": "Güncelleme için uygulama kapatılacakır. Lütfen uygulamayı yeniden başlatınız"
+    "182": "Güncelleme için uygulama kapatılacakır. Lütfen uygulamayı yeniden başlatınız",
+    "183": "Kayıt Başarılı. Şimdi giriş yapabilirsiniz.",
+    "184": "İndirilecek dosya boyutu: "
 }

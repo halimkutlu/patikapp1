@@ -42,10 +42,8 @@ class _RegisterState extends State<Register> {
                     controller: registerProvider.userName,
                     icon: Icons.person_outline,
                     inputType: TextInputType.emailAddress,
-                    name: AppLocalizations.of(context).translate("9"),
-                    hintText: AppLocalizations.of(context).translate("9",
-                        addRight: AppLocalizations.of(context)
-                            .translate("16", addLeft: " (", addRight: ")"))),
+                    name: capitalizeFirstLetter(AppLocalizations.of(context).translate("16")),
+                    hintText: capitalizeFirstLetter(AppLocalizations.of(context).translate("16"))),
               ),
               Padding(
                 padding: EdgeInsets.only(top: 0.h, left: 4.h, right: 4.h),
@@ -121,4 +119,10 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
+  String capitalizeFirstLetter(String input) {
+  if (input.isEmpty) {
+    return input;
+  }
+  return input[0].toUpperCase() + input.substring(1);
+}
 }

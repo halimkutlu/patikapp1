@@ -58,7 +58,7 @@ class RegisterProvider extends ChangeNotifier {
         Navigator.pop(context);
       },
           AppLocalizations.of(context).translate("164"),
-          AppLocalizations.of(context).translate("169"),
+          AppLocalizations.of(context).translate("165"),
           ArtSweetAlertType.info,
           AppLocalizations.of(context).translate("159"));
     } else {

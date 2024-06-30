@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, use_build_context_synchronously, unrelated_type_equality_checks
 
+import 'dart:convert';
+
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:patikmobile/api/static_variables.dart';
 import 'package:patikmobile/locale/app_localizations.dart';
+import 'package:patikmobile/models/languageSizeModel.dart';
+import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/pages/dashboard.dart';
 import 'package:patikmobile/pages/login.dart';
 import 'package:patikmobile/providers/dbprovider.dart';
@@ -15,6 +19,7 @@ import 'package:patikmobile/widgets/customAlertDialogOnlyOk.dart';
 import 'package:patikmobile/widgets/loading_bar.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:patikmobile/models/language.model.dart';
 
@@ -29,6 +34,7 @@ class SelectLearnLanguage extends StatefulWidget {
 class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late double received = 0;
+  List<LngFileSizeResponse> lngFileSizeResponse = List<LngFileSizeResponse>.empty(growable: true);
   late bool isDownloading = false;
   //late NavigatorState _navigator;
   List<dynamic> llanguage = [];
@@ -204,6 +210,8 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                           (Route<dynamic> route) => false);
                                     }
                                   } else {
+                                   List<LngFileSizeResponse> selectedLanguageSize = await getLngSizeList(dbProvider);
+                                          
                                     CustomAlertDialog(
                                         _scaffoldKey.currentContext!, () async {
                                       Navigator.pop(
@@ -263,10 +271,10 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
                                     },
                                         AppLocalizations.of(context)
                                             .translate("160"),
-                                        AppLocalizations.of(context)
-                                                .translateLngName(language) +
-                                            AppLocalizations.of(context)
-                                                .translate("161"),
+                                        "${AppLocalizations.of(context)
+                                                .translateLngName(language)}${AppLocalizations.of(context)
+                                                .translate("161")} ${AppLocalizations.of(context) 
+                                                .translate("184",addLeft: "\n\n")} ${ getSelectedLanguageSizeWithRoles(selectedLanguageSize,language)} MB",
                                         ArtSweetAlertType.question,
                                         AppLocalizations.of(context)
                                             .translate("162"),
@@ -319,5 +327,17 @@ class _SelectLearnLanguageState extends State<SelectLearnLanguage> {
         Positioned(child: Loading())
       ]),
     );
+  }
+  Future<List<LngFileSizeResponse>> getLngSizeList(LearnDbProvider appDbProvider) async {
+     lngFileSizeResponse = await appDbProvider.getLanguageFileSize();
+     print(lngFileSizeResponse);
+     return lngFileSizeResponse;
+  }
+  
+  double? getSelectedLanguageSizeWithRoles(List<LngFileSizeResponse>? selectedLanguageList, Lcid language) {
+  LngFileSizeResponse dumLngFileSizeResponse = LngFileSizeResponse();
+   var selectedLanguageSize = selectedLanguageList!.isNotEmpty ? selectedLanguageList.firstWhere((x)=> x.lcid ==language.LCID) : dumLngFileSizeResponse; 
+   var fileSize = selectedLanguageSize.fileSizeList![StaticVariables.lngPlanType];
+   return fileSize;
   }
 }

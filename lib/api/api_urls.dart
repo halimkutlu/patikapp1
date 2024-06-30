@@ -8,5 +8,6 @@ const forgotPasswordUrl = "/Users/ForgotPassword";
 const registerUrl = "/Users/Register";
 const afterPurchaseUrl = "/Purchase/Purchased";
 const getUpgradeSqlStrings = "/Downloads/GetUpgradeSqlStrings";
+const getSizeOfLanguages = "/Parameters/GetFileSizeList";
 
 const Version = "1.0.0";

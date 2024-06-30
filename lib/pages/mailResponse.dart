@@ -39,7 +39,7 @@ class _MailResponseState extends State<MailResponse> {
                 padding: EdgeInsets.only(top: 4.0.h),
                 child: Center(
                   child: Text(
-                    AppLocalizations.of(context).translate("18"),
+                    AppLocalizations.of(context).translate("167"),
                     style: TextStyle(fontSize: 2.5.h),
                   ),
                 ),
@@ -48,7 +48,7 @@ class _MailResponseState extends State<MailResponse> {
                 padding: EdgeInsets.all(2.0.h),
                 child: Center(
                   child: Text(
-                    AppLocalizations.of(context).translate("19"),
+                    AppLocalizations.of(context).translate("183"),
                     textAlign: TextAlign.center,
                     style:
                         TextStyle(fontSize: 1.5.h, fontWeight: FontWeight.bold),

@@ -14,6 +14,7 @@ import 'package:patikmobile/models/dialog.dart' as dialog;
 import 'package:patikmobile/models/http_response.model.dart';
 import 'package:patikmobile/models/information.dart';
 import 'package:patikmobile/models/language.model.dart';
+import 'package:patikmobile/models/languageSizeModel.dart';
 import 'package:patikmobile/models/user_roles.dart';
 import 'package:patikmobile/models/word.dart';
 import 'package:patikmobile/models/word_statistics.dart';
@@ -131,6 +132,22 @@ class LearnDbProvider extends DbProviderBase {
       return await openDb(lcid);
     }
     return false;
+  }
+
+ @override
+  Future<List<LngFileSizeResponse>> getLanguageFileSize() async {
+   List<LngFileSizeResponse> emptyList = List<LngFileSizeResponse>.empty(growable: true);
+
+    final apirepository = APIRepository();
+    httpSonucModel lngList =
+        await apirepository.get(controller: getSizeOfLanguages);
+    if (lngList.success!) {
+      notifyListeners();
+      return LngFileSizeResponse.listFromJson(lngList.data);
+    }
+    else{
+      return emptyList;
+    }
   }
 
   @override
@@ -605,6 +622,22 @@ class AppDbProvider extends DbProviderBase {
       result.status = true;
       result.message = AppLocalizations.of(context).translate("176");
       return result;
+    }
+  }
+
+  @override
+  Future<List<LngFileSizeResponse>> getLanguageFileSize() async {
+   List<LngFileSizeResponse> emptyList = List<LngFileSizeResponse>.empty(growable: true);
+
+    final apirepository = APIRepository();
+    httpSonucModel lngList =
+        await apirepository.get(controller: getSizeOfLanguages);
+    if (lngList.success!) {
+      notifyListeners();
+      return LngFileSizeResponse.listFromJson(lngList.data);
+    }
+    else{
+      return emptyList;
     }
   }
 
